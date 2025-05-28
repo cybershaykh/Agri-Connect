@@ -8,6 +8,8 @@ import orderRoute from './routes/orderRoute.js';
 import reviewRoute from './routes/reviewRoute.js';
 import resourceRoute from './routes/resourceRoute.js';
 import marketPriceRoute from './routes/marketPriceRoute.js';
+import adminRoute from './routes/adminRoute.js';
+import weatherRoute from './routes/weatherRoute.js';
 
 dotenv.config();
 const app = express();
@@ -23,6 +25,8 @@ app.use("/api/order", orderRoute);
 app.use("/api/review", reviewRoute);
 app.use("/api/resource", resourceRoute);
 app.use("/api/marketprice", marketPriceRoute);
+app.use("/api/admin", adminRoute);
+app.use("/api/weather", weatherRoute);
 
 app.get('/', (req, res) => {
     res.send('Hello from the backend server!');
