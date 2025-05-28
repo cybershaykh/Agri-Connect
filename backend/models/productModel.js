@@ -8,7 +8,8 @@ const productSchema = new mongoose.Schema({
   quantity: Number,
   price: { type: Number, required: true},
   images: {type: Array, required: true},
-  availability: { type: Boolean, default: true },
+  inStock: { type: Boolean, default: true },
+  location: { type: String, required: true},
   farmerId: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
   createdAt: { type: Date, default: Date.now },
 });
