@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { ShoppingCart, Minus, Plus } from "lucide-react";
+import { ShoppingCart, Minus, Plus, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 
+// All product data
 const sampleProducts = [
   {
+    id: 1,
     name: "Fresh Yam Tubers",
-    description: "Premium Nigerian yam, perfect for boiling, frying, or pounding.",
+    description:
+      "Premium Nigerian yam, perfect for boiling, frying, or pounding.",
     category: "Root Vegetable",
     rating: 4.7,
     quantity: 50,
@@ -18,6 +21,7 @@ const sampleProducts = [
     location: "Lagos, Nigeria",
   },
   {
+    id: 2,
     name: "Organic Cassava",
     description: "Rich in starch, ideal for fufu, garri, and industrial uses.",
     category: "Root Crop",
@@ -30,6 +34,7 @@ const sampleProducts = [
     location: "Benue, Nigeria",
   },
   {
+    id: 3,
     name: "Sweet Potatoes Jumbo",
     description: "Large-size, nutrient-rich sweet potatoes",
     category: "Potatoes",
@@ -41,8 +46,8 @@ const sampleProducts = [
     inStock: false,
     location: "Kano, Nigeria",
   },
-  // More products added
   {
+    id: 4,
     name: "Organic Tomatoes",
     description: "Fresh, organic tomatoes perfect for salads and sauces.",
     category: "Vegetables",
@@ -55,6 +60,7 @@ const sampleProducts = [
     location: "Kaduna, Nigeria",
   },
   {
+    id: 5,
     name: "Brown Rice",
     description: "High-quality brown rice, healthy and nutritious.",
     category: "Grains",
@@ -66,22 +72,58 @@ const sampleProducts = [
     inStock: true,
     location: "Oyo, Nigeria",
   },
+  {
+    id: 6,
+    name: "Fresh Tomatoes",
+    description: "Organic farm-grown tomatoes",
+    category: "Vegetables",
+    rating: 4.6,
+    quantity: 120,
+    price: 800,
+    image: "https://via.placeholder.com/300x200.png?text=Tomatoes",
+    inStock: true,
+    location: "Ilorin, Kwara",
+  },
+  {
+    id: 7,
+    name: "Sweet Bananas",
+    description: "Locally harvested sweet bananas",
+    category: "Fruits",
+    rating: 4.9,
+    quantity: 60,
+    price: 600,
+    image: "https://via.placeholder.com/300x200.png?text=Bananas",
+    inStock: false,
+    location: "Ibadan, Kwara",
+  },
 ];
 
+// Extract unique categories and locations
+const allCategories = [
+  "All",
+  ...new Set(sampleProducts.map((p) => p.category)),
+];
+const allLocations = ["All", ...new Set(sampleProducts.map((p) => p.location))];
+
 const Products = () => {
-  const [cart, setCart] = useState({}); // { productIndex: quantity }
+  const [cart, setCart] = useState({});
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedLocation, setSelectedLocation] = useState("All");
+  const [sortOption, setSortOption] = useState("");
+
+  useEffect(() => {
+    AOS.init({ duration: 800, easing: "ease-in-out", once: true });
+  }, []);
 
   const addToCart = (index) => {
     setCart((prevCart) => {
       const currentQty = prevCart[index] || 0;
-      // Prevent adding if product is out of stock or max quantity reached
-      if (!sampleProducts[index].inStock) return prevCart;
-      if (currentQty >= sampleProducts[index].quantity) return prevCart;
-
-      return {
-        ...prevCart,
-        [index]: currentQty + 1,
-      };
+      if (
+        !sampleProducts[index].inStock ||
+        currentQty >= sampleProducts[index].quantity
+      )
+        return prevCart;
+      return { ...prevCart, [index]: currentQty + 1 };
     });
   };
 
@@ -89,42 +131,98 @@ const Products = () => {
     setCart((prevCart) => {
       const currentQty = prevCart[index] || 0;
       if (currentQty <= 1) {
-        // Remove product from cart if quantity goes to 0
         const newCart = { ...prevCart };
         delete newCart[index];
         return newCart;
       }
-      return {
-        ...prevCart,
-        [index]: currentQty - 1,
-      };
+      return { ...prevCart, [index]: currentQty - 1 };
     });
   };
 
-  useEffect(() => {
-    AOS.init({
-      duration: 800,
-      easing: "ease-in-out",
-      once: true,
+  // Filter and sort products
+  const filteredProducts = sampleProducts
+    .filter(
+      (p) =>
+        (selectedCategory === "All" || p.category === selectedCategory) &&
+        (selectedLocation === "All" || p.location === selectedLocation)
+    )
+    .sort((a, b) => {
+      if (sortOption === "priceLow") return a.price - b.price;
+      if (sortOption === "priceHigh") return b.price - a.price;
+      if (sortOption === "ratingHigh") return b.rating - a.rating;
+      if (sortOption === "ratingLow") return a.rating - b.rating;
+      return 0;
     });
-  }, []);
 
   return (
     <section className="py-20 bg-white" data-aos="fade-up">
       <div className="container mx-auto px-4">
-        <h2 className="text-4xl font-bold text-gray-900 mb-12 text-center">
-          All Products
-        </h2>
+        <div className="text-center my-8">
+          <h1 className="text-3xl md:text-4xl font-bold text-green-800">
+            Explore Fresh Farm Products
+          </h1>
+          <p className="mt-2 text-gray-600 max-w-2xl mx-auto">
+            Browse a wide variety of agricultural products sourced directly from
+            trusted Nigerian farmers. Get fresh, affordable, and quality produce
+            all in one place.
+          </p>
+        </div>
 
+        {/* Filters */}
+        <div className="flex flex-wrap justify-between items-center mb-10 gap-4">
+          {/* Category Filter */}
+          <div className="flex flex-wrap gap-2">
+            {allCategories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-4 py-1 rounded-full border transition text-sm ${
+                  selectedCategory === cat
+                    ? "bg-green-600 text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-green-100"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          {/* Location Filter */}
+          <select
+            onChange={(e) => setSelectedLocation(e.target.value)}
+            className="border rounded px-4 py-2 text-sm text-gray-700"
+            value={selectedLocation}
+          >
+            {allLocations.map((loc) => (
+              <option key={loc} value={loc}>
+                {loc}
+              </option>
+            ))}
+          </select>
+
+          {/* Sort Dropdown */}
+          <select
+            onChange={(e) => setSortOption(e.target.value)}
+            className="border rounded px-4 py-2 text-sm text-gray-700"
+            value={sortOption}
+          >
+            <option value="">Sort By</option>
+            <option value="priceLow">Price: Low to High</option>
+            <option value="priceHigh">Price: High to Low</option>
+            <option value="ratingHigh">Rating: High to Low</option>
+            <option value="ratingLow">Rating: Low to High</option>
+          </select>
+        </div>
+
+        {/* Product Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {sampleProducts.map((product, index) => (
+          {filteredProducts.map((product, index) => (
             <div
-              key={index}
+              key={product.id}
               className="bg-white rounded-xl shadow hover:shadow-lg transition p-6 space-y-4 relative"
               data-aos="zoom-in"
               data-aos-delay={index * 100}
             >
-              {/* Product Image with Availability Badge */}
               <div className="relative">
                 <img
                   src={product.image}
@@ -142,7 +240,6 @@ const Products = () => {
                 </div>
               </div>
 
-              {/* Product Info */}
               <div className="flex justify-between items-center">
                 <h3 className="text-xl font-semibold">{product.name}</h3>
                 <span className="text-green-600 font-bold text-lg">
@@ -151,31 +248,14 @@ const Products = () => {
               </div>
 
               <p className="text-sm text-gray-600">{product.description}</p>
-
               <div className="text-sm text-gray-500">
                 Category: {product.category}
               </div>
-
-              {/* Location */}
               <div className="text-sm text-blue-600 font-semibold flex items-center space-x-1">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 11c1.656 0 3-1.344 3-3S13.656 5 12 5 9 6.344 9 8s1.344 3 3 3zM12 21c-4 0-6-3-6-6 0-3 3-7 6-7s6 4 6 7c0 3-2 6-6 6z"
-                  />
-                </svg>
+                <MapPin className="w-4 h-4" />
                 <span>{product.location}</span>
               </div>
 
-              {/* Rating as stars */}
               <div className="text-yellow-500 text-sm">
                 {"★".repeat(Math.floor(product.rating)) +
                   "☆".repeat(5 - Math.floor(product.rating))}
@@ -184,9 +264,10 @@ const Products = () => {
                 </span>
               </div>
 
-              <div className="text-sm text-gray-500">Stock: {product.quantity}</div>
+              <div className="text-sm text-gray-500">
+                Stock: {product.quantity}
+              </div>
 
-              {/* Cart controls + View Details */}
               <div className="flex items-center space-x-3 pt-3">
                 <button
                   disabled={!product.inStock}
@@ -202,7 +283,7 @@ const Products = () => {
                 </button>
 
                 <Link
-                  to={`/products/${index}`}
+                  to={`/details/${product.id}`}
                   className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition text-sm"
                 >
                   View Details

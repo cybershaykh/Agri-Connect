@@ -3,9 +3,12 @@ import { Link } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { ArrowRight, Play, Star, Zap, Shield, Award,
-    Smile, Globe, Headphones, Tractor, Plus, Minus, ShoppingCart
+    Smile, Globe, Headphones, Tractor, Plus, Minus, ShoppingCart,
+    MapPin
 } from "lucide-react";
 import CountUp from "react-countup";
+import About from "./About";
+import FAQSection from "./FAQSection";
 
 const sampleProducts = [
   {
@@ -516,20 +519,7 @@ const HomePage = () => {
 
               {/* Location */}
               <div className="text-sm text-blue-600 font-semibold flex items-center space-x-1">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 11c1.656 0 3-1.344 3-3S13.656 5 12 5 9 6.344 9 8s1.344 3 3 3zM12 21c-4 0-6-3-6-6 0-3 3-7 6-7s6 4 6 7c0 3-2 6-6 6z"
-                  />
-                </svg>
+                <MapPin className="w-4 h-4" />
                 <span>{product.location}</span>
               </div>
 
@@ -561,14 +551,14 @@ const HomePage = () => {
                   <>
                     <button
                       onClick={() => removeFromCart(index)}
-                      className="p-2 bg-gray-200 rounded-full hover:bg-gray-300"
+                      className="p-2 bg-red-200 rounded-full hover:bg-red-300"
                     >
                       <Minus className="w-4 h-4" />
                     </button>
                     <span className="font-semibold">{cart[index]}</span>
                     <button
                       onClick={() => addToCart(index)}
-                      className="p-2 bg-gray-200 rounded-full hover:bg-gray-300"
+                      className="p-2 bg-green-200 rounded-full hover:bg-green-300"
                     >
                       <Plus className="w-4 h-4" />
                     </button>
@@ -625,6 +615,75 @@ const HomePage = () => {
         </div>
       </div>
     </section>
+    <About />
+    <section className="bg-green-50 py-20 px-4" id="contact" data-aos="fade-up">
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-green-700 mb-4">Get in Touch</h2>
+          <p className="text-gray-600">
+            Have questions or want to partner with us? We’re here to help you grow.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-12">
+          {/* Contact Info */}
+          <div className="space-y-6 text-gray-700" data-aos="fade-right">
+            <div>
+              <h4 className="font-semibold text-lg">📍 Address</h4>
+              <p>123 AgroTech Road, Abuja, Nigeria</p>
+            </div>
+            <div>
+              <h4 className="font-semibold text-lg">📞 Phone</h4>
+              <p>+234 800 123 4567</p>
+            </div>
+            <div>
+              <h4 className="font-semibold text-lg">📧 Email</h4>
+              <p>support@agricconnect.com</p>
+            </div>
+            <div>
+              <h4 className="font-semibold text-lg">🕒 Working Hours</h4>
+              <p>Mon - Fri: 8:00 AM - 6:00 PM</p>
+            </div>
+          </div>
+
+          {/* Contact Form */}
+          <form
+            className="bg-white p-8 rounded-lg shadow-md space-y-6"
+            data-aos="fade-left"
+            onSubmit={(e) => {
+              e.preventDefault();
+              alert("Message sent successfully!");
+            }}
+          >
+            <input
+              type="text"
+              placeholder="Your Name"
+              className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600"
+              required
+            />
+            <input
+              type="email"
+              placeholder="Your Email"
+              className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600"
+              required
+            />
+            <textarea
+              placeholder="Your Message"
+              rows="5"
+              className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600"
+              required
+            ></textarea>
+            <button
+              type="submit"
+              className="bg-green-700 text-white px-6 py-3 rounded-md hover:bg-green-800 transition"
+            >
+              Send Message
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+    <FAQSection />
     </>
   );
 };

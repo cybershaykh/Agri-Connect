@@ -51,9 +51,9 @@ const Navbar = () => {
         <nav className="hidden md:flex space-x-6">
           <a href="/" className="text-gray-600 hover:text-green-600 font-medium">Home</a>
           <a href="/products" className="text-gray-600 hover:text-green-600 font-medium">Products</a>
-          <a href="#" className="text-gray-600 hover:text-green-600 font-medium">Solutions</a>
-          <a href="#" className="text-gray-600 hover:text-green-600 font-medium">About</a>
-          <a href="#" className="text-gray-600 hover:text-green-600 font-medium">Contact</a>
+          <a href="/farmers" className="text-gray-600 hover:text-green-600 font-medium">Farmers</a>
+          <a href="/about" className="text-gray-600 hover:text-green-600 font-medium">About</a>
+          <a href="#contact" className="text-gray-600 hover:text-green-600 font-medium">Contact</a>
         </nav>
 
         {/* Right Buttons */}
@@ -118,9 +118,9 @@ const Navbar = () => {
         <div className="md:hidden bg-white px-4 py-4 border-t border-gray-200 space-y-3">
           <a href="/" className="block text-gray-600 hover:text-green-600">Home</a>
           <a href="/products" className="block text-gray-600 hover:text-green-600">Products</a>
-          <a href="#" className="block text-gray-600 hover:text-green-600">Solutions</a>
-          <a href="#" className="block text-gray-600 hover:text-green-600">About</a>
-          <a href="#" className="block text-gray-600 hover:text-green-600">Contact</a>
+          <a href="/farmers" className="block text-gray-600 hover:text-green-600">Farmers</a>
+          <a href="/about" className="block text-gray-600 hover:text-green-600">About</a>
+          <a href="#contact" className="block text-gray-600 hover:text-green-600">Contact</a>
 
           {/* Mobile Auth Dropdown */}
           <div className="mt-2">
