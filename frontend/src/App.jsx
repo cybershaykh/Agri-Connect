@@ -8,7 +8,7 @@ import FarmersPage from "./pages/Farmer";
 import About from "./pages/About";
 import FAQSection from "./pages/FAQSection";
 import Footer from "./component/Footer";
-import Cart from "./pages/CartPage";
+import Cart from "./pages/Cart";
 import StoreContextProvider from "./component/context/StoreContext";
 
 const App = () => {

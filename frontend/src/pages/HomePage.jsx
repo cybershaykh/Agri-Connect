@@ -2,52 +2,26 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { ArrowRight, Play, Star, Zap, Shield, Award,
-    Smile, Globe, Headphones, Tractor, Plus, Minus, ShoppingCart,
-    MapPin
+import {
+  ArrowRight,
+  Play,
+  Star,
+  Zap,
+  Shield,
+  Award,
+  Smile,
+  Globe,
+  Headphones,
+  Tractor,
+  Plus,
+  Minus,
+  ShoppingCart,
+  MapPin,
 } from "lucide-react";
 import CountUp from "react-countup";
 import About from "./About";
 import FAQSection from "./FAQSection";
 
-const sampleProducts = [
-  {
-    name: "Fresh Yam Tubers",
-    description: "Premium Nigerian yam, perfect for boiling, frying, or pounding.",
-    category: "Root Vegetable",
-    rating: 4.7,
-    quantity: 50,
-    price: 3000,
-    image:
-      "https://media.istockphoto.com/id/638094208/photo/sweet-potato.jpg?b=1&s=612x612&w=0&k=20&c=s_WNbthr_Jz3Pfu4iS-M1mD023aCrcjjZrJ9f_mzfmk=",
-    inStock: false,
-    location: "Lagos, Nigeria",
-  },
-  {
-    name: "Organic Cassava",
-    description: "Rich in starch, ideal for fufu, garri, and industrial uses.",
-    category: "Root Crop",
-    rating: 4.5,
-    quantity: 100,
-    price: 2000,
-    image:
-      "https://media.istockphoto.com/id/1150496082/photo/fresh-cassava-and-peels-and-slices-on-rustic-wooden-table-top-view.jpg?b=1&s=612x612&w=0&k=20&c=x-BUs7qJl23SRtwq9Nm-6CoW_4rOuV-NflOxwRFPIkw=",
-    inStock: true,
-    location: "Benue, Nigeria",
-  },
-  {
-    name: "Sweet Potatoes Jumbo",
-    description: "Large-size, nutrient-rich sweet potatoes",
-    category: "Potatoes",
-    rating: 4.5,
-    quantity: 100,
-    price: 1000,
-    image:
-      "https://media.istockphoto.com/id/1087192472/photo/sweet-potato-isolated-on-white-background.jpg?b=1&s=612x612&w=0&k=20&c=T7ZXZ8WpJAEvtpzNswz3kUM3lujM-JRXdKpvseaTJQ8=",
-    inStock: true,
-    location: "Kano, Nigeria",
-  },
-];
 const articles = [
   {
     title: "How to Increase Crop Yields with Drone Technology",
@@ -80,16 +54,16 @@ const articles = [
 
 const HomePage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-   const [startCount, setStartCount] = useState(false);
-   const sectionRef = useRef(null);
-   const [cart, setCart] = useState({});
+  const [startCount, setStartCount] = useState(false);
+  const sectionRef = useRef(null);
+  const [cart, setCart] = useState({});
 
   useEffect(() => {
     AOS.init({ duration: 1000 });
     const token = localStorage.getItem("authToken");
     setIsLoggedIn(!!token);
   }, []);
-   useEffect(() => {
+  useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         setStartCount(entry.isIntersecting);
@@ -109,27 +83,6 @@ const HomePage = () => {
       }
     };
   }, []);
-  const addToCart = (index) => {
-    setCart((prev) => ({
-      ...prev,
-      [index]: (prev[index] || 0) + 1,
-    }));
-  };
-
-  const removeFromCart = (index) => {
-    setCart((prev) => {
-      const quantity = (prev[index] || 0) - 1;
-      if (quantity <= 0) {
-        const updated = { ...prev };
-        delete updated[index];
-        return updated;
-      }
-      return {
-        ...prev,
-        [index]: quantity,
-      };
-    });
-  };
 
   return (
     <>
@@ -162,10 +115,10 @@ const HomePage = () => {
                 {isLoggedIn ? (
                   <>
                     <a href="/products">
-                     <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg flex items-center justify-center gap-2">
-                       Explore Products
-                       <ArrowRight className="h-5 w-5" />
-                     </button>
+                      <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg flex items-center justify-center gap-2">
+                        Explore Products
+                        <ArrowRight className="h-5 w-5" />
+                      </button>
                     </a>
                     <button className="border border-green-600 text-green-600 hover:bg-green-100 px-6 py-3 rounded-lg flex items-center justify-center gap-2">
                       <Play className="h-5 w-5" />
@@ -238,452 +191,427 @@ const HomePage = () => {
         </div>
       </section>
       <section className="py-20 bg-white">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16" data-aos="fade-up">
-          <div className="flex items-center justify-center mb-4">
-            <div className="bg-green-600 rounded-full p-2 mr-3">
-              <Zap className="h-6 w-6 text-white" />
-            </div>
-            <h2 className="text-4xl font-bold text-gray-900">
-              Elevates drone agricultural operations to new heights
-            </h2>
-          </div>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Our cutting-edge drone technology revolutionizes farming practices, providing precision agriculture
-            solutions that increase efficiency and crop yields.
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-8">
-          <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow" data-aos="fade-up">
-            <div className="p-6">
-              <img
-                src="https://images.pexels.com/photos/12357627/pexels-photo-12357627.jpeg?auto=compress&cs=tinysrgb&w=600"
-                alt="Heavy Payload"
-                className="w-full h-48 object-cover rounded-lg mb-4"
-              />
-              <h3 className="text-xl font-semibold mb-2">Heavy Payload</h3>
-              <p className="text-gray-600">
-                Capable of carrying substantial loads for extensive field coverage and efficient operations.
-              </p>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow" data-aos="fade-up" data-aos-delay="100">
-            <div className="p-6">
-              <img
-                src="https://images.pexels.com/photos/11996945/pexels-photo-11996945.jpeg?auto=compress&cs=tinysrgb&w=600"
-                alt="Smooth Spreading"
-                className="w-full h-48 object-cover rounded-lg mb-4"
-              />
-              <h3 className="text-xl font-semibold mb-2">Smooth Spreading</h3>
-              <p className="text-gray-600">
-                Precision spreading technology ensures even distribution of seeds, fertilizers, and pesticides.
-              </p>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow" data-aos="fade-up" data-aos-delay="200">
-            <div className="p-6">
-              <img
-                src="https://images.pexels.com/photos/27624218/pexels-photo-27624218/free-photo-of-desert-irrigation.jpeg?auto=compress&cs=tinysrgb&w=600"
-                alt="Fast Sprinkler Kit"
-                className="w-full h-48 object-cover rounded-lg mb-4"
-              />
-              <h3 className="text-xl font-semibold mb-2">Fast Sprinkler Kit</h3>
-              <p className="text-gray-600">
-                Advanced spraying system with adjustable flow rates for optimal crop treatment.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <section className="py-20 bg-gray-50">
-      <div className="container mx-auto px-4">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          {/* Left Content */}
-          <div className="space-y-8" data-aos="fade-right">
-            <div className="space-y-4">
-              <div className="flex items-center">
-                <Star className="h-6 w-6 text-green-600 mr-2" />
-                <span className="text-green-600 font-semibold">Elevates agricultural operations to</span>
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16" data-aos="fade-up">
+            <div className="flex items-center justify-center mb-4">
+              <div className="bg-green-600 rounded-full p-2 mr-3">
+                <Zap className="h-6 w-6 text-white" />
               </div>
-              <h2 className="text-4xl font-bold text-gray-900">new heights</h2>
+              <h2 className="text-4xl font-bold text-gray-900">
+                Elevates drone agricultural operations to new heights
+              </h2>
             </div>
-
-            <div className="space-y-6">
-              <div className="border-l-4 border-green-600 pl-6">
-                <h3 className="text-xl font-semibold mb-2">Precision Crop Protection Spray</h3>
-                <p className="text-gray-600">
-                  Advanced spraying technology with intelligent flow control and precise targeting for optimal crop
-                  protection and minimal waste.
-                </p>
-              </div>
-              <div className="border-l-4 border-gray-300 pl-6">
-                <h3 className="text-xl font-semibold mb-2">Smart Field Mapping</h3>
-                <p className="text-gray-600">
-                  AI-powered field analysis and mapping capabilities for data-driven agricultural decisions.
-                </p>
-              </div>
-              <div className="border-l-4 border-gray-300 pl-6">
-                <h3 className="text-xl font-semibold mb-2">Brand New Advanced Sensors</h3>
-                <p className="text-gray-600">
-                  State-of-the-art sensor technology for real-time monitoring and precision agriculture applications.
-                </p>
-              </div>
-            </div>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Our cutting-edge drone technology revolutionizes farming
+              practices, providing precision agriculture solutions that increase
+              efficiency and crop yields.
+            </p>
           </div>
 
-          {/* Right Image */}
-          <div className="relative" data-aos="fade-left">
-            <img
-              src="https://images.pexels.com/photos/6964964/pexels-photo-6964964.jpeg?auto=compress&cs=tinysrgb&w=600"
-              alt="Agricultural Drone"
-              className="w-full h-auto rounded-2xl shadow-2xl"
-            />
-          </div>
-        </div>
-      </div>
-    </section>
-    <section className="py-20 bg-white" data-aos="fade-up">
-  <div className="container mx-auto px-4">
-    <div className="grid lg:grid-cols-2 gap-16 items-center">
-      
-      {/* Image */}
-      <div className="relative" data-aos="zoom-in">
-        <img
-          src="https://images.pexels.com/photos/32215946/pexels-photo-32215946/free-photo-of-construction-site-with-excavator-in-londrina-brazil.jpeg?auto=compress&cs=tinysrgb&w=600"
-          alt="Drone in Field"
-          className="w-full h-auto rounded-2xl shadow-lg"
-        />
-      </div>
-
-      {/* Text Content */}
-      <div className="space-y-8" data-aos="fade-left">
-        <div className="space-y-4">
-          <h2 className="text-4xl font-bold text-gray-900">
-            Tested for reliability and durability
-          </h2>
-          <p className="text-xl text-gray-600">
-            Our drones undergo rigorous testing to ensure they perform flawlessly in all agricultural conditions,
-            from harsh weather to demanding field operations.
-          </p>
-        </div>
-
-        {/* Features */}
-        <div className="grid grid-cols-2 gap-6">
-          <div className="flex items-start space-x-3" data-aos="fade-up" data-aos-delay="100">
-            <div className="bg-green-100 rounded-full p-2">
-              <Shield className="h-5 w-5 text-green-600" />
-            </div>
-            <div>
-              <h3 className="font-semibold">Weather Resistant</h3>
-              <p className="text-sm text-gray-600">IP67 rating protection</p>
-            </div>
-          </div>
-
-          <div className="flex items-start space-x-3" data-aos="fade-up" data-aos-delay="200">
-            <div className="bg-green-100 rounded-full p-2">
-              <Award className="h-5 w-5 text-green-600" />
-            </div>
-            <div>
-              <h3 className="font-semibold">Certified Quality</h3>
-              <p className="text-sm text-gray-600">Industry standards met</p>
-            </div>
-          </div>
-        </div>
-
-        {/* CTA Button */}
-        <div data-aos="fade-up" data-aos-delay="300">
-          <button className="mt-4 bg-green-600 text-white px-6 py-3 rounded-lg font-semibold shadow hover:bg-green-700 transition">
-            Learn More
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-    <section id="why-agrone" ref={sectionRef} className="py-20 bg-gray-50" data-aos="fade-up">
-      <div className="container mx-auto px-4">
-        {/* Heading */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">Why Agrone?</h2>
-          <p className="text-gray-600 text-lg max-w-xl mx-auto">
-            Delivering cutting-edge solutions and unmatched service to empower farmers across the globe.
-          </p>
-        </div>
-
-        {/* Stats */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-          <div className="flex flex-col items-center text-center space-y-2">
-            <Smile className="h-8 w-8 text-green-600 mb-2" />
-            <div className="text-3xl font-bold text-green-600">
-              {startCount ? <CountUp end={500} duration={2} suffix="+" /> : "0+"}
-            </div>
-            <p className="text-gray-600 text-sm">Customer Satisfaction</p>
-          </div>
-
-          <div className="flex flex-col items-center text-center space-y-2">
-            <Globe className="h-8 w-8 text-green-600 mb-2" />
-            <div className="text-3xl font-bold text-green-600">
-              {startCount ? <CountUp end={1000} duration={2} suffix="+" /> : "0+"}
-            </div>
-            <p className="text-gray-600 text-sm">Countries Served</p>
-          </div>
-
-          <div className="flex flex-col items-center text-center space-y-2">
-            <Headphones className="h-8 w-8 text-green-600 mb-2" />
-            <div className="text-3xl font-bold text-green-600">
-              {startCount ? <CountUp end={24} duration={2} suffix="/7" /> : "0/7"}
-            </div>
-            <p className="text-gray-600 text-sm">Support Available</p>
-          </div>
-
-          <div className="flex flex-col items-center text-center space-y-2">
-            <Tractor className="h-8 w-8 text-green-600 mb-2" />
-            <div className="text-3xl font-bold text-green-600">
-              {startCount ? <CountUp end={20000} duration={2} separator="," suffix="+" /> : "0+"}
-            </div>
-            <p className="text-gray-600 text-sm">Happy Farmers</p>
-          </div>
-        </div>
-
-        {/* Call to Action */}
-        <div className="relative bg-green-600 rounded-3xl overflow-hidden shadow-xl" data-aos="zoom-in">
-          <div className="absolute inset-0 bg-[url('https://images.pexels.com/photos/4870800/pexels-photo-4870800.jpeg?auto=compress&cs=tinysrgb&w=600')] bg-cover bg-center opacity-20"></div>
-          <div className="relative p-12 text-white">
-            <div className="max-w-md">
-              <h3 className="text-2xl font-bold mb-4">
-                Sprinkler & spray equipment farming and agriculture
-              </h3>
-              <button className="bg-white text-green-600 px-6 py-3 rounded-lg font-semibold shadow hover:bg-gray-100 transition">
-                Learn More
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-<section className="py-20 bg-white" data-aos="fade-up">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center mb-12">
-          <h2 className="text-4xl font-bold text-gray-900">Explore Our Products</h2>
-          <a href="/products">
-          <button
-            onClick={() => {
-              /* handle view all products here */
-            }}
-            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
-          >
-            View All Products
-          </button>
-          </a>
-        </div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {sampleProducts.map((product, index) => (
+          <div className="grid md:grid-cols-3 gap-8">
             <div
-              key={index}
-              className="bg-white rounded-xl shadow hover:shadow-lg transition p-6 space-y-4 relative"
-              data-aos="zoom-in"
-              data-aos-delay={index * 100}
+              className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow"
+              data-aos="fade-up"
             >
-              {/* Product Image with Availability Badge */}
-              <div className="relative">
+              <div className="p-6">
                 <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-48 object-cover rounded-lg"
+                  src="https://images.pexels.com/photos/12357627/pexels-photo-12357627.jpeg?auto=compress&cs=tinysrgb&w=600"
+                  alt="Heavy Payload"
+                  className="w-full h-48 object-cover rounded-lg mb-4"
                 />
-                <div
-                  className={`absolute top-2 right-2 text-xs px-3 py-1 rounded-full font-semibold select-none ${
-                    product.inStock
-                      ? "bg-green-100 text-green-700"
-                      : "bg-red-100 text-red-700"
-                  }`}
-                >
-                  {product.inStock ? "In Stock" : "Out of Stock"}
-                </div>
-              </div>
-
-              {/* Product Info */}
-              <div className="flex justify-between items-center">
-                <h3 className="text-xl font-semibold">{product.name}</h3>
-                <span className="text-green-600 font-bold text-lg">₦{product.price}</span>
-              </div>
-
-              <p className="text-sm text-gray-600">{product.description}</p>
-
-              <div className="text-sm text-gray-500">Category: {product.category}</div>
-
-              {/* Location */}
-              <div className="text-sm text-blue-600 font-semibold flex items-center space-x-1">
-                <MapPin className="w-4 h-4" />
-                <span>{product.location}</span>
-              </div>
-
-              {/* Rating as stars */}
-              <div className="text-yellow-500 text-sm">
-                {"★".repeat(Math.floor(product.rating)) +
-                  "☆".repeat(5 - Math.floor(product.rating))}
-                <span className="text-gray-500 ml-2">({product.rating.toFixed(1)})</span>
-              </div>
-
-              <div className="text-sm text-gray-500">Stock: {product.quantity}</div>
-
-              {/* Cart controls */}
-              <div className="flex items-center space-x-3 pt-3">
-                <button
-                  disabled={!product.inStock}
-                  onClick={() => addToCart(index)}
-                  className={`flex items-center px-3 py-1 rounded text-white text-sm transition ${
-                    product.inStock
-                      ? "bg-green-600 hover:bg-green-700"
-                      : "bg-gray-400 cursor-not-allowed"
-                  }`}
-                >
-                  <ShoppingCart className="w-5 h-5 mr-1" />
-                  
-                </button>
-
-                {cart[index] > 0 && (
-                  <>
-                    <button
-                      onClick={() => removeFromCart(index)}
-                      className="p-2 bg-red-200 rounded-full hover:bg-red-300"
-                    >
-                      <Minus className="w-4 h-4" />
-                    </button>
-                    <span className="font-semibold">{cart[index]}</span>
-                    <button
-                      onClick={() => addToCart(index)}
-                      className="p-2 bg-green-200 rounded-full hover:bg-green-300"
-                    >
-                      <Plus className="w-4 h-4" />
-                    </button>
-                  </>
-                )}
+                <h3 className="text-xl font-semibold mb-2">Heavy Payload</h3>
+                <p className="text-gray-600">
+                  Capable of carrying substantial loads for extensive field
+                  coverage and efficient operations.
+                </p>
               </div>
             </div>
-          ))}
-        </div>
-      </div>
-    </section>
- <section className="py-20 bg-gray-50" data-aos="fade-up">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center mb-12">
-          <h2 className="text-4xl font-bold text-gray-900">News & Articles</h2>
-          <Link to="/articles">
-            <button className="border border-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-100 transition">
-              View All Articles
-            </button>
-          </Link>
-        </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {articles.map((article, index) => (
-            <Link
-              to={`/articles/${article.slug}`}
-              key={index}
-              className="bg-white rounded-xl shadow hover:shadow-lg transition-shadow group block"
-              data-aos="zoom-in"
-              data-aos-delay={index * 100}
+            <div
+              className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow"
+              data-aos="fade-up"
+              data-aos-delay="100"
             >
-              <img
-                src={article.url}
-                alt={article.title}
-                className="w-full h-48 object-cover rounded-t-xl"
-              />
               <div className="p-6">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm text-gray-500">{article.date}</span>
-                  <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
-                    {article.type}
+                <img
+                  src="https://images.pexels.com/photos/11996945/pexels-photo-11996945.jpeg?auto=compress&cs=tinysrgb&w=600"
+                  alt="Smooth Spreading"
+                  className="w-full h-48 object-cover rounded-lg mb-4"
+                />
+                <h3 className="text-xl font-semibold mb-2">Smooth Spreading</h3>
+                <p className="text-gray-600">
+                  Precision spreading technology ensures even distribution of
+                  seeds, fertilizers, and pesticides.
+                </p>
+              </div>
+            </div>
+
+            <div
+              className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow"
+              data-aos="fade-up"
+              data-aos-delay="200"
+            >
+              <div className="p-6">
+                <img
+                  src="https://images.pexels.com/photos/27624218/pexels-photo-27624218/free-photo-of-desert-irrigation.jpeg?auto=compress&cs=tinysrgb&w=600"
+                  alt="Fast Sprinkler Kit"
+                  className="w-full h-48 object-cover rounded-lg mb-4"
+                />
+                <h3 className="text-xl font-semibold mb-2">
+                  Fast Sprinkler Kit
+                </h3>
+                <p className="text-gray-600">
+                  Advanced spraying system with adjustable flow rates for
+                  optimal crop treatment.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Left Content */}
+            <div className="space-y-8" data-aos="fade-right">
+              <div className="space-y-4">
+                <div className="flex items-center">
+                  <Star className="h-6 w-6 text-green-600 mr-2" />
+                  <span className="text-green-600 font-semibold">
+                    Elevates agricultural operations to
                   </span>
                 </div>
-                <h3 className="text-xl font-semibold mb-3 group-hover:text-green-600 transition-colors">
-                  {article.title}
-                </h3>
-                <p className="text-gray-600 mb-4">{article.content}</p>
-                <span className="text-green-600 hover:text-green-700 font-medium flex items-center gap-2">
-                  Read More <ArrowRight className="h-4 w-4" />
-                </span>
+                <h2 className="text-4xl font-bold text-gray-900">
+                  new heights
+                </h2>
               </div>
-            </Link>
-          ))}
-        </div>
-      </div>
-    </section>
-    <About />
-    <section className="bg-green-50 py-20 px-4" id="contact" data-aos="fade-up">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-green-700 mb-4">Get in Touch</h2>
-          <p className="text-gray-600">
-            Have questions or want to partner with us? We’re here to help you grow.
-          </p>
-        </div>
 
-        <div className="grid md:grid-cols-2 gap-12">
-          {/* Contact Info */}
-          <div className="space-y-6 text-gray-700" data-aos="fade-right">
-            <div>
-              <h4 className="font-semibold text-lg">📍 Address</h4>
-              <p>123 AgroTech Road, Abuja, Nigeria</p>
+              <div className="space-y-6">
+                <div className="border-l-4 border-green-600 pl-6">
+                  <h3 className="text-xl font-semibold mb-2">
+                    Precision Crop Protection Spray
+                  </h3>
+                  <p className="text-gray-600">
+                    Advanced spraying technology with intelligent flow control
+                    and precise targeting for optimal crop protection and
+                    minimal waste.
+                  </p>
+                </div>
+                <div className="border-l-4 border-gray-300 pl-6">
+                  <h3 className="text-xl font-semibold mb-2">
+                    Smart Field Mapping
+                  </h3>
+                  <p className="text-gray-600">
+                    AI-powered field analysis and mapping capabilities for
+                    data-driven agricultural decisions.
+                  </p>
+                </div>
+                <div className="border-l-4 border-gray-300 pl-6">
+                  <h3 className="text-xl font-semibold mb-2">
+                    Brand New Advanced Sensors
+                  </h3>
+                  <p className="text-gray-600">
+                    State-of-the-art sensor technology for real-time monitoring
+                    and precision agriculture applications.
+                  </p>
+                </div>
+              </div>
             </div>
-            <div>
-              <h4 className="font-semibold text-lg">📞 Phone</h4>
-              <p>+234 800 123 4567</p>
+
+            {/* Right Image */}
+            <div className="relative" data-aos="fade-left">
+              <img
+                src="https://images.pexels.com/photos/6964964/pexels-photo-6964964.jpeg?auto=compress&cs=tinysrgb&w=600"
+                alt="Agricultural Drone"
+                className="w-full h-auto rounded-2xl shadow-2xl"
+              />
             </div>
-            <div>
-              <h4 className="font-semibold text-lg">📧 Email</h4>
-              <p>support@agricconnect.com</p>
+          </div>
+        </div>
+      </section>
+      <section className="py-20 bg-white" data-aos="fade-up">
+        <div className="container mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Image */}
+            <div className="relative" data-aos="zoom-in">
+              <img
+                src="https://images.pexels.com/photos/32215946/pexels-photo-32215946/free-photo-of-construction-site-with-excavator-in-londrina-brazil.jpeg?auto=compress&cs=tinysrgb&w=600"
+                alt="Drone in Field"
+                className="w-full h-auto rounded-2xl shadow-lg"
+              />
             </div>
-            <div>
-              <h4 className="font-semibold text-lg">🕒 Working Hours</h4>
-              <p>Mon - Fri: 8:00 AM - 6:00 PM</p>
+
+            {/* Text Content */}
+            <div className="space-y-8" data-aos="fade-left">
+              <div className="space-y-4">
+                <h2 className="text-4xl font-bold text-gray-900">
+                  Tested for reliability and durability
+                </h2>
+                <p className="text-xl text-gray-600">
+                  Our drones undergo rigorous testing to ensure they perform
+                  flawlessly in all agricultural conditions, from harsh weather
+                  to demanding field operations.
+                </p>
+              </div>
+
+              {/* Features */}
+              <div className="grid grid-cols-2 gap-6">
+                <div
+                  className="flex items-start space-x-3"
+                  data-aos="fade-up"
+                  data-aos-delay="100"
+                >
+                  <div className="bg-green-100 rounded-full p-2">
+                    <Shield className="h-5 w-5 text-green-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Weather Resistant</h3>
+                    <p className="text-sm text-gray-600">
+                      IP67 rating protection
+                    </p>
+                  </div>
+                </div>
+
+                <div
+                  className="flex items-start space-x-3"
+                  data-aos="fade-up"
+                  data-aos-delay="200"
+                >
+                  <div className="bg-green-100 rounded-full p-2">
+                    <Award className="h-5 w-5 text-green-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Certified Quality</h3>
+                    <p className="text-sm text-gray-600">
+                      Industry standards met
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* CTA Button */}
+              <div data-aos="fade-up" data-aos-delay="300">
+                <button className="mt-4 bg-green-600 text-white px-6 py-3 rounded-lg font-semibold shadow hover:bg-green-700 transition">
+                  Learn More
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section
+        id="why-agrone"
+        ref={sectionRef}
+        className="py-20 bg-gray-50"
+        data-aos="fade-up"
+      >
+        <div className="container mx-auto px-4">
+          {/* Heading */}
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Why Agrone?
+            </h2>
+            <p className="text-gray-600 text-lg max-w-xl mx-auto">
+              Delivering cutting-edge solutions and unmatched service to empower
+              farmers across the globe.
+            </p>
+          </div>
+
+          {/* Stats */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+            <div className="flex flex-col items-center text-center space-y-2">
+              <Smile className="h-8 w-8 text-green-600 mb-2" />
+              <div className="text-3xl font-bold text-green-600">
+                {startCount ? (
+                  <CountUp end={500} duration={2} suffix="+" />
+                ) : (
+                  "0+"
+                )}
+              </div>
+              <p className="text-gray-600 text-sm">Customer Satisfaction</p>
+            </div>
+
+            <div className="flex flex-col items-center text-center space-y-2">
+              <Globe className="h-8 w-8 text-green-600 mb-2" />
+              <div className="text-3xl font-bold text-green-600">
+                {startCount ? (
+                  <CountUp end={1000} duration={2} suffix="+" />
+                ) : (
+                  "0+"
+                )}
+              </div>
+              <p className="text-gray-600 text-sm">Countries Served</p>
+            </div>
+
+            <div className="flex flex-col items-center text-center space-y-2">
+              <Headphones className="h-8 w-8 text-green-600 mb-2" />
+              <div className="text-3xl font-bold text-green-600">
+                {startCount ? (
+                  <CountUp end={24} duration={2} suffix="/7" />
+                ) : (
+                  "0/7"
+                )}
+              </div>
+              <p className="text-gray-600 text-sm">Support Available</p>
+            </div>
+
+            <div className="flex flex-col items-center text-center space-y-2">
+              <Tractor className="h-8 w-8 text-green-600 mb-2" />
+              <div className="text-3xl font-bold text-green-600">
+                {startCount ? (
+                  <CountUp end={20000} duration={2} separator="," suffix="+" />
+                ) : (
+                  "0+"
+                )}
+              </div>
+              <p className="text-gray-600 text-sm">Happy Farmers</p>
             </div>
           </div>
 
-          {/* Contact Form */}
-          <form
-            className="bg-white p-8 rounded-lg shadow-md space-y-6"
-            data-aos="fade-left"
-            onSubmit={(e) => {
-              e.preventDefault();
-              alert("Message sent successfully!");
-            }}
+          {/* Call to Action */}
+          <div
+            className="relative bg-green-600 rounded-3xl overflow-hidden shadow-xl"
+            data-aos="zoom-in"
           >
-            <input
-              type="text"
-              placeholder="Your Name"
-              className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600"
-              required
-            />
-            <input
-              type="email"
-              placeholder="Your Email"
-              className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600"
-              required
-            />
-            <textarea
-              placeholder="Your Message"
-              rows="5"
-              className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600"
-              required
-            ></textarea>
-            <button
-              type="submit"
-              className="bg-green-700 text-white px-6 py-3 rounded-md hover:bg-green-800 transition"
-            >
-              Send Message
-            </button>
-          </form>
+            <div className="absolute inset-0 bg-[url('https://images.pexels.com/photos/4870800/pexels-photo-4870800.jpeg?auto=compress&cs=tinysrgb&w=600')] bg-cover bg-center opacity-20"></div>
+            <div className="relative p-12 text-white">
+              <div className="max-w-md">
+                <h3 className="text-2xl font-bold mb-4">
+                  Sprinkler & spray equipment farming and agriculture
+                </h3>
+                <button className="bg-white text-green-600 px-6 py-3 rounded-lg font-semibold shadow hover:bg-gray-100 transition">
+                  Learn More
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
-    <FAQSection />
+      </section>
+      <section className="py-20 bg-gray-50" data-aos="fade-up">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center mb-12">
+            <h2 className="text-4xl font-bold text-gray-900">
+              News & Articles
+            </h2>
+            <Link to="/articles">
+              <button className="border border-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-100 transition">
+                View All Articles
+              </button>
+            </Link>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {articles.map((article, index) => (
+              <Link
+                to={`/articles/${article.slug}`}
+                key={index}
+                className="bg-white rounded-xl shadow hover:shadow-lg transition-shadow group block"
+                data-aos="zoom-in"
+                data-aos-delay={index * 100}
+              >
+                <img
+                  src={article.url}
+                  alt={article.title}
+                  className="w-full h-48 object-cover rounded-t-xl"
+                />
+                <div className="p-6">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm text-gray-500">
+                      {article.date}
+                    </span>
+                    <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                      {article.type}
+                    </span>
+                  </div>
+                  <h3 className="text-xl font-semibold mb-3 group-hover:text-green-600 transition-colors">
+                    {article.title}
+                  </h3>
+                  <p className="text-gray-600 mb-4">{article.content}</p>
+                  <span className="text-green-600 hover:text-green-700 font-medium flex items-center gap-2">
+                    Read More <ArrowRight className="h-4 w-4" />
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+      <About />
+      <section
+        className="bg-green-50 py-20 px-4"
+        id="contact"
+        data-aos="fade-up"
+      >
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-green-700 mb-4">
+              Get in Touch
+            </h2>
+            <p className="text-gray-600">
+              Have questions or want to partner with us? We’re here to help you
+              grow.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-12">
+            {/* Contact Info */}
+            <div className="space-y-6 text-gray-700" data-aos="fade-right">
+              <div>
+                <h4 className="font-semibold text-lg">📍 Address</h4>
+                <p>123 AgroTech Road, Abuja, Nigeria</p>
+              </div>
+              <div>
+                <h4 className="font-semibold text-lg">📞 Phone</h4>
+                <p>+234 800 123 4567</p>
+              </div>
+              <div>
+                <h4 className="font-semibold text-lg">📧 Email</h4>
+                <p>support@agricconnect.com</p>
+              </div>
+              <div>
+                <h4 className="font-semibold text-lg">🕒 Working Hours</h4>
+                <p>Mon - Fri: 8:00 AM - 6:00 PM</p>
+              </div>
+            </div>
+
+            {/* Contact Form */}
+            <form
+              className="bg-white p-8 rounded-lg shadow-md space-y-6"
+              data-aos="fade-left"
+              onSubmit={(e) => {
+                e.preventDefault();
+                alert("Message sent successfully!");
+              }}
+            >
+              <input
+                type="text"
+                placeholder="Your Name"
+                className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600"
+                required
+              />
+              <input
+                type="email"
+                placeholder="Your Email"
+                className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600"
+                required
+              />
+              <textarea
+                placeholder="Your Message"
+                rows="5"
+                className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600"
+                required
+              ></textarea>
+              <button
+                type="submit"
+                className="bg-green-700 text-white px-6 py-3 rounded-md hover:bg-green-800 transition"
+              >
+                Send Message
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+      <FAQSection />
     </>
   );
 };

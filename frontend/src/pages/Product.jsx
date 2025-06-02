@@ -3,100 +3,8 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { ShoppingCart, Minus, Plus, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
+import sampleProducts from "../assets/assets";
 
-// All product data
-const sampleProducts = [
-  {
-    id: 1,
-    name: "Fresh Yam Tubers",
-    description:
-      "Premium Nigerian yam, perfect for boiling, frying, or pounding.",
-    category: "Root Vegetable",
-    rating: 4.7,
-    quantity: 50,
-    price: 3000,
-    image:
-      "https://media.istockphoto.com/id/638094208/photo/sweet-potato.jpg?b=1&s=612x612&w=0&k=20&c=s_WNbthr_Jz3Pfu4iS-M1mD023aCrcjjZrJ9f_mzfmk=",
-    inStock: false,
-    location: "Lagos, Nigeria",
-  },
-  {
-    id: 2,
-    name: "Organic Cassava",
-    description: "Rich in starch, ideal for fufu, garri, and industrial uses.",
-    category: "Root Crop",
-    rating: 4.5,
-    quantity: 100,
-    price: 2000,
-    image:
-      "https://media.istockphoto.com/id/1150496082/photo/fresh-cassava-and-peels-and-slices-on-rustic-wooden-table-top-view.jpg?b=1&s=612x612&w=0&k=20&c=x-BUs7qJl23SRtwq9Nm-6CoW_4rOuV-NflOxwRFPIkw=",
-    inStock: true,
-    location: "Benue, Nigeria",
-  },
-  {
-    id: 3,
-    name: "Sweet Potatoes Jumbo",
-    description: "Large-size, nutrient-rich sweet potatoes",
-    category: "Potatoes",
-    rating: 4.5,
-    quantity: 100,
-    price: 1000,
-    image:
-      "https://media.istockphoto.com/id/1087192472/photo/sweet-potato-isolated-on-white-background.jpg?b=1&s=612x612&w=0&k=20&c=T7ZXZ8WpJAEvtpzNswz3kUM3lujM-JRXdKpvseaTJQ8=",
-    inStock: false,
-    location: "Kano, Nigeria",
-  },
-  {
-    id: 4,
-    name: "Organic Tomatoes",
-    description: "Fresh, organic tomatoes perfect for salads and sauces.",
-    category: "Vegetables",
-    rating: 4.8,
-    quantity: 200,
-    price: 1500,
-    image:
-      "https://media.istockphoto.com/id/1285368200/photo/fresh-tomatoes.jpg?b=1&s=612x612&w=0&k=20&c=l1FxTqVlhbRfS8pABHxGkX10-yX7RzEjkYfGOZ0z1Hs=",
-    inStock: true,
-    location: "Kaduna, Nigeria",
-  },
-  {
-    id: 5,
-    name: "Brown Rice",
-    description: "High-quality brown rice, healthy and nutritious.",
-    category: "Grains",
-    rating: 4.6,
-    quantity: 300,
-    price: 2500,
-    image:
-      "https://media.istockphoto.com/id/1476311640/photo/whole-grain-brown-rice-isolated-on-white-background.jpg?b=1&s=612x612&w=0&k=20&c=EpbELP5-Tp_3nnkFgNQXn-Tb3ss93_nwZgkOG7ymXns=",
-    inStock: true,
-    location: "Oyo, Nigeria",
-  },
-  {
-    id: 6,
-    name: "Fresh Tomatoes",
-    description: "Organic farm-grown tomatoes",
-    category: "Vegetables",
-    rating: 4.6,
-    quantity: 120,
-    price: 800,
-    image: "https://via.placeholder.com/300x200.png?text=Tomatoes",
-    inStock: true,
-    location: "Ilorin, Kwara",
-  },
-  {
-    id: 7,
-    name: "Sweet Bananas",
-    description: "Locally harvested sweet bananas",
-    category: "Fruits",
-    rating: 4.9,
-    quantity: 60,
-    price: 600,
-    image: "https://via.placeholder.com/300x200.png?text=Bananas",
-    inStock: false,
-    location: "Ibadan, Kwara",
-  },
-];
 
 // Extract unique categories and locations
 const allCategories = [
@@ -159,7 +67,7 @@ const Products = () => {
       <div className="container mx-auto px-4">
         <div className="text-center my-8">
           <h1 className="text-3xl md:text-4xl font-bold text-green-800">
-            Explore Fresh Farm Products
+            Explore Fresh Farm Products near you
           </h1>
           <p className="mt-2 text-gray-600 max-w-2xl mx-auto">
             Browse a wide variety of agricultural products sourced directly from
@@ -283,10 +191,10 @@ const Products = () => {
                 </button>
 
                 <Link
-                  to={`/details/${product.id}`}
+                  to={`/checkout/${product.id}`}
                   className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition text-sm"
                 >
-                  View Details
+                  Buy Now
                 </Link>
 
                 {cart[index] && (
