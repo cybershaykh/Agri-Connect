@@ -1,0 +1,208 @@
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Mail, Lock, User, Eye, EyeOff, MapPin, Leaf } from "lucide-react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import AOS from "aos";
+import "aos/dist/aos.css";
+
+const Register = () => {
+  const [role, setRole] = useState("buyer");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [farmName, setFarmName] = useState("");
+  const [farmSize, setFarmSize] = useState("");
+  const [location, setLocation] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    AOS.init({ duration: 800 });
+  }, []);
+
+  const handleRegister = (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    // Validation
+    if (!name || !email || !password || (role === "farmer" && (!farmName || !farmSize || !location))) {
+      toast.error("Please fill all required fields.");
+      setLoading(false);
+      return;
+    }
+
+    setTimeout(() => {
+      setLoading(false);
+      toast.success(`Successfully registered as ${role}`);
+      setTimeout(() => navigate("/login"), 1500);
+    }, 1500);
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-green-50 px-4">
+      <ToastContainer position="top-right" />
+      <div className="max-w-md w-full bg-white rounded-3xl shadow-lg p-6 sm:p-8" data-aos="fade-up">
+        {/* Branding */}
+        <div className="text-center mb-4">
+          <h1 className="text-3xl font-bold text-green-700"></h1>
+          <p className="text-sm text-gray-500">Empowering Farmers & Buyers</p>
+        </div>
+
+        {/* Role Toggle */}
+        <div className="flex justify-center gap-4 my-4">
+          {["buyer", "farmer"].map((r) => (
+            <button
+              key={r}
+              onClick={() => setRole(r)}
+              className={`px-4 py-2 text-sm font-semibold rounded-full transition ${
+                role === r
+                  ? "bg-green-600 text-white shadow-md"
+                  : "bg-gray-200 text-gray-600"
+              }`}
+            >
+              {r === "buyer" ? "Register as Buyer" : "Register as Farmer"}
+            </button>
+          ))}
+        </div>
+
+        {/* Form Title */}
+        <h2 className="text-xl font-bold text-center text-green-700 mb-6">
+          {role === "buyer" ? "Buyer Registration" : "Farmer Registration"}
+        </h2>
+
+        {/* Form */}
+        <form onSubmit={handleRegister} className="space-y-5">
+          {/* Name */}
+          <div>
+            <label className="text-sm font-medium text-gray-700">Full Name</label>
+            <div className="relative mt-1">
+              <User className="absolute left-3 top-2.5 text-gray-400" />
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500"
+                placeholder="John Doe"
+                required
+              />
+            </div>
+          </div>
+
+          {/* Email */}
+          <div>
+            <label className="text-sm font-medium text-gray-700">Email</label>
+            <div className="relative mt-1">
+              <Mail className="absolute left-3 top-2.5 text-gray-400" />
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500"
+                placeholder="you@example.com"
+                required
+              />
+            </div>
+          </div>
+
+          {/* Password */}
+          <div>
+            <label className="text-sm font-medium text-gray-700">Password</label>
+            <div className="relative mt-1">
+              <Lock className="absolute left-3 top-2.5 text-gray-400" />
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500"
+                placeholder="••••••••"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-2.5 text-gray-500"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+          </div>
+
+          {/* Farmer Fields */}
+          {role === "farmer" && (
+            <>
+              {/* Farm Name */}
+              <div>
+                <label className="text-sm font-medium text-gray-700">Farm Name</label>
+                <div className="relative mt-1">
+                  <Leaf className="absolute left-3 top-2.5 text-gray-400" />
+                  <input
+                    type="text"
+                    value={farmName}
+                    onChange={(e) => setFarmName(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500"
+                    placeholder="Green Harvest Farm"
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Farm Size */}
+              <div>
+                <label className="text-sm font-medium text-gray-700">Farm Size (acres)</label>
+                <input
+                  type="number"
+                  value={farmSize}
+                  onChange={(e) => setFarmSize(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500"
+                  placeholder="e.g. 10"
+                  required
+                />
+              </div>
+
+              {/* Location */}
+              <div>
+                <label className="text-sm font-medium text-gray-700">Location</label>
+                <div className="relative mt-1">
+                  <MapPin className="absolute left-3 top-2.5 text-gray-400" />
+                  <input
+                    type="text"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500"
+                    placeholder="Kaduna, Nigeria"
+                    required
+                  />
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* Submit */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full flex justify-center items-center gap-2 bg-green-600 text-white font-semibold py-2 rounded-xl hover:bg-green-700 transition disabled:opacity-60"
+          >
+            {loading ? (
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            ) : (
+              "Register"
+            )}
+          </button>
+
+          {/* Footer */}
+          <p className="text-sm text-center text-gray-600">
+            Already have an account?{" "}
+            <a href="/login" className="text-green-600 font-semibold hover:underline">
+              Log in here
+            </a>
+          </p>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default Register;

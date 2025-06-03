@@ -7,11 +7,12 @@ const sampleProducts = [
     category: "Root Vegetable",
     rating: 4.7,
     quantity: 50,
-    price: 3000,
+    price: 4.99,
     image:
       "https://media.istockphoto.com/id/638094208/photo/sweet-potato.jpg?b=1&s=612x612&w=0&k=20&c=s_WNbthr_Jz3Pfu4iS-M1mD023aCrcjjZrJ9f_mzfmk=",
     inStock: false,
     location: "Lagos, Nigeria",
+    href: "/details"
   },
   {
     id: 2,
@@ -25,6 +26,7 @@ const sampleProducts = [
       "https://media.istockphoto.com/id/1150496082/photo/fresh-cassava-and-peels-and-slices-on-rustic-wooden-table-top-view.jpg?b=1&s=612x612&w=0&k=20&c=x-BUs7qJl23SRtwq9Nm-6CoW_4rOuV-NflOxwRFPIkw=",
     inStock: true,
     location: "Benue, Nigeria",
+    href: "/details"
   },
   {
     id: 3,
@@ -50,7 +52,7 @@ const sampleProducts = [
     image:
       "https://plus.unsplash.com/premium_photo-1723575768999-91d0a31e471f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fE9yZ2FuaWMlMjBUb21hdG9lc3xlbnwwfHwwfHx8MA%3D%3D=",
     inStock: true,
-    location: "Kaduna, kaduna",
+    location: "Kaduna, Kaduna",
   },
   {
     id: 5,
@@ -87,7 +89,7 @@ const sampleProducts = [
     price: 600,
     image: "https://media.istockphoto.com/id/1530835621/photo/bunch-of-bananas-isolated-on-white-background.webp?a=1&b=1&s=612x612&w=0&k=20&c=o_k7VEaZyXZeA_i1Jec8H4q8tLmQAgm6WiSF7FJrgQY=",
     inStock: false,
-    location: "Ibadan, Kwara",
+    location: "Ibadan, Oyo",
   },
   {
   id: 8,

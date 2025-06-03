@@ -10,6 +10,8 @@ import FAQSection from "./pages/FAQSection";
 import Footer from "./component/Footer";
 import Cart from "./pages/Cart";
 import StoreContextProvider from "./component/context/StoreContext";
+import Login from "./component/Login";
+import Register from "./component/Register";
 
 const App = () => {
   return (
@@ -25,6 +27,8 @@ const App = () => {
             <Route path="/about" element={<About />} />
             <Route path="/faqsection" element={<FAQSection />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
           </Routes>
         </BrowserRouter>
       </StoreContextProvider>

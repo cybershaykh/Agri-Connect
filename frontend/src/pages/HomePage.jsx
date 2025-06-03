@@ -56,7 +56,6 @@ const HomePage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [startCount, setStartCount] = useState(false);
   const sectionRef = useRef(null);
-  const [cart, setCart] = useState({});
 
   useEffect(() => {
     AOS.init({ duration: 1000 });
@@ -69,7 +68,7 @@ const HomePage = () => {
         setStartCount(entry.isIntersecting);
       },
       {
-        threshold: 0.5, // Trigger when 50% is visible
+        threshold: 0.5,
       }
     );
 

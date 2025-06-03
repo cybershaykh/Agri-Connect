@@ -93,7 +93,7 @@ const Navbar = () => {
           </div>
 
           {/* Get Started Button (desktop only) */}
-          <a href="#" className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition hidden md:inline-block">
+          <a href="/register" className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition hidden md:inline-block">
             Get Started
           </a>
 

@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Star, User, Phone, Mail, MapPin, PencilLine, X } from "lucide-react";
+import {
+  Star,
+  User,
+  Phone,
+  Mail,
+  MapPin,
+  PencilLine,
+  X,
+  ChevronLeft,
+} from "lucide-react";
 import AOS from "aos";
+import { Link } from "react-router-dom";
 import "aos/dist/aos.css";
 
 const ProductDetail = () => {
@@ -20,15 +30,17 @@ const ProductDetail = () => {
 
   const product = {
     id: 1,
-    name: "Organic Tomatoes",
+    name: "Fresh Yam Tubers",
     price: 4.99,
     unit: "lb",
     description:
-      "Fresh, vine-ripened organic tomatoes grown without pesticides or synthetic fertilizers. These tomatoes are perfect for salads, cooking, or eating fresh. Harvested at peak ripeness for maximum flavor and nutrition.",
-    images: ["https://plus.unsplash.com/premium_photo-1723575768999-91d0a31e471f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fE9yZ2FuaWMlMjBUb21hdG9lc3xlbnwwfHwwfHx8MA%3D%3D", "https://media.istockphoto.com/id/184404950/photo/tomato-isolated-on-white-background.webp?a=1&b=1&s=612x612&w=0&k=20&c=bp5B_R079YVldoG0dS-MGHctNymMiuaBn21sdUmC8TI=", "https://media.istockphoto.com/id/941825878/photo/tomato-with-slice-isolated-with-clipping-path.webp?a=1&b=1&s=612x612&w=0&k=20&c=TNNVmVjdjehliTna2IAvZCuTMMY7eiep5aaFMV8c_Yo="],
+      "Premium Nigerian yam, perfect for boiling, frying, or pounding.",
+    images: [
+      "https://media.istockphoto.com/id/638094208/photo/sweet-potato.jpg?b=1&s=612x612&w=0&k=20&c=s_WNbthr_Jz3Pfu4iS-M1mD023aCrcjjZrJ9f_mzfmk=",
+    ],
     farmer: {
       name: "Green Valley Farm",
-      avatar: "/placeholder.svg",
+      avatar: "https://plus.unsplash.com/premium_photo-1726313836345-3524772937fe?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fEdyZWVuJTIwVmFsbGV5JTIwRmFybXxlbnwwfHwwfHx8MA%3D%3D",
       location: "Sonoma County, California",
       distance: "2.3 miles",
       rating: 4.8,
@@ -81,7 +93,8 @@ const ProductDetail = () => {
       avatar: "/placeholder.svg",
       rating: 5,
       date: "2024-03-05",
-      comment: "Best tomatoes I've had in years! Perfect for my homemade sauce.",
+      comment:
+        "Best tomatoes I've had in years! Perfect for my homemade sauce.",
       helpful: 15,
     },
   ];
@@ -89,9 +102,7 @@ const ProductDetail = () => {
   // Submit review handler
   const handleReviewSubmit = (e) => {
     e.preventDefault();
-    // Here you would normally send the review to a server
 
-    // For now, just show toast and close modal
     setToast("Review submitted successfully!");
     setShowReviewModal(false);
     setReviewForm({ name: "", rating: 5, comment: "" });
@@ -102,6 +113,13 @@ const ProductDetail = () => {
 
   return (
     <div className="max-w-5xl mx-auto p-6" data-aos="fade-up">
+      <Link
+        to="/products"
+        className="inline-flex items-center text-green-700 hover:text-green-900 hover:underline mb-4"
+      >
+        <ChevronLeft className="w-5 h-5 mr-1" />
+        Back to Products
+      </Link>
       {/* Product Images */}
       <div className="flex gap-4 mb-6">
         <div className="flex flex-col gap-2">
@@ -111,7 +129,9 @@ const ProductDetail = () => {
               src={img}
               alt={`${product.name} ${idx + 1}`}
               className={`w-20 h-20 object-cover rounded cursor-pointer border-2 ${
-                selectedImage === idx ? "border-green-600" : "border-transparent"
+                selectedImage === idx
+                  ? "border-green-600"
+                  : "border-transparent"
               }`}
               onClick={() => setSelectedImage(idx)}
             />
@@ -129,7 +149,9 @@ const ProductDetail = () => {
         <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
         <div className="flex items-center gap-2 mb-4">
           <Star className="text-yellow-400" />
-          <span>{product.rating} ({product.reviews} reviews)</span>
+          <span>
+            {product.rating} ({product.reviews} reviews)
+          </span>
           <span className="ml-4 px-2 py-1 bg-green-200 text-green-800 rounded text-xs font-semibold">
             {product.badge}
           </span>
@@ -138,23 +160,6 @@ const ProductDetail = () => {
         <p className="font-semibold mb-2">
           Price: ${product.price} per {product.unit}
         </p>
-        <div className="flex items-center gap-4 mb-6">
-          <button
-            className="px-3 py-1 border rounded hover:bg-gray-100"
-            onClick={() =>
-              setQuantity((q) => (q > 1 ? q - 1 : q))
-            }
-          >
-            -
-          </button>
-          <span>{quantity}</span>
-          <button
-            className="px-3 py-1 border rounded hover:bg-gray-100"
-            onClick={() => setQuantity((q) => q + 1)}
-          >
-            +
-          </button>
-        </div>
       </div>
 
       {/* Farmer Info */}
@@ -169,10 +174,12 @@ const ProductDetail = () => {
           <div>
             <p className="font-semibold">{product.farmer.name}</p>
             <p className="flex items-center gap-1 text-sm text-gray-600">
-              <MapPin size={14} /> {product.farmer.location} ({product.farmer.distance})
+              <MapPin size={14} /> {product.farmer.location} (
+              {product.farmer.distance})
             </p>
             <p className="flex items-center gap-1 text-sm text-gray-600">
-              <Star size={14} /> {product.farmer.rating} ({product.farmer.totalReviews} reviews)
+              <Star size={14} /> {product.farmer.rating} (
+              {product.farmer.totalReviews} reviews)
             </p>
           </div>
         </div>
@@ -217,7 +224,9 @@ const ProductDetail = () => {
                   ))}
                 </div>
               </div>
-              <span className="ml-auto text-sm text-gray-500">{review.date}</span>
+              <span className="ml-auto text-sm text-gray-500">
+                {review.date}
+              </span>
             </div>
             <p>{review.comment}</p>
           </div>
@@ -252,7 +261,10 @@ const ProductDetail = () => {
               <select
                 value={reviewForm.rating}
                 onChange={(e) =>
-                  setReviewForm({ ...reviewForm, rating: parseInt(e.target.value) })
+                  setReviewForm({
+                    ...reviewForm,
+                    rating: parseInt(e.target.value),
+                  })
                 }
                 className="w-full border p-2 rounded"
               >

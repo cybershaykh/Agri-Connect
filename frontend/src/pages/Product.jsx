@@ -151,11 +151,12 @@ const Products = () => {
               <div className="flex justify-between items-center">
                 <h3 className="text-xl font-semibold">{product.name}</h3>
                 <span className="text-green-600 font-bold text-lg">
-                  ₦{product.price}
+                  ${product.price}
                 </span>
               </div>
 
               <p className="text-sm text-gray-600">{product.description}</p>
+              
               <div className="text-sm text-gray-500">
                 Category: {product.category}
               </div>
@@ -175,6 +176,12 @@ const Products = () => {
               <div className="text-sm text-gray-500">
                 Stock: {product.quantity}
               </div>
+               <Link
+  to={product.href}
+  className="text-green-700 text-sm hover:underline"
+>
+  View Details
+</Link>
 
               <div className="flex items-center space-x-3 pt-3">
                 <button
@@ -187,15 +194,7 @@ const Products = () => {
                   }`}
                 >
                   <ShoppingCart className="w-5 h-5 mr-1" />
-                  Add to Cart
                 </button>
-
-                <Link
-                  to={`/checkout/${product.id}`}
-                  className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition text-sm"
-                >
-                  Buy Now
-                </Link>
 
                 {cart[index] && (
                   <div className="ml-auto flex items-center space-x-2">
