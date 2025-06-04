@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { ShoppingCart, Minus, Plus, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import sampleProducts from "../assets/assets";
-
+import { StoreContext } from "../component/context/StoreContext";
 
 // Extract unique categories and locations
 const allCategories = [
@@ -14,40 +14,18 @@ const allCategories = [
 const allLocations = ["All", ...new Set(sampleProducts.map((p) => p.location))];
 
 const Products = () => {
-  const [cart, setCart] = useState({});
+
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedLocation, setSelectedLocation] = useState("All");
   const [sortOption, setSortOption] = useState("");
+  const { cartItems, addToCart, removeFromCart} = useContext(StoreContext);
+
+  console.log(cartItems)
 
   useEffect(() => {
     AOS.init({ duration: 800, easing: "ease-in-out", once: true });
   }, []);
 
-  const addToCart = (index) => {
-    setCart((prevCart) => {
-      const currentQty = prevCart[index] || 0;
-      if (
-        !sampleProducts[index].inStock ||
-        currentQty >= sampleProducts[index].quantity
-      )
-        return prevCart;
-      return { ...prevCart, [index]: currentQty + 1 };
-    });
-  };
-
-  const removeFromCart = (index) => {
-    setCart((prevCart) => {
-      const currentQty = prevCart[index] || 0;
-      if (currentQty <= 1) {
-        const newCart = { ...prevCart };
-        delete newCart[index];
-        return newCart;
-      }
-      return { ...prevCart, [index]: currentQty - 1 };
-    });
-  };
-
-  // Filter and sort products
   const filteredProducts = sampleProducts
     .filter(
       (p) =>
@@ -124,12 +102,11 @@ const Products = () => {
 
         {/* Product Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProducts.map((product, index) => (
+          {filteredProducts.map((product) => (
             <div
               key={product.id}
               className="bg-white rounded-xl shadow hover:shadow-lg transition p-6 space-y-4 relative"
               data-aos="zoom-in"
-              data-aos-delay={index * 100}
             >
               <div className="relative">
                 <img
@@ -156,7 +133,7 @@ const Products = () => {
               </div>
 
               <p className="text-sm text-gray-600">{product.description}</p>
-              
+
               <div className="text-sm text-gray-500">
                 Category: {product.category}
               </div>
@@ -176,17 +153,17 @@ const Products = () => {
               <div className="text-sm text-gray-500">
                 Stock: {product.quantity}
               </div>
-               <Link
-  to={product.href}
-  className="text-green-700 text-sm hover:underline"
->
-  View Details
-</Link>
+              <Link
+                to={product.href}
+                className="text-green-700 text-sm hover:underline"
+              >
+                View Details
+              </Link>
 
               <div className="flex items-center space-x-3 pt-3">
                 <button
                   disabled={!product.inStock}
-                  onClick={() => addToCart(index)}
+                  onClick={() => addToCart(product.id)}
                   className={`flex items-center px-3 py-1 rounded text-white text-sm transition ${
                     product.inStock
                       ? "bg-green-600 hover:bg-green-700"
@@ -196,17 +173,17 @@ const Products = () => {
                   <ShoppingCart className="w-5 h-5 mr-1" />
                 </button>
 
-                {cart[index] && (
+                {cartItems[product.id] > 0 && (
                   <div className="ml-auto flex items-center space-x-2">
                     <button
-                      onClick={() => removeFromCart(index)}
+                      onClick={() => removeFromCart(product.id)}
                       className="p-1 rounded bg-red-200 text-red-700 hover:bg-red-300 transition"
                     >
                       <Minus size={14} />
                     </button>
-                    <span className="font-semibold">{cart[index]}</span>
+                    <div className="font-semibold">{cartItems[product.id]}</div>
                     <button
-                      onClick={() => addToCart(index)}
+                      onClick={() => addToCart(product.id)}
                       className="p-1 rounded bg-green-200 text-green-700 hover:bg-green-300 transition"
                     >
                       <Plus size={14} />

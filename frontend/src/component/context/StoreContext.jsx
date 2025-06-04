@@ -1,59 +1,80 @@
 import { createContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import foodItems from "../../assets/assets";
 import sampleProducts from "../../assets/assets";
 
 export const StoreContext = createContext(null);
 
-const StoreContextProvider = (props) => {
+const StoreContextProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState({});
 
-  const addToCart = (productId) => {
-    if (!cartItems[productId]) {
-      setCartItems((prev) => ({
-        ...prev,
-        [productId]: 1,
-      }));
-    } else {
-      setCartItems((prev) => ({
-        ...prev,
-        [productId]: prev[productId] + 1,
-      }));
+  // Load cart from localStorage on first render
+  useEffect(() => {
+    const storedCart = localStorage.getItem("cart");
+    if (storedCart) {
+      setCartItems(JSON.parse(storedCart));
     }
-     toast.success("Item added to cart!");
+  }, []);
+
+  // Save cart to localStorage on changes
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cartItems));
+  }, [cartItems]);
+
+  const addToCart = (id) => {
+    const product = sampleProducts.find((item) => item.id === id);
+    if (!product) return;
+
+    setCartItems((prev) => {
+      const existingItem = prev[id];
+      const updatedCart = {
+        ...prev,
+        [id]: {
+          ...product,
+          quantity: existingItem ? existingItem.quantity + 1 : 1,
+        },
+      };
+      return updatedCart;
+    });
   };
-  const removeFromCart = (productId) => {
-    setCartItems((prev) => ({ ...prev, [productId]: prev[productId] - 1 }));
-    toast.info("Item removed from cart.");
+
+  const removeFromCart = (id) => {
+    setCartItems((prev) => {
+      const existingItem = prev[id];
+      if (!existingItem) return prev;
+
+      if (existingItem.quantity > 1) {
+        return {
+          ...prev,
+          [id]: {
+            ...existingItem,
+            quantity: existingItem.quantity - 1,
+          },
+        };
+      } else {
+        const { [id]: _, ...rest } = prev;
+        return rest;
+      }
+    });
   };
 
   const getTotalCartAmount = () => {
-    let totalAmount = 0;
-    for (const product in cartItems) {
-      if (cartItems[product] > 0) {
-        let itemInfo = sampleProducts.find((product) => product._id === item);
-        totalAmount += itemInfo.price * cartItems[product];
-      }
-    }
-    return totalAmount;
+    return Object.values(cartItems).reduce((acc, item) => {
+      return acc + item.price * item.quantity;
+    }, 0);
   };
-  // useEffect(() =>{
-  //     console.log(cartItems);
-  // }, [cartItems])
 
   const contextValue = {
+    sampleProducts,
     cartItems,
-    setCartItems,
     addToCart,
     removeFromCart,
     getTotalCartAmount,
-    sampleProducts,
   };
+
   return (
     <StoreContext.Provider value={contextValue}>
-      {props.children}
+      {children}
     </StoreContext.Provider>
   );
 };
+
 export default StoreContextProvider;

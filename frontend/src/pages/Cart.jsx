@@ -10,6 +10,8 @@ const Cart = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
+  console.log("cart items",cartItems)
+
   const subtotal = sampleProducts.reduce((acc, item) => {
     return acc + item.price * (cartItems[item.id] || 0);
   }, 0);
@@ -27,22 +29,20 @@ const Cart = () => {
   return (
     <div className="w-full mt-20 px-4 py-10 md:px-12 lg:px-24 bg-[#f9fafb] min-h-screen">
       <ToastContainer />
-      <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
-        Your Cart
-      </h1>
 
       {/* Cart Items Table */}
       <div className="bg-white shadow-xl rounded-lg overflow-hidden mb-10">
         <div className="grid grid-cols-6 gap-4 px-6 py-4 bg-green-100 font-semibold text-sm text-gray-700">
           <p>Item</p>
-          <p className="col-span-1">Name</p>
+          <p className="col-span-1">Title</p>
           <p>Price</p>
-          <p>Qty</p>
+          <p>Quantity</p>
           <p>Total</p>
           <p>Remove</p>
         </div>
         <hr />
-        {sampleProducts.map((item) => {
+        {Array.isArray(sampleProducts) &&
+        sampleProducts.map((item) => {
           if (cartItems[item.id] > 0) {
             return (
               <div key={item.id} className="border-b">

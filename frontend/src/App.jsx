@@ -12,13 +12,14 @@ import Cart from "./pages/Cart";
 import StoreContextProvider from "./component/context/StoreContext";
 import Login from "./component/Login";
 import Register from "./component/Register";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
   return (
     <div>
-      <Navbar />
-      <StoreContextProvider>
-        <BrowserRouter>
+      <BrowserRouter>
+        <StoreContextProvider>
+          <Navbar />
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/products" element={<Products />} />
@@ -30,9 +31,10 @@ const App = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
           </Routes>
-        </BrowserRouter>
-      </StoreContextProvider>
-      <Footer />
+          <Toaster position="top-center" />
+          <Footer />
+        </StoreContextProvider>
+      </BrowserRouter>
     </div>
   );
 };
