@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
   Star,
-  User,
   Phone,
   Mail,
   MapPin,
@@ -14,7 +13,6 @@ import { Link } from "react-router-dom";
 import "aos/dist/aos.css";
 
 const ProductDetail = () => {
-  const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [reviewForm, setReviewForm] = useState({
