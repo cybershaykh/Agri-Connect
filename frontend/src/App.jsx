@@ -13,6 +13,7 @@ import StoreContextProvider from "./component/context/StoreContext";
 import Login from "./component/Login";
 import Register from "./component/Register";
 import { Toaster } from "react-hot-toast";
+import UserProfile from "./pages/UserProfile";
 
 const App = () => {
   return (
@@ -30,6 +31,7 @@ const App = () => {
             <Route path="/cart" element={<Cart />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/profile" element={<UserProfile />} />
           </Routes>
           <Toaster position="top-center" />
           <Footer />

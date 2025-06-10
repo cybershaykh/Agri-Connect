@@ -121,14 +121,6 @@ const Navbar = () => {
                       My Profile
                     </a>
                     <a 
-                      href="/dashboard" 
-                      className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600"
-                      onClick={() => setUserDropdownOpen(false)}
-                    >
-                      <LayoutDashboard className="w-4 h-4" />
-                      Dashboard
-                    </a>
-                    <a 
                       href="/orders" 
                       className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600"
                       onClick={() => setUserDropdownOpen(false)}
@@ -218,14 +210,6 @@ const Navbar = () => {
                 >
                   <User className="w-4 h-4" />
                   My Profile
-                </a>
-                <a 
-                  href="/dashboard" 
-                  className="flex items-center gap-2 text-gray-600 hover:text-green-600 px-2 py-1"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <LayoutDashboard className="w-4 h-4" />
-                  Dashboard
                 </a>
                 <a 
                   href="/orders" 
