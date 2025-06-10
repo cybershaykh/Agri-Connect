@@ -1,25 +1,34 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
+import { StoreContext } from "./context/StoreContext";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { url, setToken, login } = useContext(StoreContext);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [termsChecked, setTermsChecked] = useState(false);
   const navigate = useNavigate();
+  const [data, setData] = useState({
+    email: "",
+    password: ""
+  });
 
-  useEffect(() => {
-    AOS.init({ duration: 800 });
-  }, []);
+  const onChangeHandler = (event) => {
+    const { name, value } = event.target;
+    setData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-
+  const onLogin = async (event) => {
+    event.preventDefault();
+    
     if (!termsChecked) {
       toast.error("⚠️ Please agree to the terms and conditions before logging in.", {
         style: {
@@ -30,20 +39,41 @@ const Login = () => {
           fontSize: "16px",
           padding: "16px",
         },
-        icon: "",
         position: "top-center",
       });
       return;
     }
 
-    if (email && password) {
-      setLoading(true);
-      setTimeout(() => {
-        setLoading(false);
-        navigate("/dashboard");
-      }, 2000); // simulate network delay
+    setLoading(true);
+    try {
+      const response = await axios.post(`${url}/api/user/login`, data);
+      
+      if (response.data.success) {
+        setToken(response.data.token, response.data.user);
+        toast.success("Login successful!");
+        localStorage.setItem("token", response.data.token)
+        
+        const token = localStorage.getItem("token")
+        if(token){
+          navigate("/")
+          
+        }else{
+          
+          navigate("/login")
+        }
+      } else {
+        toast.error(response.data.message || "Login failed");
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "An error occurred during login");
+    } finally {
+      setLoading(false);
     }
   };
+
+  useEffect(() => {
+    AOS.init({ duration: 800 });
+  }, []);
 
   return (
     <>
@@ -57,17 +87,18 @@ const Login = () => {
             Welcome Back
           </h2>
 
-          <form onSubmit={handleLogin} className="space-y-6">
+          <form onSubmit={onLogin} className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-700">
                 Email address
               </label>
               <div className="mt-1 relative">
                 <Mail className="absolute left-3 top-2.5 text-gray-400" />
-                <input
+                <input 
+                  name="email"
+                  onChange={onChangeHandler}
+                  value={data.email}
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
                   required
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500"
                   placeholder="you@example.com"
@@ -82,9 +113,10 @@ const Login = () => {
               <div className="mt-1 relative">
                 <Lock className="absolute left-3 top-2.5 text-gray-400" />
                 <input
+                  name="password"
                   type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={data.password}
+                  onChange={onChangeHandler}
                   required
                   className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500"
                   placeholder="********"
@@ -92,18 +124,14 @@ const Login = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-2.5 text-gray-500"
+                  className="absolute right-3 top-2.5 text-gray-500 hover:text-gray-700"
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
             </div>
 
-            {/* Terms and Conditions checkbox */}
-            <div
-              className="flex items-center space-x-2 text-sm"
-              data-aos="fade-up"
-            >
+            <div className="flex items-center space-x-2 text-sm" data-aos="fade-up">
               <input
                 type="checkbox"
                 id="terms"
@@ -133,7 +161,7 @@ const Login = () => {
             </button>
 
             <p className="text-sm text-center text-gray-600">
-              Don’t have an account?{" "}
+              Don't have an account?{" "}
               <a
                 href="/register"
                 className="text-green-600 font-semibold hover:underline"

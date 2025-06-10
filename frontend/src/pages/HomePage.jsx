@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -21,6 +21,7 @@ import {
 import CountUp from "react-countup";
 import About from "./About";
 import FAQSection from "./FAQSection";
+import { StoreContext } from "../component/context/StoreContext";
 
 const articles = [
   {
@@ -56,6 +57,7 @@ const HomePage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [startCount, setStartCount] = useState(false);
   const sectionRef = useRef(null);
+  const {token, setToken} = useContext(StoreContext);
 
   useEffect(() => {
     AOS.init({ duration: 1000 });
@@ -111,7 +113,7 @@ const HomePage = () => {
 
               {/* Buttons */}
               <div className="flex flex-col sm:flex-row gap-4">
-                {isLoggedIn ? (
+                {token ? (
                   <>
                     <a href="/products">
                       <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg flex items-center justify-center gap-2">
