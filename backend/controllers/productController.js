@@ -86,7 +86,3 @@ export const deleteProduct = async (req, res) => {
         res.status(500).json({ error: "❌Something went wrong while deleting the product." });
     }
 };
-// get all farmer products
-export const getFarmerProducts = async (req, res) => {
-    
-}
