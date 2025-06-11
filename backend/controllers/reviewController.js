@@ -4,19 +4,19 @@ import productModel from '../models/productModel.js';
 // Add a review for a product
 export const addReview = async (req, res) => {
     try {
-        const { productId, buyerId, rating, comment } = req.body;
+        const { name, rating, comment } = req.body;
 
-        if (!productId || !buyerId || !rating) {
+        if (!name || !rating || !comment) {
             return res.status(400).json({ error: "❌ Product ID, Buyer ID, and rating are required." });
         }
 
-        const product = await productModel.findById(productId);
+        const product = await productModel.findById(name);
         if (!product) {
             return res.status(404).json({ error: "❌ Product not found." });
         }
 
         // Check if buyer already left a review for this product
-        const existingReview = await reviewModel.findOne({ productId, buyerId });
+        const existingReview = await reviewModel.findOne({ name });
 
         if (existingReview) {
             existingReview.rating = rating;
@@ -24,7 +24,7 @@ export const addReview = async (req, res) => {
             await existingReview.save();
 
             // Recalculate average rating
-            const reviews = await reviewModel.find({ productId });
+            const reviews = await reviewModel.find({ name });
             const averageRating = reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length;
             product.averageRating = averageRating;
             await product.save();
@@ -38,8 +38,7 @@ export const addReview = async (req, res) => {
 
         // Create new review
         const newReview = new reviewModel({
-            productId,
-            buyerId,
+            name,
             rating,
             comment,
         });
@@ -47,7 +46,7 @@ export const addReview = async (req, res) => {
         const savedReview = await newReview.save();
 
         // Update the product's average rating
-        const reviews = await reviewModel.find({ productId });
+        const reviews = await reviewModel.find({ name });
         const averageRating = reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length;
         product.averageRating = averageRating;
         await product.save();

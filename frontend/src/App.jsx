@@ -10,13 +10,17 @@ import FAQSection from "./pages/FAQSection";
 import Footer from "./component/Footer";
 import Cart from "./pages/Cart";
 import StoreContextProvider from "./component/context/StoreContext";
+import Login from "./component/Login";
+import Register from "./component/Register";
+import { Toaster } from "react-hot-toast";
+import UserProfile from "./pages/UserProfile";
 
 const App = () => {
   return (
     <div>
-      <Navbar />
-      <StoreContextProvider>
-        <BrowserRouter>
+      <BrowserRouter>
+        <StoreContextProvider>
+          <Navbar />
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/products" element={<Products />} />
@@ -25,10 +29,14 @@ const App = () => {
             <Route path="/about" element={<About />} />
             <Route path="/faqsection" element={<FAQSection />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/profile" element={<UserProfile />} />
           </Routes>
-        </BrowserRouter>
-      </StoreContextProvider>
-      <Footer />
+          <Toaster position="top-center" />
+          <Footer />
+        </StoreContextProvider>
+      </BrowserRouter>
     </div>
   );
 };
