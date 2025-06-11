@@ -119,11 +119,16 @@ const StoreContextProvider = ({ children }) => {
     });
   };
 
-  const getTotalCartAmount = () => {
-    return Object.values(cartItems).reduce((acc, item) => {
-      return acc + item.price * item.quantity;
-    }, 0);
-  };
+ const getTotalCartAmount = () => {
+  let totalAmount = 0;
+  for (const item in cartItems) {
+    const product = sampleProducts.find((p) => p.id === item);
+    if (product) {
+      totalAmount += product.price * cartItems[item];
+    }
+  }
+  return totalAmount;
+};
 
   const contextValue = {
     sampleProducts,

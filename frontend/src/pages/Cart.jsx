@@ -1,135 +1,131 @@
-import React, { useContext, useState } from "react";
-import { StoreContext } from "../component/context/StoreContext.jsx";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom";
-import sampleProducts from "../assets/assets.jsx";
+import React, { useContext } from "react";
+import { StoreContext } from "../component/context/StoreContext";
+import { X, ShoppingCart } from "lucide-react";
+import { Link } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 
 const Cart = () => {
-  const { cartItems, removeFromCart } = useContext(StoreContext);
-  const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
+  const { cartItems, removeFromCart, addToCart, getTotalCartAmount } =
+    useContext(StoreContext);
 
-  console.log("cart items",cartItems)
+  const handleRemoveItem = (productId) => {
+    removeFromCart(productId);
+    toast.success("Item removed from cart");
+  };
 
-  const subtotal = sampleProducts.reduce((acc, item) => {
-    return acc + item.price * (cartItems[item.id] || 0);
-  }, 0);
+  const handleIncreaseQuantity = (productId) => {
+    addToCart(productId);
+    toast.success("Item quantity increased");
+  };
 
-  const deliveryFee = subtotal > 0 ? 2 : 0;
-  const total = subtotal + deliveryFee;
-
-  const handleCheckout = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      navigate("/order");
-    }, 1000);
+  const handleDecreaseQuantity = (productId) => {
+    removeFromCart(productId);
+    toast.success("Item quantity decreased");
   };
 
   return (
-    <div className="w-full mt-20 px-4 py-10 md:px-12 lg:px-24 bg-[#f9fafb] min-h-screen">
-      <ToastContainer />
+    <div className="container mx-auto px-4 py-12">
+      <Toaster position="top-center" reverseOrder={false} />
+      <h1 className="text-3xl font-bold text-green-800 mb-8">Your Shopping Cart</h1>
 
-      {/* Cart Items Table */}
-      <div className="bg-white shadow-xl rounded-lg overflow-hidden mb-10">
-        <div className="grid grid-cols-6 gap-4 px-6 py-4 bg-green-100 font-semibold text-sm text-gray-700">
-          <p>Item</p>
-          <p className="col-span-1">Title</p>
-          <p>Price</p>
-          <p>Quantity</p>
-          <p>Total</p>
-          <p>Remove</p>
+      {Object.keys(cartItems).length === 0 ? (
+        <div className="text-center py-12">
+          <ShoppingCart className="w-16 h-16 mx-auto text-gray-400 mb-4" />
+          <h2 className="text-xl font-semibold text-gray-600 mb-2">
+            Your cart is empty
+          </h2>
+          <p className="text-gray-500 mb-6">
+            Looks like you haven't added any items to your cart yet.
+          </p>
+          <Link
+            to="/products"
+            className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+          >
+            Browse Products
+          </Link>
         </div>
-        <hr />
-        {Array.isArray(sampleProducts) &&
-        sampleProducts.map((item) => {
-          if (cartItems[item.id] > 0) {
-            return (
-              <div key={item.id} className="border-b">
-                <div className="grid grid-cols-6 items-center gap-4 px-6 py-4 text-sm md:text-base">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-12 h-12 object-cover rounded-md shadow-sm"
-                  />
-                  <p className="col-span-1 truncate text-gray-800">{item.name}</p>
-                  <p className="text-gray-600">${item.price.toFixed(2)}</p>
-                  <p className="text-gray-600">{cartItems[item.id]}</p>
-                  <p className="font-semibold text-gray-800">
-                    ${(item.price * cartItems[item.id]).toFixed(2)}
-                  </p>
-                  <button
-                    onClick={() => removeFromCart(item.id)}
-                    className="text-red-500 font-bold hover:scale-110 transition transform duration-200"
-                    title="Remove item"
-                  >
-                    ×
-                  </button>
-                </div>
+      ) : (
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="md:col-span-2">
+            <div className="bg-white rounded-lg shadow overflow-hidden">
+              <div className="grid grid-cols-12 bg-gray-100 p-4 font-semibold text-gray-700">
+                <div className="col-span-6">Product</div>
+                <div className="col-span-2 text-center">Price</div>
+                <div className="col-span-2 text-center">Quantity</div>
+                <div className="col-span-2 text-center">Total</div>
               </div>
-            );
-          }
-          return null;
-        })}
-      </div>
 
-      {/* Total Section */}
-      <div className="max-w-xl mx-auto bg-white shadow-xl rounded-lg p-6 space-y-4">
-        <h2 className="text-2xl font-bold text-gray-800">Order Summary</h2>
-        <div className="flex justify-between text-sm text-gray-700">
-          <p>Subtotal</p>
-          <p>${subtotal.toFixed(2)}</p>
-        </div>
-        {subtotal > 0 && (
-          <div className="flex justify-between text-sm text-gray-700">
-            <p>Delivery Fee</p>
-            <p>${deliveryFee.toFixed(2)}</p>
+              {Object.entries(cartItems).map(([productId, quantity]) => {
+                const product = sampleProducts.find((p) => p.id === productId);
+                if (!product) return null;
+
+                return (
+                  <div
+                    key={productId}
+                    className="grid grid-cols-12 items-center p-4 border-b"
+                  >
+                    <div className="col-span-6 flex items-center">
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="w-16 h-16 object-cover rounded mr-4"
+                      />
+                      <div>
+                        <h3 className="font-medium">{product.name}</h3>
+                        <p className="text-sm text-gray-500">
+                          {product.category}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="col-span-2 text-center">
+                      ${product.price.toFixed(2)}
+                    </div>
+                    <div className="col-span-2 flex justify-center items-center">
+                      <button
+                        onClick={() => handleDecreaseQuantity(productId)}
+                        className="p-1 rounded bg-gray-200 hover:bg-gray-300"
+                      >
+                        <Minus size={14} />
+                      </button>
+                      <span className="mx-2">{quantity}</span>
+                      <button
+                        onClick={() => handleIncreaseQuantity(productId)}
+                        className="p-1 rounded bg-gray-200 hover:bg-gray-300"
+                      >
+                        <Plus size={14} />
+                      </button>
+                    </div>
+                    <div className="col-span-2 text-center">
+                      ${(product.price * quantity).toFixed(2)}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        )}
-        <hr />
-        <div className="flex justify-between font-semibold text-lg">
-          <p>Total</p>
-          <p>${total.toFixed(2)}</p>
-        </div>
 
-        <button
-          onClick={handleCheckout}
-          className={`mt-6 w-full text-white py-3 rounded-lg text-lg font-semibold transition duration-200 flex items-center justify-center gap-2 ${
-            subtotal > 0
-              ? "bg-green-600 hover:bg-green-700"
-              : "bg-gray-400 cursor-not-allowed"
-          }`}
-          disabled={subtotal === 0 || isLoading}
-        >
-          {isLoading ? (
-            <>
-              <svg
-                className="animate-spin h-5 w-5 text-white"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 018 8h-4l3 3 3-3h-4a8 8 0 01-8 8v-4l-3 3 3 3v-4a8 8 0 01-8-8z"
-                ></path>
-              </svg>
-              Processing...
-            </>
-          ) : (
-            "PROCEED TO CHECKOUT"
-          )}
-        </button>
-      </div>
+          <div className="bg-white rounded-lg shadow p-6 h-fit">
+            <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+            <div className="space-y-4">
+              <div className="flex justify-between">
+                <span>Subtotal</span>
+                <span>${getTotalCartAmount().toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Shipping</span>
+                <span>Free</span>
+              </div>
+              <div className="border-t pt-4 flex justify-between font-bold text-lg">
+                <span>Total</span>
+                <span>${getTotalCartAmount().toFixed(2)}</span>
+              </div>
+            </div>
+            <button className="w-full mt-6 py-3 bg-green-600 text-white rounded hover:bg-green-700 transition">
+              Proceed to Checkout
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
