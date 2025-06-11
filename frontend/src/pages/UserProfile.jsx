@@ -80,7 +80,7 @@ const UserProfile = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-green-50 to-blue-50">
       {/* Header */}
       <header
-        className="bg-white/80 backdrop-blur-md border-b border-slate-200 px-6 py-4 sticky top-0 z-50 shadow-sm"
+        className="bg-white/80 backdrop-blur-md border-b border-slate-200 px-6 py-4 top-0 z-50 shadow-sm"
         data-aos="fade-down"
       >
         <div className="max-w-6xl mx-auto flex items-center gap-4">

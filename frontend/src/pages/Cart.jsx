@@ -2,30 +2,29 @@ import React, { useContext } from "react";
 import { StoreContext } from "../component/context/StoreContext";
 import { X, ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
 
 const Cart = () => {
   const { cartItems, removeFromCart, addToCart, getTotalCartAmount } =
     useContext(StoreContext);
 
-  const handleRemoveItem = (productId) => {
-    removeFromCart(productId);
-    toast.success("Item removed from cart");
-  };
+  // const handleRemoveItem = (productId) => {
+  //   removeFromCart(productId);
+  //   toast.success("Item removed from cart");
+  // };
 
-  const handleIncreaseQuantity = (productId) => {
-    addToCart(productId);
-    toast.success("Item quantity increased");
-  };
+  // const handleIncreaseQuantity = (productId) => {
+  //   addToCart(productId);
+  //   toast.success("Item quantity increased");
+  // };
 
-  const handleDecreaseQuantity = (productId) => {
-    removeFromCart(productId);
-    toast.success("Item quantity decreased");
-  };
+  // const handleDecreaseQuantity = (productId) => {
+  //   removeFromCart(productId);
+  //   toast.success("Item quantity decreased");
+  // };
 
   return (
     <div className="container mx-auto px-4 py-12">
-      <Toaster position="top-center" reverseOrder={false} />
+      
       <h1 className="text-3xl font-bold text-green-800 mb-8">Your Shopping Cart</h1>
 
       {Object.keys(cartItems).length === 0 ? (
@@ -82,14 +81,14 @@ const Cart = () => {
                     </div>
                     <div className="col-span-2 flex justify-center items-center">
                       <button
-                        onClick={() => handleDecreaseQuantity(productId)}
+                        onClick={() => removeFromCart(productId)}
                         className="p-1 rounded bg-gray-200 hover:bg-gray-300"
                       >
                         <Minus size={14} />
                       </button>
                       <span className="mx-2">{quantity}</span>
                       <button
-                        onClick={() => handleIncreaseQuantity(productId)}
+                        onClick={() => addToCart(productId)}
                         className="p-1 rounded bg-gray-200 hover:bg-gray-300"
                       >
                         <Plus size={14} />

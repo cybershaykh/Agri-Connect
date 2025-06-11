@@ -128,7 +128,7 @@ const Products = () => {
               <div className="flex justify-between items-center">
                 <h3 className="text-xl font-semibold">{product.name}</h3>
                 <span className="text-green-600 font-bold text-lg">
-                  ${product.price}
+                  ₦{product.price}
                 </span>
               </div>
 

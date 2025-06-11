@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import sampleProducts from "../../assets/assets";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export const StoreContext = createContext(null);
 
@@ -38,7 +39,7 @@ const StoreContextProvider = ({ children }) => {
 
   // Load cart from localStorage on first render
   useEffect(() => {
-    const storedCart = localStorage.getItem("cart");
+    const storedCart = localStorage.getItem("cartItems");
     if (storedCart) {
       setCartItems(JSON.parse(storedCart));
     }
@@ -46,7 +47,7 @@ const StoreContextProvider = ({ children }) => {
 
   // Save cart to localStorage on changes
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cartItems));
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
   }, [cartItems]);
 
   // Fetch user data when token changes
@@ -95,6 +96,7 @@ const StoreContextProvider = ({ children }) => {
           quantity: existingItem ? existingItem.quantity + 1 : 1,
         },
       };
+      toast.success("Added to cart");
       return updatedCart;
     });
   };
@@ -114,6 +116,7 @@ const StoreContextProvider = ({ children }) => {
         };
       } else {
         const { [id]: _, ...rest } = prev;
+        toast.success("🗑️ Removed from cart");
         return rest;
       }
     });
