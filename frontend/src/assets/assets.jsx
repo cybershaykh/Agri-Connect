@@ -1,3 +1,27 @@
+import increase_arrow from "./increase_arrow.svg";
+import decrease_arrow from "./decrease_arrow.svg";
+import my_location_image from "./my_location_image.svg";
+
+export const assets = {
+  increase_arrow,
+  decrease_arrow,
+  my_location_image
+};
+
+export const addressDummyData = [
+  {
+    "_id": "67a1e4233f34a77b6dde9055",
+    "userId": "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
+    "fullName": "GreatStack",
+    "phoneNumber": "0123456789",
+    "pincode": 654321,
+    "area": "Main Road , 123 Street, G Block",
+    "city": "City",
+    "state": "State",
+    "__v": 0
+  }
+]
+
 const sampleProducts = [
   {
     id: 1,

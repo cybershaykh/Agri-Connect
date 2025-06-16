@@ -10,6 +10,7 @@ import resourceRoute from './routes/resourceRoute.js';
 import marketPriceRoute from './routes/marketPriceRoute.js';
 import adminRoute from './routes/adminRoute.js';
 import weatherRoute from './routes/weatherRoute.js';
+import farmerRoute from './routes/farmerRoute.js';
 
 dotenv.config();
 const app = express();
@@ -20,6 +21,7 @@ app.use(express.json());
 connectDB();
 
 app.use("/api/user", userRoute);
+app.use("/api/farmer", farmerRoute);
 app.use("/api/product", productRoute);
 app.use("/api/order", orderRoute);
 app.use("/api/review", reviewRoute);

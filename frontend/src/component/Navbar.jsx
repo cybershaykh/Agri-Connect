@@ -142,11 +142,11 @@ const Navbar = () => {
           </div>
 
           {/* Get Started Button (desktop only) - only show when not logged in */}
-          {!token && (
+          {/* {!token && (
             <a href="/register" className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition hidden md:inline-block">
               Get Started
             </a>
-          )}
+          )} */}
 
           {/* Cart Icon */}
           <a href="/cart" className="relative text-gray-600 hover:text-green-600">

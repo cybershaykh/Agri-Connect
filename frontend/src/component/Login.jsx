@@ -65,7 +65,7 @@ const Login = () => {
         toast.error(response.data.message || "Login failed");
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "An error occurred during login");
+      toast.error(error.response?.data?.message || "No Internet Connection");
     } finally {
       setLoading(false);
     }

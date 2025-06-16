@@ -5,9 +5,9 @@ import productModel from '../models/productModel.js';
 // create a new product
 export const addProduct = async (req, res) => {
     try {
-        const { name, description, category, rating, quantity, price, images, inStock, location } = req.body;
+        const { name, description, category, rating, quantity, price, image, inStock, location } = req.body;
 
-        if (!name || !category || !images || !price || !quantity) {
+        if (!name || !category || !image || !price || !quantity) {
             return res.status(400).json({ error: "❌Please provide all required fields." });
         }
 
@@ -18,7 +18,7 @@ export const addProduct = async (req, res) => {
             rating: rating || 0,
             quantity,
             price,
-            images,
+            image,
             location,
             inStock: inStock !== undefined ? inStock : true,
         });
@@ -32,6 +32,52 @@ export const addProduct = async (req, res) => {
     } catch (err) {
         console.error("Add product error:", err);
         res.status(500).json({ error: "❌Something went wrong while adding the product." });
+    }
+};
+
+//get all products
+export const getAllProducts = async (req, res) => {
+    try {
+        const products = await productModel.find({}).sort({ createdAt: -1 });
+
+        if (products.length === 0) {
+            return res.status(404).json({ error: "❌No products found." });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "✅Products retrieved successfully.",
+            products
+        });
+    } catch (err) {
+        console.error("Get all products error:", err);
+        res.status(500).json({ error: "❌Something went wrong while retrieving products." });
+    }
+};
+
+// get a single product by ID
+export const getProductById = async (req, res) => {
+    try {
+        const { productId } = req.body;
+
+        if (!productId) {
+            return res.status(400).json({ error: "❌Product ID is required." });
+        }
+
+        const product = await productModel.findById(productId);
+
+        if (!product) {
+            return res.status(404).json({ error: "❌Product not found." });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "✅Product retrieved successfully.",
+            product
+        });
+    } catch (err) {
+        console.error("Get product by ID error:", err);
+        res.status(500).json({ error: "❌Something went wrong while retrieving the product." });
     }
 };
 

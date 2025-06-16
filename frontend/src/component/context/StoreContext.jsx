@@ -1,16 +1,34 @@
 import { createContext, useEffect, useState } from "react";
-import sampleProducts from "../../assets/assets";
+import sampleProducts from "/src/assets/assets";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export const StoreContext = createContext(null);
 
 const StoreContextProvider = ({ children }) => {
+  const router = useEffect(() => {
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get(`${url}/api/product/getall`);
+      setProducts(response.data.products); // adjust key if your API response is different
+    } catch (err) {
+      console.error("Failed to fetch products", err);
+      toast.error("Could not load products");
+    }
+  };
+
+  fetchProducts();
+}, []);useNavigate
   const [cartItems, setCartItems] = useState({});
+  const navigate = useNavigate();
   const url = "http://localhost:3000";
   const [token, setToken] = useState("");
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState([]);
+
+
 
   // Initialize auth state from localStorage
   useEffect(() => {
@@ -20,7 +38,7 @@ const StoreContextProvider = ({ children }) => {
 
       if (storedToken) {
         setToken(storedToken);
-        
+
         if (storedUser) {
           try {
             setUser(JSON.parse(storedUser));
@@ -54,7 +72,7 @@ const StoreContextProvider = ({ children }) => {
   const fetchUserData = async (token) => {
     try {
       const response = await axios.get(`${url}/api/user/me`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
       setUser(response.data.user);
       localStorage.setItem("user", JSON.stringify(response.data.user));
@@ -74,6 +92,8 @@ const StoreContextProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.removeItem("cart");
+    localStorage.removeItem("cartItems");
     setToken("");
     setUser(null);
   };
@@ -84,7 +104,7 @@ const StoreContextProvider = ({ children }) => {
   };
 
   const addToCart = (id) => {
-    const product = sampleProducts.find((item) => item.id === id);
+    const product = products.find((item) => item.id === id);
     if (!product) return;
 
     setCartItems((prev) => {
@@ -122,23 +142,37 @@ const StoreContextProvider = ({ children }) => {
     });
   };
 
- const getTotalCartAmount = () => {
-  let totalAmount = 0;
-  for (const item in cartItems) {
-    const product = sampleProducts.find((p) => p.id === item);
-    if (product) {
-      totalAmount += product.price * cartItems[item];
+  const getCartCount = () => {
+    let totalCount = 0;
+    for (const items in cartItems) {
+      if (cartItems[items] > 0) {
+        totalCount += cartItems[items];
+      }
     }
-  }
-  return totalAmount;
-};
+    return totalCount;
+  };
+
+  const getCartAmount = () => {
+    let totalAmount = 0;
+    for (const items in cartItems) {
+      let itemInfo = products.find((product) => product._id === items);
+      if (cartItems[items] > 0) {
+        totalAmount += itemInfo.offerPrice * cartItems[items];
+      }
+    }
+    return Math.floor(totalAmount * 100) / 100;
+  };
+
+  // useEffect(() => {
+  //   fetchUserData();
+  // }, []);
 
   const contextValue = {
-    sampleProducts,
-    cartItems,
-    addToCart,
+    products, router,
+    cartItems, getCartCount,
+    addToCart, navigate,
     removeFromCart,
-    getTotalCartAmount,
+    getCartAmount,
     url,
     token,
     setToken,
@@ -147,7 +181,7 @@ const StoreContextProvider = ({ children }) => {
     login,
     logout,
     updateUser,
-    loading
+    loading,
   };
 
   return (

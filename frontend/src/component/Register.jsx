@@ -9,7 +9,7 @@ import axios from "axios";
 import { StoreContext } from "./context/StoreContext";
 
 const Register = () => {
-  const {url, setToken} = useContext(StoreContext);
+  const { url, setToken } = useContext(StoreContext);
   const [role, setRole] = useState("buyer");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -23,39 +23,44 @@ const Register = () => {
   const [data, setData] = useState({
     name: "",
     email: "",
-    password: ""
-  })
+    password: "",
+  });
   const onChangeHandler = (event) => {
     const name = event.target.name;
     const value = event.target.value;
-    setData(data => ({
+    setData((data) => ({
       ...data,
-      [name]:value
-    }))
-  }
+      [name]: value,
+    }));
+  };
   const onRegister = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
     setLoading(true);
+
     try {
       const response = await axios.post(`${url}/api/user/register`, data);
-      
+
       if (response.data.success) {
-        setToken(response.data.token, response.data.user);
-        toast.success("Register successful!");
-        localStorage.setItem("token", response.data.token)
-        
-        const token = localStorage.getItem("token")
-        if(token){
-          navigate("/")
-          
-        }else{
-          // navigate("/login")
-        }
+        setToken(response.data.token);
+        toast.success("✅ Successfully registered as ${role}`!", {
+          position: "top-center",
+          autoClose: 2000,
+        });
+
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
       } else {
-        toast.error(response.data.message || "Register failed");
+        toast.error(response.data.message || "❌ Registration failed", {
+          position: "top-center",
+        });
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "An error occurred during register");
+      toast.error(
+        error.response?.data?.message ||
+          "🚨 An error occurred during registration",
+        { position: "top-center" }
+      );
     } finally {
       setLoading(false);
     }
@@ -68,28 +73,31 @@ const Register = () => {
     AOS.init({ duration: 800 });
   }, []);
 
-  const handleRegister = (e) => {
-    e.preventDefault();
-    setLoading(true);
+  // const handleRegister = (e) => {
+  //   e.preventDefault();
+  //   setLoading(true);
 
-    // Validation
-    if (!name || !email || !password || (role === "farmer" && (!farmName || !farmSize || !location))) {
-      toast.error("Please fill all required fields.");
-      setLoading(false);
-      return;
-    }
+  //   // Validation
+  //   if (!name || !email || !password || (role === "farmer" && (!farmName || !farmSize || !location))) {
+  //     toast.error("Please fill all required fields.");
+  //     setLoading(false);
+  //     return;
+  //   }
 
-    setTimeout(() => {
-      setLoading(false);
-      toast.success(`Successfully registered as ${role}`);
-      setTimeout(() => navigate("/login"), 1500);
-    }, 1500);
-  };
+  //   setTimeout(() => {
+  //     setLoading(false);
+  //     toast.success(`Successfully registered as ${role}`);
+  //     setTimeout(() => navigate("/login"), 1500);
+  //   }, 1500);
+  // };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-green-50 px-4">
       <ToastContainer position="top-right" />
-      <div className="max-w-md w-full bg-white rounded-3xl shadow-lg p-6 sm:p-8" data-aos="fade-up">
+      <div
+        className="max-w-md w-full bg-white rounded-3xl shadow-lg p-6 sm:p-8"
+        data-aos="fade-up"
+      >
         {/* Branding */}
         <div className="text-center mb-4">
           <h1 className="text-3xl font-bold text-green-700"></h1>
@@ -121,10 +129,15 @@ const Register = () => {
         <form onSubmit={onRegister} className="space-y-5">
           {/* Name */}
           <div>
-            <label className="text-sm font-medium text-gray-700">Full Name</label>
+            <label className="text-sm font-medium text-gray-700">
+              Full Name
+            </label>
             <div className="relative mt-1">
               <User className="absolute left-3 top-2.5 text-gray-400" />
-              <input name="name" onChange={onChangeHandler} value={data.name}
+              <input
+                name="name"
+                onChange={onChangeHandler}
+                value={data.name}
                 type="text"
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500"
                 placeholder="John Doe"
@@ -138,7 +151,10 @@ const Register = () => {
             <label className="text-sm font-medium text-gray-700">Email</label>
             <div className="relative mt-1">
               <Mail className="absolute left-3 top-2.5 text-gray-400" />
-              <input name="email" onChange={onChangeHandler} value={data.email}
+              <input
+                name="email"
+                onChange={onChangeHandler}
+                value={data.email}
                 type="email"
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500"
                 placeholder="you@example.com"
@@ -149,10 +165,15 @@ const Register = () => {
 
           {/* Password */}
           <div>
-            <label className="text-sm font-medium text-gray-700">Password</label>
+            <label className="text-sm font-medium text-gray-700">
+              Password
+            </label>
             <div className="relative mt-1">
               <Lock className="absolute left-3 top-2.5 text-gray-400" />
-              <input name="password" onChange={onChangeHandler} value={data.password}
+              <input
+                name="password"
+                onChange={onChangeHandler}
+                value={data.password}
                 type={showPassword ? "text" : "password"}
                 className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500"
                 placeholder="********"
@@ -173,7 +194,9 @@ const Register = () => {
             <>
               {/* Farm Name */}
               <div>
-                <label className="text-sm font-medium text-gray-700">Farm Name</label>
+                <label className="text-sm font-medium text-gray-700">
+                  Farm Name
+                </label>
                 <div className="relative mt-1">
                   <Leaf className="absolute left-3 top-2.5 text-gray-400" />
                   <input
@@ -189,7 +212,9 @@ const Register = () => {
 
               {/* Farm Size */}
               <div>
-                <label className="text-sm font-medium text-gray-700">Farm Size (acres)</label>
+                <label className="text-sm font-medium text-gray-700">
+                  Farm Size (acres)
+                </label>
                 <input
                   type="number"
                   value={farmSize}
@@ -202,7 +227,9 @@ const Register = () => {
 
               {/* Location */}
               <div>
-                <label className="text-sm font-medium text-gray-700">Location</label>
+                <label className="text-sm font-medium text-gray-700">
+                  Location
+                </label>
                 <div className="relative mt-1">
                   <MapPin className="absolute left-3 top-2.5 text-gray-400" />
                   <input
@@ -234,7 +261,10 @@ const Register = () => {
           {/* Footer */}
           <p className="text-sm text-center text-gray-600">
             Already have an account?{" "}
-            <a href="/login" className="text-green-600 font-semibold hover:underline">
+            <a
+              href="/login"
+              className="text-green-600 font-semibold hover:underline"
+            >
               Log in here
             </a>
           </p>

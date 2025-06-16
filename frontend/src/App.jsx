@@ -14,7 +14,19 @@ import Login from "./component/Login";
 import Register from "./component/Register";
 import { Toaster } from "react-hot-toast";
 import UserProfile from "./pages/UserProfile";
+import AddAddress from "./component/Addaddress";
+import { ToastContainer } from "react-toastify";
 
+<ToastContainer
+  position="top-center"
+  autoClose={2000}
+  hideProgressBar={false}
+  newestOnTop
+  closeOnClick
+  pauseOnHover
+  draggable
+  theme="colored"
+/>
 const App = () => {
   return (
     <div>
@@ -31,9 +43,10 @@ const App = () => {
             <Route path="/cart" element={<Cart />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/add-address" element={<AddAddress />} />
             <Route path="/profile" element={<UserProfile />} />
           </Routes>
-          <Toaster position="top-center" />
+          <ToastContainer position="top-center" />
           <Footer />
         </StoreContextProvider>
       </BrowserRouter>

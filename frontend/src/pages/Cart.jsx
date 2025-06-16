@@ -1,131 +1,115 @@
 import React, { useContext } from "react";
+import OrderSummary from "../component/OrderSummary";
 import { StoreContext } from "../component/context/StoreContext";
-import { X, ShoppingCart } from "lucide-react";
-import { Link } from "react-router-dom";
+import { assets } from "../assets/assets";
+import { ChevronLeft } from "lucide-react";
+
 
 const Cart = () => {
-  const { cartItems, removeFromCart, addToCart, getTotalCartAmount } =
-    useContext(StoreContext);
 
-  // const handleRemoveItem = (productId) => {
-  //   removeFromCart(productId);
-  //   toast.success("Item removed from cart");
-  // };
+  const { products, cartItems, navigate, addToCart, removeFromCart, getCartCount, getCartAmount } = useContext(StoreContext);
 
-  // const handleIncreaseQuantity = (productId) => {
-  //   addToCart(productId);
-  //   toast.success("Item quantity increased");
-  // };
-
-  // const handleDecreaseQuantity = (productId) => {
-  //   removeFromCart(productId);
-  //   toast.success("Item quantity decreased");
-  // };
+  console.log(cartItems);
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      
-      <h1 className="text-3xl font-bold text-green-800 mb-8">Your Shopping Cart</h1>
-
-      {Object.keys(cartItems).length === 0 ? (
-        <div className="text-center py-12">
-          <ShoppingCart className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-          <h2 className="text-xl font-semibold text-gray-600 mb-2">
-            Your cart is empty
-          </h2>
-          <p className="text-gray-500 mb-6">
-            Looks like you haven't added any items to your cart yet.
-          </p>
-          <Link
-            to="/products"
-            className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
-          >
-            Browse Products
-          </Link>
-        </div>
-      ) : (
-        <div className="grid md:grid-cols-3 gap-8">
-          <div className="md:col-span-2">
-            <div className="bg-white rounded-lg shadow overflow-hidden">
-              <div className="grid grid-cols-12 bg-gray-100 p-4 font-semibold text-gray-700">
-                <div className="col-span-6">Product</div>
-                <div className="col-span-2 text-center">Price</div>
-                <div className="col-span-2 text-center">Quantity</div>
-                <div className="col-span-2 text-center">Total</div>
-              </div>
-
-              {Object.entries(cartItems).map(([productId, quantity]) => {
-                const product = sampleProducts.find((p) => p.id === productId);
-                if (!product) return null;
-
-                return (
-                  <div
-                    key={productId}
-                    className="grid grid-cols-12 items-center p-4 border-b"
-                  >
-                    <div className="col-span-6 flex items-center">
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="w-16 h-16 object-cover rounded mr-4"
-                      />
-                      <div>
-                        <h3 className="font-medium">{product.name}</h3>
-                        <p className="text-sm text-gray-500">
-                          {product.category}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="col-span-2 text-center">
-                      ${product.price.toFixed(2)}
-                    </div>
-                    <div className="col-span-2 flex justify-center items-center">
-                      <button
-                        onClick={() => removeFromCart(productId)}
-                        className="p-1 rounded bg-gray-200 hover:bg-gray-300"
-                      >
-                        <Minus size={14} />
-                      </button>
-                      <span className="mx-2">{quantity}</span>
-                      <button
-                        onClick={() => addToCart(productId)}
-                        className="p-1 rounded bg-gray-200 hover:bg-gray-300"
-                      >
-                        <Plus size={14} />
-                      </button>
-                    </div>
-                    <div className="col-span-2 text-center">
-                      ${(product.price * quantity).toFixed(2)}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+    <>
+      <div className="flex flex-col md:flex-row gap-10 px-6 md:px-16 lg:px-32 pt-14 mb-20">
+        <div className="flex-1">
+          <div className="flex items-center justify-between mb-8 border-b border-gray-500/30 pb-6">
+            <p className="text-2xl md:text-3xl text-gray-500">
+              Your <span className="font-medium text-green-700">Cart</span>
+            </p>
+            <p className="text-lg md:text-xl text-gray-500/80">{getCartCount()} Items</p>
           </div>
+          <div className="overflow-x-auto">
+            <table className="min-w-full table-auto">
+              <thead className="text-left">
+                <tr>
+                  <th className="text-nowrap pb-6 md:px-4 px-1 text-gray-600 font-medium">
+                    Product Details
+                  </th>
+                  <th className="pb-6 md:px-4 px-1 text-gray-600 font-medium">
+                    Price
+                  </th>
+                  <th className="pb-6 md:px-4 px-1 text-gray-600 font-medium">
+                    Quantity
+                  </th>
+                  <th className="pb-6 md:px-4 px-1 text-gray-600 font-medium">
+                    Subtotal
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.keys(cartItems).map((itemId) => {
+                  const product = products.find(product => product._id === itemId);
 
-          <div className="bg-white rounded-lg shadow p-6 h-fit">
-            <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
-            <div className="space-y-4">
-              <div className="flex justify-between">
-                <span>Subtotal</span>
-                <span>${getTotalCartAmount().toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Shipping</span>
-                <span>Free</span>
-              </div>
-              <div className="border-t pt-4 flex justify-between font-bold text-lg">
-                <span>Total</span>
-                <span>${getTotalCartAmount().toFixed(2)}</span>
-              </div>
-            </div>
-            <button className="w-full mt-6 py-3 bg-green-600 text-white rounded hover:bg-green-700 transition">
-              Proceed to Checkout
-            </button>
+                  if (!product || cartItems[itemId] <= 0) return null;
+
+                  return (
+                    <tr key={itemId}>
+                      <td className="flex items-center gap-4 py-4 md:px-4 px-1">
+                        <div>
+                          <div className="rounded-lg overflow-hidden bg-gray-500/10 p-2">
+                            <img
+                              src={product.image[0]}
+                              alt={product.name}
+                              className="w-16 h-auto object-cover mix-blend-multiply"
+                              width={1280}
+                              height={720}
+                            />
+                          </div>
+                          <button
+                            className="md:hidden text-xs text-green-700 mt-1"
+                            onClick={() => removeFromCart(product._id, 0)}
+                          >
+                            Remove
+                          </button>
+                        </div>
+                        <div className="text-sm hidden md:block">
+                          <p className="text-gray-800">{product.name}</p>
+                          <button
+                            className="text-xs text-green-700 mt-1"
+                            onClick={() => removeFromCart(product._id, 0)}
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      </td>
+                      <td className="py-4 md:px-4 px-1 text-gray-600">${product.offerPrice}</td>
+                      <td className="py-4 md:px-4 px-1">
+                        <div className="flex items-center md:gap-2 gap-1">
+                          <button onClick={() => removeFromCart(product._id, cartItems[itemId] - 1)}>
+                            <img
+                              src={assets.decrease_arrow}
+                              alt="decrease_arrow"
+                              className="w-4 h-4"
+                            />
+                          </button>
+                          <input onChange={e => removeFromCart(product._id, Number(e.target.value))} type="number" value={cartItems[itemId]} className="w-8 border text-center appearance-none"></input>
+                          <button onClick={() => addToCart(product._id)}>
+                            <img
+                              src={assets.increase_arrow}
+                              alt="increase_arrow"
+                              className="w-4 h-4"
+                            />
+                          </button>
+                        </div>
+                      </td>
+                      <td className="py-4 md:px-4 px-1 text-gray-600">${(product.offerPrice * cartItems[itemId]).toFixed(2)}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
+          <button onClick={()=> navigate('/products')} className="group flex items-center mt-6 gap-2 text-green-700">
+            <ChevronLeft className="group-hover:-translate-x-1 transition" />
+            Continue Shopping
+          </button>
         </div>
-      )}
-    </div>
+        <OrderSummary />
+      </div>
+    </>
   );
 };
 

@@ -6,27 +6,30 @@ import { Link } from "react-router-dom";
 import sampleProducts from "../assets/assets";
 import { StoreContext } from "../component/context/StoreContext";
 
-// Extract unique categories and locations
-const allCategories = [
-  "All",
-  ...new Set(sampleProducts.map((p) => p.category)),
-];
-const allLocations = ["All", ...new Set(sampleProducts.map((p) => p.location))];
 
 const Products = () => {
-
+  
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedLocation, setSelectedLocation] = useState("All");
   const [sortOption, setSortOption] = useState("");
-  const { cartItems, addToCart, removeFromCart} = useContext(StoreContext);
-
+  const { cartItems, addToCart, removeFromCart, products} = useContext(StoreContext);
+  
+  console.log(products)
+  
   console.log(cartItems)
+  
+  // Extract unique categories and locations
+  const allCategories = [
+    "All",
+    ...new Set(products.map((p) => p.category)),
+  ];
+  const allLocations = ["All", ...new Set(products.map((p) => p.location))];
 
   useEffect(() => {
     AOS.init({ duration: 800, easing: "ease-in-out", once: true });
   }, []);
 
-  const filteredProducts = sampleProducts
+  const filteredProducts = products
     .filter(
       (p) =>
         (selectedCategory === "All" || p.category === selectedCategory) &&
@@ -104,7 +107,7 @@ const Products = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredProducts.map((product) => (
             <div
-              key={product.id}
+              key={product._id}
               className="bg-white rounded-xl shadow hover:shadow-lg transition p-6 space-y-4 relative"
               data-aos="zoom-in"
             >
@@ -183,7 +186,7 @@ const Products = () => {
                     </button>
                     <div className="font-semibold">{cartItems[product.id]}</div>
                     <button
-                      onClick={() => addToCart(product.id)}
+                      onClick={() => addToCart(product._id)}
                       className="p-1 rounded bg-green-200 text-green-700 hover:bg-green-300 transition"
                     >
                       <Plus size={14} />
