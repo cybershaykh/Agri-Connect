@@ -5,9 +5,9 @@ import productModel from '../models/productModel.js';
 // create a new product
 export const addProduct = async (req, res) => {
     try {
-        const { name, description, category, rating, quantity, price, image, inStock, location } = req.body;
+        const { name, description, category, rating, price, image, offerPrice, inStock, location } = req.body;
 
-        if (!name || !category || !image || !price || !quantity) {
+        if (!name || !category || !image || !price) {
             return res.status(400).json({ error: "❌Please provide all required fields." });
         }
 
@@ -16,8 +16,8 @@ export const addProduct = async (req, res) => {
             description,
             category,
             rating: rating || 0,
-            quantity,
             price,
+            offerPrice: offerPrice || 0,
             image,
             location,
             inStock: inStock !== undefined ? inStock : true,

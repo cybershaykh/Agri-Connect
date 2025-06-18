@@ -7,7 +7,7 @@ import { ChevronLeft } from "lucide-react";
 
 const Cart = () => {
 
-  const { products, cartItems, navigate, addToCart, removeFromCart, getCartCount, getCartAmount } = useContext(StoreContext);
+  const { products, cartItems, navigate, addToCart, removeFromCart, getCartCount, updateCartQuantity } = useContext(StoreContext);
 
   console.log(cartItems);
 
@@ -69,23 +69,23 @@ const Cart = () => {
                           <p className="text-gray-800">{product.name}</p>
                           <button
                             className="text-xs text-green-700 mt-1"
-                            onClick={() => removeFromCart(product._id, 0)}
+                            onClick={() => updateCartQuantity(product._id, 0)}
                           >
                             Remove
                           </button>
                         </div>
                       </td>
-                      <td className="py-4 md:px-4 px-1 text-gray-600">${product.offerPrice}</td>
+                      <td className="py-4 md:px-4 px-1 text-gray-600">₦{product.price}</td>
                       <td className="py-4 md:px-4 px-1">
                         <div className="flex items-center md:gap-2 gap-1">
-                          <button onClick={() => removeFromCart(product._id, cartItems[itemId] - 1)}>
+                          <button onClick={() => updateCartQuantity(product._id, cartItems[itemId] - 1)}>
                             <img
                               src={assets.decrease_arrow}
                               alt="decrease_arrow"
                               className="w-4 h-4"
                             />
                           </button>
-                          <input onChange={e => removeFromCart(product._id, Number(e.target.value))} type="number" value={cartItems[itemId]} className="w-8 border text-center appearance-none"></input>
+                          <input onChange={e => updateCartQuantity(product._id, Number(e.target.value))} type="number" value={cartItems[itemId]} className="w-8 border text-center appearance-none"></input>
                           <button onClick={() => addToCart(product._id)}>
                             <img
                               src={assets.increase_arrow}
@@ -95,7 +95,7 @@ const Cart = () => {
                           </button>
                         </div>
                       </td>
-                      <td className="py-4 md:px-4 px-1 text-gray-600">${(product.offerPrice * cartItems[itemId]).toFixed(2)}</td>
+                      <td className="py-4 md:px-4 px-1 text-gray-600">₦{(product.price * cartItems[itemId]).toFixed(2)}</td>
                     </tr>
                   );
                 })}

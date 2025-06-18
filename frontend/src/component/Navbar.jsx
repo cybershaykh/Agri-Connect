@@ -46,15 +46,14 @@ const Navbar = () => {
   return (
     <header className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50" data-aos="fade-down">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        {/* Logo */}
         <a href="/" className="text-2xl font-extrabold text-green-600 tracking-wide hover:text-green-700 transition">
-          🌾 Agrone
+          🌾 AgriConnect
         </a>
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex space-x-6">
           <a href="/" className="text-gray-600 hover:text-green-600 font-medium">Home</a>
-          <a href="/products" className="text-gray-600 hover:text-green-600 font-medium">Products</a>
+          <a href="/all-products" className="text-gray-600 hover:text-green-600 font-medium">Products</a>
           <a href="/farmers" className="text-gray-600 hover:text-green-600 font-medium">Farmers</a>
           <a href="/about" className="text-gray-600 hover:text-green-600 font-medium">About</a>
           <a href="#contact" className="text-gray-600 hover:text-green-600 font-medium">Contact</a>
@@ -170,7 +169,7 @@ const Navbar = () => {
       {mobileMenuOpen && (
         <div className="md:hidden bg-white px-4 py-4 border-t border-gray-200 space-y-3">
           <a href="/" className="block text-gray-600 hover:text-green-600" onClick={() => setMobileMenuOpen(false)}>Home</a>
-          <a href="/products" className="block text-gray-600 hover:text-green-600" onClick={() => setMobileMenuOpen(false)}>Products</a>
+          <a href="/all-products" className="block text-gray-600 hover:text-green-600" onClick={() => setMobileMenuOpen(false)}>Products</a>
           <a href="/farmers" className="block text-gray-600 hover:text-green-600" onClick={() => setMobileMenuOpen(false)}>Farmers</a>
           <a href="/about" className="block text-gray-600 hover:text-green-600" onClick={() => setMobileMenuOpen(false)}>About</a>
           <a href="#contact" className="block text-gray-600 hover:text-green-600" onClick={() => setMobileMenuOpen(false)}>Contact</a>

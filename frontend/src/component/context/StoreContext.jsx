@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import sampleProducts from "/src/assets/assets";
+import { productsDummyData } from "../../assets/assets";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -28,7 +28,10 @@ const StoreContextProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
 
-
+  // Initialize products with dummy data for development
+  const fetchProductData = async () => {
+    setProducts(productsDummyData);
+  };
 
   // Initialize auth state from localStorage
   useEffect(() => {
@@ -103,43 +106,25 @@ const StoreContextProvider = ({ children }) => {
     localStorage.setItem("user", JSON.stringify(updatedUser));
   };
 
-  const addToCart = (id) => {
-    const product = products.find((item) => item.id === id);
-    if (!product) return;
-
-    setCartItems((prev) => {
-      const existingItem = prev[id];
-      const updatedCart = {
-        ...prev,
-        [id]: {
-          ...product,
-          quantity: existingItem ? existingItem.quantity + 1 : 1,
-        },
-      };
-      toast.success("Added to cart");
-      return updatedCart;
-    });
+  // 
+  const addToCart = async (itemId) => {
+    let cartData = structuredClone(cartItems);
+    if (cartData[itemId]) {
+      cartData[itemId] += 1;
+    } else {
+      cartData[itemId] = 1;
+    }
+    setCartItems(cartData);
   };
 
-  const removeFromCart = (id) => {
-    setCartItems((prev) => {
-      const existingItem = prev[id];
-      if (!existingItem) return prev;
-
-      if (existingItem.quantity > 1) {
-        return {
-          ...prev,
-          [id]: {
-            ...existingItem,
-            quantity: existingItem.quantity - 1,
-          },
-        };
-      } else {
-        const { [id]: _, ...rest } = prev;
-        toast.success("🗑️ Removed from cart");
-        return rest;
-      }
-    });
+  const updateCartQuantity = async (itemId, quantity) => {
+    let cartData = structuredClone(cartItems);
+    if (quantity === 0) {
+      delete cartData[itemId];
+    } else {
+      cartData[itemId] = quantity;
+    }
+    setCartItems(cartData);
   };
 
   const getCartCount = () => {
@@ -157,23 +142,22 @@ const StoreContextProvider = ({ children }) => {
     for (const items in cartItems) {
       let itemInfo = products.find((product) => product._id === items);
       if (cartItems[items] > 0) {
-        totalAmount += itemInfo.offerPrice * cartItems[items];
+        totalAmount += itemInfo.price * cartItems[items];
       }
     }
     return Math.floor(totalAmount * 100) / 100;
   };
 
-  // useEffect(() => {
-  //   fetchUserData();
-  // }, []);
+  useEffect(() => {
+    fetchProductData();
+  }, []);
 
   const contextValue = {
     products, router,
     cartItems, getCartCount,
-    addToCart, navigate,
-    removeFromCart,
+    addToCart, navigate, fetchProductData,
     getCartAmount,
-    url,
+    url, updateCartQuantity,
     token,
     setToken,
     user,
