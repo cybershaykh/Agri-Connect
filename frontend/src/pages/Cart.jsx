@@ -102,7 +102,7 @@ const Cart = () => {
               </tbody>
             </table>
           </div>
-          <button onClick={()=> navigate('/products')} className="group flex items-center mt-6 gap-2 text-green-700">
+          <button onClick={()=> navigate('/all-products')} className="group flex items-center mt-6 gap-2 text-green-700">
             <ChevronLeft className="group-hover:-translate-x-1 transition" />
             Continue Shopping
           </button>

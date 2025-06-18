@@ -43,7 +43,7 @@ const OrderSummary = () => {
 
     // Redirect to a confirmation page after a short delay
     setTimeout(() => {
-      navigate("/order-confirmation");
+      navigate("/order-plced");
     }, 1500);
   };
 

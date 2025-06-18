@@ -296,7 +296,7 @@ const Sidebar = () => {
                     <option value="fruits">Fruits</option>
                     <option value="grains">Grains</option>
                     <option value="livestock">Livestock</option>
-                    <option value="dairy">Dairy</option>
+                    <option value="dairy">Spices</option>
                   </select>
                 </div>
 

@@ -1,25 +1,21 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
-import {
-  Menu,
-  X,
-  ShoppingBasket,
-  User,
-  LogIn,
-  LayoutDashboard,
-  LogOut,
-  UserCircle
-} from "lucide-react";
+import { Menu, X, User, LogIn, LogOut, UserCircle, ShoppingCart } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { Link, useNavigate } from "react-router-dom";
 import { StoreContext } from "./context/StoreContext";
-import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
-  const { token, setToken, user } = useContext(StoreContext);
+  const [animateCart, setAnimateCart] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  const { token, setToken, user, cartItems } = useContext(StoreContext);
   const navigate = useNavigate();
   const userMenuRef = useRef(null);
+
+  const totalCartItems = Object.values(cartItems || {}).reduce((a, b) => a + b, 0);
 
   useEffect(() => {
     AOS.init({ duration: 800 });
@@ -30,38 +26,69 @@ const Navbar = () => {
       }
     };
 
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
+
+  useEffect(() => {
+    if (totalCartItems > 0) {
+      setAnimateCart(true);
+      const timer = setTimeout(() => setAnimateCart(false), 500);
+      return () => clearTimeout(timer);
+    }
+  }, [totalCartItems]);
 
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("cart");
     setToken("");
-    navigate("/")
+    navigate("/");
     setUserDropdownOpen(false);
   };
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50" data-aos="fade-down">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <a href="/" className="text-2xl font-extrabold text-green-600 tracking-wide hover:text-green-700 transition">
+        <Link to="/" className="text-2xl font-extrabold text-green-600 tracking-wide hover:text-green-700 transition">
           🌾 AgriConnect
-        </a>
+        </Link>
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex space-x-6">
-          <a href="/" className="text-gray-600 hover:text-green-600 font-medium">Home</a>
-          <a href="/all-products" className="text-gray-600 hover:text-green-600 font-medium">Products</a>
-          <a href="/farmers" className="text-gray-600 hover:text-green-600 font-medium">Farmers</a>
-          <a href="/about" className="text-gray-600 hover:text-green-600 font-medium">About</a>
+          <Link to="/" className="text-gray-600 hover:text-green-600 font-medium">Home</Link>
+          <Link to="/all-products" className="text-gray-600 hover:text-green-600 font-medium">Products</Link>
+          <Link to="/farmers" className="text-gray-600 hover:text-green-600 font-medium">Farmers</Link>
+          <Link to="/about" className="text-gray-600 hover:text-green-600 font-medium">About</Link>
           <a href="#contact" className="text-gray-600 hover:text-green-600 font-medium">Contact</a>
         </nav>
 
         {/* Right Buttons */}
         <div className="flex items-center space-x-4 relative">
-          {/* User Icon Dropdown */}
+          {/* Cart Icon with Animation */}
+          <Link to="/cart" className="relative group">
+            <ShoppingCart
+              className={`h-6 w-6 transition-transform duration-300 ${
+                isScrolled ? "text-gray-700" : "text-gray-600"
+              } ${animateCart ? "animate-bounce" : ""}`}
+            />
+            {totalCartItems > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                {totalCartItems}
+              </span>
+            )}
+          </Link>
+
+          {/* User Dropdown */}
           <div ref={userMenuRef} className="relative">
             <button
               onClick={() => setUserDropdownOpen(!userDropdownOpen)}
@@ -69,11 +96,11 @@ const Navbar = () => {
             >
               {user ? (
                 <>
-                  <span className="hidden md:inline text-sm font-medium">{user?.name || 'My Account'}</span>
+                  <span className="hidden md:inline text-sm font-medium">{user?.name || "My Account"}</span>
                   {user?.avatar ? (
-                    <img 
-                      src={user.avatar} 
-                      alt="Profile" 
+                    <img
+                      src={user.avatar}
+                      alt="Profile"
                       className="w-8 h-8 rounded-full object-cover"
                     />
                   ) : (
@@ -84,49 +111,50 @@ const Navbar = () => {
                 <User className="w-6 h-6" />
               )}
             </button>
+
             {userDropdownOpen && (
               <div className="absolute right-0 mt-2 w-56 bg-white border rounded-md shadow-md z-50">
                 {!token ? (
                   <>
-                    <a 
-                      href="/login" 
+                    <Link
+                      to="/login"
                       className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600"
                       onClick={() => setUserDropdownOpen(false)}
                     >
                       <LogIn className="w-4 h-4" />
                       Login
-                    </a>
-                    <a 
-                      href="/register" 
+                    </Link>
+                    <Link
+                      to="/register"
                       className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600 border-t border-gray-100"
                       onClick={() => setUserDropdownOpen(false)}
                     >
                       <User className="w-4 h-4" />
                       Register
-                    </a>
+                    </Link>
                   </>
                 ) : (
                   <>
                     <div className="px-4 py-3 border-b border-gray-100">
-                      <p className="text-sm font-medium text-gray-900 truncate">{user?.name || 'Welcome'}</p>
-                      <p className="text-xs text-gray-500 truncate">{user?.email || ''}</p>
+                      <p className="text-sm font-medium text-gray-900 truncate">{user?.name || "Welcome"}</p>
+                      <p className="text-xs text-gray-500 truncate">{user?.email || ""}</p>
                     </div>
-                    <a 
-                      href="/profile" 
+                    <Link
+                      to="/profile"
                       className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600"
                       onClick={() => setUserDropdownOpen(false)}
                     >
                       <User className="w-4 h-4" />
                       My Profile
-                    </a>
-                    <a 
-                      href="/orders" 
+                    </Link>
+                    <Link
+                      to="/orders"
                       className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600"
                       onClick={() => setUserDropdownOpen(false)}
                     >
-                      <ShoppingBasket className="w-4 h-4" />
+                      <ShoppingCart className="w-4 h-4" />
                       My Orders
-                    </a>
+                    </Link>
                     <button
                       onClick={logout}
                       className="flex w-full items-center gap-2 px-4 py-2 text-left text-gray-700 hover:bg-green-50 hover:text-green-600 border-t border-gray-100"
@@ -140,22 +168,7 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Get Started Button (desktop only) - only show when not logged in */}
-          {/* {!token && (
-            <a href="/register" className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition hidden md:inline-block">
-              Get Started
-            </a>
-          )} */}
-
-          {/* Cart Icon */}
-          <a href="/cart" className="relative text-gray-600 hover:text-green-600">
-            <ShoppingBasket className="w-6 h-6" />
-            <span className="absolute -top-1 -right-1 w-5 h-5 bg-green-600 text-white text-xs rounded-full flex items-center justify-center">
-              {user?.cartItemsCount || 0}
-            </span>
-          </a>
-
-          {/* Mobile Menu Toggle */}
+          {/* Mobile Toggle */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden text-gray-600"
@@ -168,65 +181,38 @@ const Navbar = () => {
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-white px-4 py-4 border-t border-gray-200 space-y-3">
-          <a href="/" className="block text-gray-600 hover:text-green-600" onClick={() => setMobileMenuOpen(false)}>Home</a>
-          <a href="/all-products" className="block text-gray-600 hover:text-green-600" onClick={() => setMobileMenuOpen(false)}>Products</a>
-          <a href="/farmers" className="block text-gray-600 hover:text-green-600" onClick={() => setMobileMenuOpen(false)}>Farmers</a>
-          <a href="/about" className="block text-gray-600 hover:text-green-600" onClick={() => setMobileMenuOpen(false)}>About</a>
+          <Link to="/" className="block text-gray-600 hover:text-green-600" onClick={() => setMobileMenuOpen(false)}>Home</Link>
+          <Link to="/all-products" className="block text-gray-600 hover:text-green-600" onClick={() => setMobileMenuOpen(false)}>Products</Link>
+          <Link to="/farmers" className="block text-gray-600 hover:text-green-600" onClick={() => setMobileMenuOpen(false)}>Farmers</Link>
+          <Link to="/about" className="block text-gray-600 hover:text-green-600" onClick={() => setMobileMenuOpen(false)}>About</Link>
           <a href="#contact" className="block text-gray-600 hover:text-green-600" onClick={() => setMobileMenuOpen(false)}>Contact</a>
 
-          {/* Mobile Auth Dropdown */}
+          {/* Mobile User Menu */}
           <div className="mt-4 pt-2 border-t border-gray-200">
             <div className="text-gray-600 font-medium mb-1">Account</div>
             {!token ? (
               <>
-                <a 
-                  href="/login" 
-                  className="flex items-center gap-2 text-gray-600 hover:text-green-600 px-2 py-1"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <LogIn className="w-4 h-4" />
-                  Login
-                </a>
-                <a 
-                  href="/register" 
-                  className="flex items-center gap-2 text-gray-600 hover:text-green-600 px-2 py-1"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <User className="w-4 h-4" />
-                  Register
-                </a>
+                <Link to="/login" className="flex items-center gap-2 text-gray-600 hover:text-green-600 px-2 py-1" onClick={() => setMobileMenuOpen(false)}>
+                  <LogIn className="w-4 h-4" /> Login
+                </Link>
+                <Link to="/register" className="flex items-center gap-2 text-gray-600 hover:text-green-600 px-2 py-1" onClick={() => setMobileMenuOpen(false)}>
+                  <User className="w-4 h-4" /> Register
+                </Link>
               </>
             ) : (
               <>
                 <div className="px-2 py-1 mb-1">
-                  <p className="text-sm font-medium text-gray-900">{user?.name || 'Welcome'}</p>
-                  <p className="text-xs text-gray-500">{user?.email || ''}</p>
+                  <p className="text-sm font-medium text-gray-900">{user?.name}</p>
+                  <p className="text-xs text-gray-500">{user?.email}</p>
                 </div>
-                <a 
-                  href="/profile" 
-                  className="flex items-center gap-2 text-gray-600 hover:text-green-600 px-2 py-1"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <User className="w-4 h-4" />
-                  My Profile
-                </a>
-                <a 
-                  href="/orders" 
-                  className="flex items-center gap-2 text-gray-600 hover:text-green-600 px-2 py-1"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <ShoppingBasket className="w-4 h-4" />
-                  My Orders
-                </a>
-                <button
-                  onClick={() => {
-                    logout();
-                    setMobileMenuOpen(false);
-                  }}
-                  className="flex w-full items-center gap-2 text-gray-600 hover:text-green-600 px-2 py-1 mt-1"
-                >
-                  <LogOut className="w-4 h-4" />
-                  Logout
+                <Link to="/profile" className="flex items-center gap-2 text-gray-600 hover:text-green-600 px-2 py-1" onClick={() => setMobileMenuOpen(false)}>
+                  <User className="w-4 h-4" /> My Profile
+                </Link>
+                <Link to="/orders" className="flex items-center gap-2 text-gray-600 hover:text-green-600 px-2 py-1" onClick={() => setMobileMenuOpen(false)}>
+                  <ShoppingCart className="w-4 h-4" /> My Orders
+                </Link>
+                <button onClick={() => { logout(); setMobileMenuOpen(false); }} className="flex w-full items-center gap-2 text-gray-600 hover:text-green-600 px-2 py-1 mt-1">
+                  <LogOut className="w-4 h-4" /> Logout
                 </button>
               </>
             )}

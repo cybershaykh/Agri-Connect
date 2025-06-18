@@ -5,7 +5,9 @@ import productModel from '../models/productModel.js';
 // create a new product
 export const addProduct = async (req, res) => {
     try {
-        const { name, description, category, rating, price, image, offerPrice, inStock, location } = req.body;
+        const { name, description, category, rating, price, image, offerPrice, inStock, location,
+            farmerImage, farmerAddress, farmerName, farmerPhone, farmerEmail
+         } = req.body;
 
         if (!name || !category || !image || !price) {
             return res.status(400).json({ error: "❌Please provide all required fields." });
@@ -21,6 +23,11 @@ export const addProduct = async (req, res) => {
             image,
             location,
             inStock: inStock !== undefined ? inStock : true,
+            farmerImage,
+            farmerAddress,
+            farmerName,
+            farmerPhone,
+            farmerEmail,
         });
 
         const savedProduct = await newProduct.save();

@@ -53,7 +53,7 @@ const ProductCard = ({ product }) => {
           </span>
         </div>
       </div>
-      <p className="text-xs max-sm:hidden">{product.category}</p>
+      <p className="text-xs text--500/70 max-sm:hidden">{product.category}</p>
 
       <div className="flex items-end justify-between w-full mt-1">
         <p className="text-base font-medium">₦{product.price}</p>

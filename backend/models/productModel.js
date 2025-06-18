@@ -10,6 +10,11 @@ const productSchema = new mongoose.Schema({
   image: {type: Array, required: true},
   inStock: { type: Boolean, default: true },
   location: { type: String, required: true},
+  farmerImage: { type: Array, required: true },
+  farmerAddress: { type: String, required: true },
+  farmerName: { type: String, required: true },
+  farmerPhone: { type: String, required: true },
+  farmerEmail: { type: String, required: true },
   farmerId: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
   createdAt: { type: Date, default: Date.now },
 });

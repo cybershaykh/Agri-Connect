@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./component/Navbar";
 import HomePage from "./pages/HomePage";
 // import Products from "./pages/Product";
-import ProductDetail from "./pages/ProductDetail";
 import FarmersPage from "./pages/Farmer";
 import About from "./pages/About";
 import FAQSection from "./pages/FAQSection";
@@ -14,32 +13,23 @@ import Login from "./component/Login";
 import Register from "./component/Register";
 import UserProfile from "./pages/UserProfile";
 import AddAddress from "./component/Addaddress";
-import { ToastContainer } from "react-toastify";
 import AllProducts from "./pages/AllProducts";
 import Product from "./product/id/page";
+import { Toaster } from "react-hot-toast";
+import MyOrders from "./component/MyOrders";
+import OrderPlaced from "./component/OrderPlaced";
 
-<ToastContainer
-  position="top-center"
-  autoClose={2000}
-  hideProgressBar={false}
-  newestOnTop
-  closeOnClick
-  pauseOnHover
-  draggable
-  theme="colored"
-/>
 const App = () => {
   return (
     <div>
       <BrowserRouter>
         <StoreContextProvider>
+          <Toaster position="top-center" />
           <Navbar />
           <Routes>
             <Route path="/" element={<HomePage />} />
-            {/* <Route path="/products" element={<Products />} /> */}
             <Route path="/all-products" element={<AllProducts />} />
             <Route path="/product/:id" element={<Product />} />
-            <Route path="/details" element={<ProductDetail />} />
             <Route path="/farmers" element={<FarmersPage />} />
             <Route path="/about" element={<About />} />
             <Route path="/faqsection" element={<FAQSection />} />
@@ -48,8 +38,9 @@ const App = () => {
             <Route path="/register" element={<Register />} />
             <Route path="/add-address" element={<AddAddress />} />
             <Route path="/profile" element={<UserProfile />} />
+            <Route path="/my-orders" element={<MyOrders />} />
+            <Route path="/order-placed" element={<OrderPlaced />} />
           </Routes>
-          <ToastContainer position="top-center" />
           <Footer />
         </StoreContextProvider>
       </BrowserRouter>
