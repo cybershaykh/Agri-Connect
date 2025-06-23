@@ -6,9 +6,7 @@ import { Bell, ChevronDown, LogOut, Settings, User } from "lucide-react";
 
 const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  // const navigate = useNavigate();
 
-  // Initialize AOS
   useEffect(() => {
     AOS.init({
       duration: 800,
@@ -18,7 +16,7 @@ const Navbar = () => {
 
   // Logout logic
   const handleLogout = () => {
-    localStorage.removeItem("token"); // Optional: remove user token
+    localStorage.removeItem("token"); 
     setDropdownOpen(false);
     navigate("/"); // Redirect to landing page
   };
@@ -31,7 +29,7 @@ const Navbar = () => {
           <div className="h-8 w-8 rounded-lg bg-green-600 flex items-center justify-center">
             <span className="text-white font-bold text-sm">F</span>
           </div>
-          <h1 className="text-lg sm:text-xl font-semibold">FarmerDashBoard</h1>
+          <h1 className="text-lg sm:text-xl font-semibold">AdminConnect</h1>
         </div>
 
         {/* Right Side */}

@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mail, Lock, User, Eye, EyeOff, MapPin, Leaf } from "lucide-react";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -65,35 +65,13 @@ const Register = () => {
       setLoading(false);
     }
   };
-  // useEffect(() =>{
-  //   console.log(data);
-  // },[data])
 
   useEffect(() => {
     AOS.init({ duration: 800 });
   }, []);
 
-  // const handleRegister = (e) => {
-  //   e.preventDefault();
-  //   setLoading(true);
-
-  //   // Validation
-  //   if (!name || !email || !password || (role === "farmer" && (!farmName || !farmSize || !location))) {
-  //     toast.error("Please fill all required fields.");
-  //     setLoading(false);
-  //     return;
-  //   }
-
-  //   setTimeout(() => {
-  //     setLoading(false);
-  //     toast.success(`Successfully registered as ${role}`);
-  //     setTimeout(() => navigate("/login"), 1500);
-  //   }, 1500);
-  // };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-green-50 px-4">
-      <ToastContainer position="top-right" />
       <div
         className="max-w-md w-full bg-white rounded-3xl shadow-lg p-6 sm:p-8"
         data-aos="fade-up"

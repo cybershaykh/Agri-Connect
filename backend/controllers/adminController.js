@@ -19,26 +19,26 @@ export const getAllUsers = async (req, res) => {
 //Block or unblock a user (Admin only)
 export const blockUser = async (req, res) => {
     try {
-        const { buyerId, action } = req.body;
+        const { userId, action } = req.body;
 
-        if (!buyerId || !action) {
+        if (!userId || !action) {
             return res.status(400).json({ error: "❌ User ID and action are required." });
         }
         if (action !== "block" && action !== "unblock") {
             return res.status(400).json({ error: "❌ Invalid action. Use 'block' or 'unblock'." });
         }
-        const buyer = await userModel.findById(buyerId);
-        if (!buyer) {
+        const user = await userModel.findById(userId);
+        if (!userId) {
             return res.status(404).json({ error: "❌ User not found." });
         }
 
-        buyer.isBlocked = action === "block";
-        await buyer.save();
+        user.isBlocked = action === "block";
+        await user.save();
 
         res.status(200).json({
             success: true,
             message: `✅ User has been ${action}ed successfully.`,
-            buyer
+            user
         });
     } catch (err) {
         console.error(err);

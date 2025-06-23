@@ -11,6 +11,7 @@ import marketPriceRoute from './routes/marketPriceRoute.js';
 import adminRoute from './routes/adminRoute.js';
 import weatherRoute from './routes/weatherRoute.js';
 import farmerRoute from './routes/farmerRoute.js';
+import cartRoute from './routes/cartRoute.js';
 
 dotenv.config();
 const app = express();
@@ -28,6 +29,7 @@ app.use("/api/review", reviewRoute);
 app.use("/api/resource", resourceRoute);
 app.use("/api/marketprice", marketPriceRoute);
 app.use("/api/admin", adminRoute);
+app.use("/api/cart", cartRoute);
 app.use("/api/weather", weatherRoute);
 
 app.get('/', (req, res) => {

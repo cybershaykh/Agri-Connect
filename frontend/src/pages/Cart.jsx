@@ -7,7 +7,7 @@ import { ChevronLeft } from "lucide-react";
 
 const Cart = () => {
 
-  const { products, cartItems, navigate, addToCart, removeFromCart, getCartCount, updateCartQuantity } = useContext(StoreContext);
+  const { products, cartItems, navigate, addToCart, getCartCount, updateCartQuantity } = useContext(StoreContext);
 
   console.log(cartItems);
 
@@ -60,7 +60,7 @@ const Cart = () => {
                           </div>
                           <button
                             className="md:hidden text-xs text-green-700 mt-1"
-                            onClick={() => removeFromCart(product._id, 0)}
+                            onClick={() => updateCartQuantity(product._id, 0)}
                           >
                             Remove
                           </button>

@@ -1,7 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import farmerModel from "../models/farmerModel.js"
-// import farmerModel from '../models/farmerModel.js';
 import dotenv from 'dotenv';
 
 dotenv.config();

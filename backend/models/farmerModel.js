@@ -8,7 +8,6 @@ const farmerSchema = new mongoose.Schema(
     farmName: { type: String, required: true },
     farmSize: { type: String, required: true },
     location: { type: String, required: true },
-    cartData: { type: Object, default: {} },
     verified: { type: Boolean, default: false },
     role: { type: String, enum: ['farmer', 'buyer', 'admin'], default: 'farmer' },
     isBlocked: { type: Boolean, default: false },

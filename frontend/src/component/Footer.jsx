@@ -15,7 +15,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
         {/* Logo & Description */}
         <div>
-          <h2 className="text-2xl font-bold mb-3">AgriConnect</h2>
+          <h2 className="text-2xl font-bold mb-3"> 🌾 AgriConnect</h2>
           <p className="text-sm text-gray-300">
             Bridging the gap between Nigerian farmers and buyers with access to weather updates, market prices, and modern agricultural tools.
           </p>
