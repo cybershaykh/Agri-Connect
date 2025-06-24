@@ -15,7 +15,6 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [farmName, setFarmName] = useState("");
-  const [farmSize, setFarmSize] = useState("");
   const [location, setLocation] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -186,21 +185,6 @@ const Register = () => {
                     required
                   />
                 </div>
-              </div>
-
-              {/* Farm Size */}
-              <div>
-                <label className="text-sm font-medium text-gray-700">
-                  Farm Size (acres)
-                </label>
-                <input
-                  type="number"
-                  value={farmSize}
-                  onChange={(e) => setFarmSize(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500"
-                  placeholder="e.g. 10"
-                  required
-                />
               </div>
 
               {/* Location */}

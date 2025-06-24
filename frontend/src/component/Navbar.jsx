@@ -1,5 +1,13 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
-import { Menu, X, User, LogIn, LogOut, UserCircle, ShoppingCart } from "lucide-react";
+import {
+  Menu,
+  X,
+  User,
+  LogIn,
+  LogOut,
+  UserCircle,
+  ShoppingCart,
+} from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { Link, useNavigate } from "react-router-dom";
@@ -15,6 +23,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const userMenuRef = useRef(null);
 
+  const isFarmer = user?.role === "farmer";
   const totalCartItems = Object.values(cartItems || {}).reduce((a, b) => a + b, 0);
 
   useEffect(() => {
@@ -57,36 +66,54 @@ const Navbar = () => {
   };
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50" data-aos="fade-down">
+    <header
+      className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50"
+      data-aos="fade-down"
+    >
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <Link to="/" className="text-2xl font-extrabold text-green-600 tracking-wide hover:text-green-700 transition">
+        <Link
+          to="/"
+          className="text-2xl font-extrabold text-green-600 tracking-wide hover:text-green-700 transition"
+        >
           🌾 AgriConnect
         </Link>
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex space-x-6">
           <Link to="/" className="text-gray-600 hover:text-green-600 font-medium">Home</Link>
-          <Link to="/all-products" className="text-gray-600 hover:text-green-600 font-medium">Products</Link>
-          <Link to="/farmers" className="text-gray-600 hover:text-green-600 font-medium">Farmers</Link>
+
+          {!isFarmer ? (
+            <>
+              <Link to="/all-products" className="text-gray-600 hover:text-green-600 font-medium">Products</Link>
+              <Link to="/farmers" className="text-gray-600 hover:text-green-600 font-medium">Farmers</Link>
+            </>
+          ) : (
+            <>
+              <Link to="/farmer-dashboard" className="text-gray-600 hover:text-green-600 font-medium">Dashboard</Link>
+              <Link to="/add-product" className="text-gray-600 hover:text-green-600 font-medium">Add Product</Link>
+            </>
+          )}
+
           <Link to="/about" className="text-gray-600 hover:text-green-600 font-medium">About</Link>
           <a href="#contact" className="text-gray-600 hover:text-green-600 font-medium">Contact</a>
         </nav>
 
         {/* Right Buttons */}
         <div className="flex items-center space-x-4 relative">
-          {/* Cart Icon with Animation */}
-          <Link to="/cart" className="relative group">
-            <ShoppingCart
-              className={`h-6 w-6 transition-transform duration-300 ${
-                isScrolled ? "text-gray-700" : "text-gray-600"
-              } ${animateCart ? "animate-bounce" : ""}`}
-            />
-            {totalCartItems > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                {totalCartItems}
-              </span>
-            )}
-          </Link>
+          {!isFarmer && (
+            <Link to="/cart" className="relative group">
+              <ShoppingCart
+                className={`h-6 w-6 transition-transform duration-300 ${
+                  isScrolled ? "text-gray-700" : "text-gray-600"
+                } ${animateCart ? "animate-bounce" : ""}`}
+              />
+              {totalCartItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {totalCartItems}
+                </span>
+              )}
+            </Link>
+          )}
 
           {/* User Dropdown */}
           <div ref={userMenuRef} className="relative">
@@ -96,11 +123,19 @@ const Navbar = () => {
             >
               {user ? (
                 <>
-                  <span className="hidden md:inline text-sm font-medium">{user?.name || "My Account"}</span>
+                  <span className="hidden md:inline text-sm font-medium">
+                    {user?.name || "My Account"}
+                  </span>
                   {user?.avatar ? (
                     <img
                       src={user.avatar}
                       alt="Profile"
+                      className="w-8 h-8 rounded-full object-cover"
+                    />
+                  ) : isFarmer ? (
+                    <img
+                      src="/default-farmer-avatar.png"
+                      alt="Farmer"
                       className="w-8 h-8 rounded-full object-cover"
                     />
                   ) : (
@@ -139,26 +174,28 @@ const Navbar = () => {
                       <p className="text-sm font-medium text-gray-900 truncate">{user?.name || "Welcome"}</p>
                       <p className="text-xs text-gray-500 truncate">{user?.email || ""}</p>
                     </div>
-                    <Link
-                      to="/profile"
-                      className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600"
-                      onClick={() => setUserDropdownOpen(false)}
-                    >
-                      <User className="w-4 h-4" />
-                      My Profile
-                    </Link>
-                    <Link
-                      to="/orders"
-                      className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600"
-                      onClick={() => setUserDropdownOpen(false)}
-                    >
-                      <ShoppingCart className="w-4 h-4" />
-                      My Orders
-                    </Link>
-                    <button
-                      onClick={logout}
-                      className="flex w-full items-center gap-2 px-4 py-2 text-left text-gray-700 hover:bg-green-50 hover:text-green-600 border-t border-gray-100"
-                    >
+
+                    {isFarmer ? (
+                      <>
+                        <Link to="/farmer-dashboard" className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600" onClick={() => setUserDropdownOpen(false)}>
+                          <User className="w-4 h-4" /> Dashboard
+                        </Link>
+                        <Link to="/add-product" className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600" onClick={() => setUserDropdownOpen(false)}>
+                          <ShoppingCart className="w-4 h-4" /> Add Product
+                        </Link>
+                      </>
+                    ) : (
+                      <>
+                        <Link to="/profile" className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600" onClick={() => setUserDropdownOpen(false)}>
+                          <User className="w-4 h-4" /> My Profile
+                        </Link>
+                        <Link to="/orders" className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600" onClick={() => setUserDropdownOpen(false)}>
+                          <ShoppingCart className="w-4 h-4" /> My Orders
+                        </Link>
+                      </>
+                    )}
+
+                    <button onClick={logout} className="flex w-full items-center gap-2 px-4 py-2 text-left text-gray-700 hover:bg-green-50 hover:text-green-600 border-t border-gray-100">
                       <LogOut className="w-4 h-4" />
                       Logout
                     </button>
@@ -169,10 +206,7 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Toggle */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden text-gray-600"
-          >
+          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden text-gray-600">
             {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
@@ -182,8 +216,19 @@ const Navbar = () => {
       {mobileMenuOpen && (
         <div className="md:hidden bg-white px-4 py-4 border-t border-gray-200 space-y-3">
           <Link to="/" className="block text-gray-600 hover:text-green-600" onClick={() => setMobileMenuOpen(false)}>Home</Link>
-          <Link to="/all-products" className="block text-gray-600 hover:text-green-600" onClick={() => setMobileMenuOpen(false)}>Products</Link>
-          <Link to="/farmers" className="block text-gray-600 hover:text-green-600" onClick={() => setMobileMenuOpen(false)}>Farmers</Link>
+
+          {!isFarmer ? (
+            <>
+              <Link to="/all-products" className="block text-gray-600 hover:text-green-600" onClick={() => setMobileMenuOpen(false)}>Products</Link>
+              <Link to="/farmers" className="block text-gray-600 hover:text-green-600" onClick={() => setMobileMenuOpen(false)}>Farmers</Link>
+            </>
+          ) : (
+            <>
+              <Link to="/farmer-dashboard" className="block text-gray-600 hover:text-green-600" onClick={() => setMobileMenuOpen(false)}>Dashboard</Link>
+              <Link to="/add-product" className="block text-gray-600 hover:text-green-600" onClick={() => setMobileMenuOpen(false)}>Add Product</Link>
+            </>
+          )}
+
           <Link to="/about" className="block text-gray-600 hover:text-green-600" onClick={() => setMobileMenuOpen(false)}>About</Link>
           <a href="#contact" className="block text-gray-600 hover:text-green-600" onClick={() => setMobileMenuOpen(false)}>Contact</a>
 
@@ -205,12 +250,25 @@ const Navbar = () => {
                   <p className="text-sm font-medium text-gray-900">{user?.name}</p>
                   <p className="text-xs text-gray-500">{user?.email}</p>
                 </div>
-                <Link to="/profile" className="flex items-center gap-2 text-gray-600 hover:text-green-600 px-2 py-1" onClick={() => setMobileMenuOpen(false)}>
-                  <User className="w-4 h-4" /> My Profile
-                </Link>
-                <Link to="/orders" className="flex items-center gap-2 text-gray-600 hover:text-green-600 px-2 py-1" onClick={() => setMobileMenuOpen(false)}>
-                  <ShoppingCart className="w-4 h-4" /> My Orders
-                </Link>
+                {isFarmer ? (
+                  <>
+                    <Link to="/farmer-dashboard" className="flex items-center gap-2 text-gray-600 hover:text-green-600 px-2 py-1" onClick={() => setMobileMenuOpen(false)}>
+                      <User className="w-4 h-4" /> Dashboard
+                    </Link>
+                    <Link to="/add-product" className="flex items-center gap-2 text-gray-600 hover:text-green-600 px-2 py-1" onClick={() => setMobileMenuOpen(false)}>
+                      <ShoppingCart className="w-4 h-4" /> Add Product
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/profile" className="flex items-center gap-2 text-gray-600 hover:text-green-600 px-2 py-1" onClick={() => setMobileMenuOpen(false)}>
+                      <User className="w-4 h-4" /> My Profile
+                    </Link>
+                    <Link to="/orders" className="flex items-center gap-2 text-gray-600 hover:text-green-600 px-2 py-1" onClick={() => setMobileMenuOpen(false)}>
+                      <ShoppingCart className="w-4 h-4" /> My Orders
+                    </Link>
+                  </>
+                )}
                 <button onClick={() => { logout(); setMobileMenuOpen(false); }} className="flex w-full items-center gap-2 text-gray-600 hover:text-green-600 px-2 py-1 mt-1">
                   <LogOut className="w-4 h-4" /> Logout
                 </button>

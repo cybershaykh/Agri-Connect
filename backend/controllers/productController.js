@@ -4,30 +4,31 @@ import productModel from '../models/productModel.js';
 
 // create a new product
 export const addProduct = async (req, res) => {
-    try {
-        const { name, description, category, rating, price, image, offerPrice, inStock, location,
+
+    const { name,description, category, rating, price, image, offerPrice, inStock, location,
             farmerImage, farmerAddress, farmerName, farmerPhone, farmerEmail
-         } = req.body;
+        } = req.body;
+    try {
 
         if (!name || !category || !image || !price) {
             return res.status(400).json({ error: "❌Please provide all required fields." });
         }
 
         const newProduct = new productModel({
-            name,
-            description,
-            category,
+            name: name,
+            description:description || "",
+            category: category,
             rating: rating || 0,
-            price,
+            price: price,
             offerPrice: offerPrice || 0,
-            image,
-            location,
+            image:image,
+            location: location || "",
             inStock: inStock !== undefined ? inStock : true,
-            farmerImage,
-            farmerAddress,
-            farmerName,
-            farmerPhone,
-            farmerEmail,
+            farmerImage: farmerImage || [],
+            farmerAddress: farmerAddress || "",
+            farmerName: farmerName || "",
+            farmerPhone: farmerPhone || "",
+            farmerEmail: farmerEmail || "",
         });
 
         const savedProduct = await newProduct.save();
@@ -62,8 +63,8 @@ export const getAllProducts = async (req, res) => {
     }
 };
 
-// get a single product by ID
-export const getProductById = async (req, res) => {
+// approve a product
+export const approveProduct = async (req, res) => {
     try {
         const { productId } = req.body;
 
@@ -71,23 +72,50 @@ export const getProductById = async (req, res) => {
             return res.status(400).json({ error: "❌Product ID is required." });
         }
 
-        const product = await productModel.findById(productId);
+        const productToApprove = await productModel.findById(productId);
 
-        if (!product) {
+        if (!productToApprove) {
             return res.status(404).json({ error: "❌Product not found." });
         }
 
+        productToApprove.isApproved = true;
+        productToApprove.approvedBy = req.user._id;
+        productToApprove.approvalDate = new Date();
+
+        const updatedProduct = await productToApprove.save();
+
         res.status(200).json({
             success: true,
-            message: "✅Product retrieved successfully.",
-            product
+            message: "✅Product approved successfully.",
+            product: updatedProduct
         });
-    } catch (err) {
-        console.error("Get product by ID error:", err);
-        res.status(500).json({ error: "❌Something went wrong while retrieving the product." });
+    } catch (error) {
+        console.error("Approve product error:", error);
+        res.status(500).json({ error: "❌Something went wrong while approving the product." });
     }
 };
 
+// get unapproved products
+export const getUnapprovedProducts = async (req, res) => {
+    // Uncomment the following code if you want to fetch unapproved products
+    try {
+        const products = await productModel.find({ isApproved: false }).populate('farmerId', 'fullName');
+        res.status(200).json({ success: true, products });
+    }
+    catch (error) {
+        res.status(500).json({ success: false, message: 'Failed to fetch products', error: error.message });
+    }
+};
+
+// get approved products
+export const getApprovedProducts = async (req, res) => {
+    try {
+        const products = await productModel.find({ isApproved: true }).populate('farmerId', 'fullName');
+        res.status(200).json({ success: true, products });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Failed to fetch products', error: error.message });
+    }
+};
 
 // update a product
 export const updateProduct = async (req, res) => {

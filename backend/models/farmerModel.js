@@ -6,7 +6,6 @@ const farmerSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     farmName: { type: String, required: true },
-    farmSize: { type: String, required: true },
     location: { type: String, required: true },
     verified: { type: Boolean, default: false },
     role: { type: String, enum: ['farmer', 'buyer', 'admin'], default: 'farmer' },

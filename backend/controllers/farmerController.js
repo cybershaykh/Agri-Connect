@@ -8,9 +8,9 @@ const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
 
 // Register a new farmer
 export const registerFarmer = async (req, res) => {
-  const { name, email, password, farmSize, farmName, location } = req.body;
+  const { name, email, password, farmName, location } = req.body;
 
-  if (!name || !email || !password || !farmSize || !farmName || !location) {
+  if (!name || !email || !password || !farmName || !location) {
     return res.status(400).json({
       success: false,
       message: "❌ Please provide all required fields."
@@ -33,7 +33,6 @@ export const registerFarmer = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      farmSize,
       farmName,
       location
     });

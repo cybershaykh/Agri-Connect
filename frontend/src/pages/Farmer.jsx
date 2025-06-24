@@ -9,7 +9,6 @@ import {
   Award,
   MessageCircle,
 } from "lucide-react";
-import { Link } from "react-router-dom"; // or next/link if using Next.js
 
 export default function FarmersPage() {
   useEffect(() => {

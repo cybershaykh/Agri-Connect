@@ -1,12 +1,16 @@
 import express from "express";
-import { addProduct, deleteProduct, getAllProducts, getProductById, updateProduct } from "../controllers/productController.js";
+import { addProduct, approveProduct, deleteProduct, getAllProducts, getApprovedProducts, getUnapprovedProducts, updateProduct } from "../controllers/productController.js";
+import authMiddleware from "../middlewares/auth.js";
+import { isAdmin } from "../middlewares/middleware.js";
 
 
 const productRoute = express.Router();
 
 productRoute.post("/add", addProduct);
 productRoute.get("/getall", getAllProducts);
-productRoute.get("/:id", getProductById);
+productRoute.put('/approve/:productId', authMiddleware, isAdmin, approveProduct);
+productRoute.get('/pending', authMiddleware, isAdmin, getUnapprovedProducts);
+productRoute.get("/:id", getApprovedProducts);
 productRoute.put("/:id", updateProduct);
 productRoute.delete("/:id", deleteProduct);
 

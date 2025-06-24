@@ -115,6 +115,14 @@ const StoreContextProvider = ({ children }) => {
       cartData[itemId] = 1;
     }
     setCartItems(cartData);
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(`${url}/api/cart/add`, { productId: itemId }, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    } catch (err) {
+     console.error("❌ Failed to sync with backend:", err.message);
+    }
   };
 
   const updateCartQuantity = async (itemId, quantity) => {
@@ -125,6 +133,14 @@ const StoreContextProvider = ({ children }) => {
       cartData[itemId] = quantity;
     }
     setCartItems(cartData);
+     try {
+    const token = localStorage.getItem("token");
+    await axios.post(`${url}/api/cart/add`, { productId: itemId }, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  } catch (err) {
+    console.error("❌ Failed to sync with backend:", err.message);
+  }
   };
 
   const getCartCount = () => {
@@ -142,7 +158,7 @@ const StoreContextProvider = ({ children }) => {
     for (const items in cartItems) {
       let itemInfo = products.find((product) => product._id === items);
       if (cartItems[items] > 0) {
-        totalAmount += itemInfo.price * cartItems[items];
+        totalAmount += itemInfo.offerPrice * cartItems[items];
       }
     }
     return Math.floor(totalAmount * 100) / 100;

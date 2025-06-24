@@ -11,7 +11,7 @@ const ProductList = () => {
   const [loading, setLoading] = useState(true)
 
   const fetchList = async () => {
-    const response = await axios.get(`${url}/api/product/list`);
+    const response = await axios.get(`${url}/api/product/getall`);
     
     setLoading(false)
   }

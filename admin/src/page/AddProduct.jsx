@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
+import { useEffect } from "react";
 
 const AddProduct = () => {
   const url = "http://localhost:3000";
@@ -9,7 +10,7 @@ const AddProduct = () => {
   const [farmerImageFile, setFarmerImageFile] = useState(null);
 
   const [data, setData] = useState({
-    name: "",
+    productName: "",
     description: "",
     category: "Fruits",
     price: "",
@@ -59,12 +60,15 @@ const AddProduct = () => {
       formData.append("farmerPhone", data.farmerPhone);
       formData.append("farmerEmail", data.farmerEmail);
 
-      const response = await axios.post(`${url}/api/product/add`, formData);
+      try {
+        const response = await axios.post(`${url}/api/product/add`, formData);
+      } catch (error) {
+        console.log(error)
+      }
       setLoading(false);
 
       if (response.data.success) {
         toast.success("✅ Product added successfully!");
-        // Reset form
         setData({
           name: "",
           description: "",
@@ -82,14 +86,17 @@ const AddProduct = () => {
         setImage([]);
         setFarmerImageFile(null);
       } else {
-        toast.error("❌ Failed to add product.");
+        toast.error("Failed to add product.");
       }
     } catch (err) {
       setLoading(false);
-      console.error("Submit error:", err);
-      toast.error("❌ Something went wrong.");
+      toast.error(" Something went wrong.");
     }
   };
+
+  useEffect(()=>{
+    console.log(data);
+  }, [data])
 
   return (
     <div className="flex-1 min-h-screen flex flex-col justify-between">
@@ -133,10 +140,10 @@ const AddProduct = () => {
           <input
             name="name"
             type="text"
-            placeholder="Type here"
+            placeholder="Enter product name"
             className="w-full border rounded-lg px-4 py-2"
             onChange={onChangeHandler}
-            value={data.name}
+            value={data.productName}
             required
           />
         </div>

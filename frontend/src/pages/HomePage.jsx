@@ -22,6 +22,7 @@ import CountUp from "react-countup";
 import About from "./About";
 import FAQSection from "./FAQSection";
 import { StoreContext } from "../component/context/StoreContext";
+import Testimonial from "./Testimonial";
 
 const articles = [
   {
@@ -410,7 +411,7 @@ const HomePage = () => {
           {/* Heading */}
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Why Agrone?
+              Why AgriConnect?
             </h2>
             <p className="text-gray-600 text-lg max-w-xl mx-auto">
               Delivering cutting-edge solutions and unmatched service to empower
@@ -468,6 +469,7 @@ const HomePage = () => {
               <p className="text-gray-600 text-sm">Happy Farmers</p>
             </div>
           </div>
+          <Testimonial />
 
           {/* Call to Action */}
           <div
