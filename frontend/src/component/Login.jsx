@@ -8,11 +8,13 @@ import toast, { Toaster } from "react-hot-toast";
 import { StoreContext } from "./context/StoreContext";
 
 const Login = () => {
-  const { url, setToken, login } = useContext(StoreContext);
+  const { url, setToken } = useContext(StoreContext);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [termsChecked, setTermsChecked] = useState(false);
+  const [loginType, setLoginType] = useState("user"); // 'user' or 'farmer'
   const navigate = useNavigate();
+
   const [data, setData] = useState({
     email: "",
     password: ""
@@ -20,7 +22,7 @@ const Login = () => {
 
   const onChangeHandler = (event) => {
     const { name, value } = event.target;
-    setData(prev => ({
+    setData((prev) => ({
       ...prev,
       [name]: value
     }));
@@ -28,7 +30,7 @@ const Login = () => {
 
   const onLogin = async (event) => {
     event.preventDefault();
-    
+
     if (!termsChecked) {
       toast.error("⚠️ Please agree to the terms and conditions before logging in.", {
         style: {
@@ -37,30 +39,30 @@ const Login = () => {
           color: "#856404",
           fontWeight: "600",
           fontSize: "16px",
-          padding: "16px",
+          padding: "16px"
         },
-        position: "top-center",
+        position: "top-center"
       });
       return;
     }
 
     setLoading(true);
+
+    const endpoint =
+      loginType === "farmer"
+        ? `${url}/api/farmer/login`
+        : `${url}/api/user/login`;
+
     try {
-      const response = await axios.post(`${url}/api/user/login`, data);
-      
+      const response = await axios.post(endpoint, data);
+
       if (response.data.success) {
-        setToken(response.data.token, response.data.user);
-        toast.success("Login successful!");
-        localStorage.setItem("token", response.data.token)
-        
-        const token = localStorage.getItem("token")
-        if(token){
-          navigate("/")
-          
-        }else{
-          
-          navigate("/login")
-        }
+        setToken(response.data.token, response.data.user || response.data.farmer);
+        toast.success(`${loginType === "farmer" ? "Farmer" : "User"} login successful!`);
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.user || response.data.farmer));
+
+        navigate(loginType === "farmer" ? "/farmerdashboard" : "/");
       } else {
         toast.error(response.data.message || "Login failed");
       }
@@ -72,11 +74,10 @@ const Login = () => {
           color: "#721c24",
           fontWeight: "600",
           fontSize: "16px",
-          padding: "16px",
+          padding: "16px"
         },
-        position: "top-center",
-      }
-      );
+        position: "top-center"
+      });
     } finally {
       setLoading(false);
     }
@@ -95,17 +96,34 @@ const Login = () => {
           data-aos="flip-left"
         >
           <h2 className="text-3xl font-bold text-center text-green-700 mb-6">
-            Welcome Back
+            {loginType === "farmer" ? "Farmer Login" : "Welcome Back"}
           </h2>
+
+          <div className="flex justify-center gap-4 mb-4">
+            <button
+              onClick={() => setLoginType("user")}
+              className={`px-4 py-1 rounded-full font-semibold ${
+                loginType === "user" ? "bg-green-600 text-white" : "bg-gray-200"
+              }`}
+            >
+              User Login
+            </button>
+            <button
+              onClick={() => setLoginType("farmer")}
+              className={`px-4 py-1 rounded-full font-semibold ${
+                loginType === "farmer" ? "bg-green-600 text-white" : "bg-gray-200"
+              }`}
+            >
+              Farmer Login
+            </button>
+          </div>
 
           <form onSubmit={onLogin} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Email address
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Email address</label>
               <div className="mt-1 relative">
                 <Mail className="absolute left-3 top-2.5 text-gray-400" />
-                <input 
+                <input
                   name="email"
                   onChange={onChangeHandler}
                   value={data.email}
@@ -118,9 +136,7 @@ const Login = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Password
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Password</label>
               <div className="mt-1 relative">
                 <Lock className="absolute left-3 top-2.5 text-gray-400" />
                 <input
@@ -167,19 +183,18 @@ const Login = () => {
               {loading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
-                "Log In"
+                `${loginType === "farmer" ? "Farmer Login" : "Log In"}`
               )}
             </button>
 
-            <p className="text-sm text-center text-gray-600">
-              Don't have an account?{" "}
-              <a
-                href="/register"
-                className="text-green-600 font-semibold hover:underline"
-              >
-                Register here
-              </a>
-            </p>
+            {loginType === "user" && (
+              <p className="text-sm text-center text-gray-600">
+                Don&apos;t have an account?{" "}
+                <a href="/register" className="text-green-600 font-semibold hover:underline">
+                  Register here
+                </a>
+              </p>
+            )}
           </form>
         </div>
       </div>

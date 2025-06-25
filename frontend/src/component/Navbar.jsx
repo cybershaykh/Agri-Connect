@@ -89,7 +89,7 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              <Link to="/farmer-dashboard" className="text-gray-600 hover:text-green-600 font-medium">Dashboard</Link>
+              <Link to="/farmerdashboard" className="text-gray-600 hover:text-green-600 font-medium">Dashboard</Link>
               <Link to="/add-product" className="text-gray-600 hover:text-green-600 font-medium">Add Product</Link>
             </>
           )}
@@ -129,7 +129,7 @@ const Navbar = () => {
                   {user?.avatar ? (
                     <img
                       src={user.avatar}
-                      alt="Profile"
+                      alt="user"
                       className="w-8 h-8 rounded-full object-cover"
                     />
                   ) : isFarmer ? (

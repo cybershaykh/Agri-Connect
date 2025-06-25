@@ -7,37 +7,42 @@ import { useNavigate } from "react-router-dom";
 export const StoreContext = createContext(null);
 
 const StoreContextProvider = ({ children }) => {
-  const router = useEffect(() => {
+  const navigate = useNavigate();
+  const url = "http://localhost:3000";
+
+  const [cartItems, setCartItems] = useState({});
+  const [token, setToken] = useState("");
+  const [user, setUser] = useState(null);
+  const [farmer, setFarmer] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState([]);
+
+  // Fetch products from real API
   const fetchProducts = async () => {
     try {
       const response = await axios.get(`${url}/api/product/getall`);
-      setProducts(response.data.products); // adjust key if your API response is different
+      setProducts(response.data.products);
     } catch (err) {
       console.error("Failed to fetch products", err);
       toast.error("Could not load products");
     }
   };
+  // Fetch products on initial load
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
-  fetchProducts();
-}, []);useNavigate
-  const [cartItems, setCartItems] = useState({});
-  const navigate = useNavigate();
-  const url = "http://localhost:3000";
-  const [token, setToken] = useState("");
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [products, setProducts] = useState([]);
-
-  // Initialize products with dummy data for development
+  // Initialize with dummy products (fallback)
   const fetchProductData = async () => {
     setProducts(productsDummyData);
   };
 
-  // Initialize auth state from localStorage
+  // Rehydrate auth on reload
   useEffect(() => {
     const initializeAuth = async () => {
       const storedToken = localStorage.getItem("token");
       const storedUser = localStorage.getItem("user");
+      const storedFarmer = localStorage.getItem("farmer");
 
       if (storedToken) {
         setToken(storedToken);
@@ -47,6 +52,12 @@ const StoreContextProvider = ({ children }) => {
             setUser(JSON.parse(storedUser));
           } catch (e) {
             console.error("Failed to parse user data", e);
+          }
+        } else if (storedFarmer) {
+          try {
+            setFarmer(JSON.parse(storedFarmer));
+          } catch (e) {
+            console.error("Failed to parse farmer data", e);
           }
         } else {
           await fetchUserData(storedToken);
@@ -58,7 +69,7 @@ const StoreContextProvider = ({ children }) => {
     initializeAuth();
   }, []);
 
-  // Load cart from localStorage on first render
+  // Load cart from localStorage
   useEffect(() => {
     const storedCart = localStorage.getItem("cartItems");
     if (storedCart) {
@@ -66,12 +77,12 @@ const StoreContextProvider = ({ children }) => {
     }
   }, []);
 
-  // Save cart to localStorage on changes
+  // Save cart to localStorage on update
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // Fetch user data when token changes
+  // Fetch user profile
   const fetchUserData = async (token) => {
     try {
       const response = await axios.get(`${url}/api/user/me`, {
@@ -85,6 +96,7 @@ const StoreContextProvider = ({ children }) => {
     }
   };
 
+  // Login as user
   const login = async (token, userData) => {
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(userData));
@@ -92,88 +104,100 @@ const StoreContextProvider = ({ children }) => {
     setUser(userData);
   };
 
+  // Login as farmer
+  const loginAsFarmer = async (token, farmerData) => {
+    localStorage.setItem("token", token);
+    localStorage.setItem("farmer", JSON.stringify(farmerData));
+    setToken(token);
+    setFarmer(farmerData);
+  };
+
+  // Logout
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    localStorage.removeItem("cart");
+    localStorage.removeItem("farmer");
     localStorage.removeItem("cartItems");
     setToken("");
     setUser(null);
+    setFarmer(null);
   };
 
+  // Update user info
   const updateUser = (updatedUser) => {
     setUser(updatedUser);
     localStorage.setItem("user", JSON.stringify(updatedUser));
   };
 
-  // 
+  // Add to cart
   const addToCart = async (itemId) => {
-    let cartData = structuredClone(cartItems);
-    if (cartData[itemId]) {
-      cartData[itemId] += 1;
-    } else {
-      cartData[itemId] = 1;
-    }
+    const cartData = structuredClone(cartItems);
+    cartData[itemId] = (cartData[itemId] || 0) + 1;
     setCartItems(cartData);
+
     try {
       const token = localStorage.getItem("token");
       await axios.post(`${url}/api/cart/add`, { productId: itemId }, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+        headers: { Authorization: `Bearer ${token}` },
+      });
     } catch (err) {
-     console.error("❌ Failed to sync with backend:", err.message);
+      console.error("❌ Failed to sync with backend:", err.message);
     }
   };
 
+  // Update quantity
   const updateCartQuantity = async (itemId, quantity) => {
-    let cartData = structuredClone(cartItems);
+    const cartData = structuredClone(cartItems);
     if (quantity === 0) {
       delete cartData[itemId];
     } else {
       cartData[itemId] = quantity;
     }
     setCartItems(cartData);
-     try {
-    const token = localStorage.getItem("token");
-    await axios.post(`${url}/api/cart/add`, { productId: itemId }, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-  } catch (err) {
-    console.error("❌ Failed to sync with backend:", err.message);
-  }
-  };
 
-  const getCartCount = () => {
-    let totalCount = 0;
-    for (const items in cartItems) {
-      if (cartItems[items] > 0) {
-        totalCount += cartItems[items];
-      }
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(`${url}/api/cart/add`, { productId: itemId }, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    } catch (err) {
+      console.error("❌ Failed to sync with backend:", err.message);
     }
-    return totalCount;
   };
 
+  // Total cart items count
+  const getCartCount = () => {
+    return Object.values(cartItems).reduce((sum, qty) => sum + qty, 0);
+  };
+
+  // Total amount
   const getCartAmount = () => {
     let totalAmount = 0;
-    for (const items in cartItems) {
-      let itemInfo = products.find((product) => product._id === items);
-      if (cartItems[items] > 0) {
-        totalAmount += itemInfo.offerPrice * cartItems[items];
+    for (const itemId in cartItems) {
+      const itemInfo = products.find((product) => product._id === itemId);
+      if (itemInfo && cartItems[itemId] > 0) {
+        totalAmount += itemInfo.offerPrice * cartItems[itemId];
       }
     }
     return Math.floor(totalAmount * 100) / 100;
   };
-
   useEffect(() => {
     fetchProductData();
-  }, []);
+  }, [])
 
   const contextValue = {
-    products, router,
-    cartItems, getCartCount,
-    addToCart, navigate, fetchProductData,
+    products,
+    cartItems,
+    getCartCount,
+    addToCart,
+    navigate,
+    fetchProductData,
     getCartAmount,
-    url, updateCartQuantity,
+    loginAsFarmer,
+    farmer,
+    setFarmer,
+    url,
+    updateCartQuantity,
     token,
     setToken,
     user,
@@ -182,6 +206,8 @@ const StoreContextProvider = ({ children }) => {
     logout,
     updateUser,
     loading,
+    fetchProducts,
+    fetchUserData,
   };
 
   return (

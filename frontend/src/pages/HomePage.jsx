@@ -13,10 +13,6 @@ import {
   Globe,
   Headphones,
   Tractor,
-  Plus,
-  Minus,
-  ShoppingCart,
-  MapPin,
 } from "lucide-react";
 import CountUp from "react-countup";
 import About from "./About";
@@ -116,7 +112,7 @@ const HomePage = () => {
               <div className="flex flex-col sm:flex-row gap-4">
                 {token ? (
                   <>
-                    <a href="/products">
+                    <a href="/all-products">
                       <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg flex items-center justify-center gap-2">
                         Explore Products
                         <ArrowRight className="h-5 w-5" />

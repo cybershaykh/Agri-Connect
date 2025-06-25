@@ -47,7 +47,7 @@ export const registerFarmer = async (req, res) => {
       success: true,
       message: "✅ Farmer registered successfully.",
       token,
-      user: {
+      famer: {
         id: newFarmer._id,
         name: newFarmer.name,
         email: newFarmer.email,
@@ -105,7 +105,7 @@ export const loginFarmer = async (req, res) => {
       success: true,
       message: "✅ Login successful.",
       token,
-      user: {
+      farmer: {
         id: farmer._id,
         name: farmer.name,
         email: farmer.email,
@@ -152,3 +152,39 @@ export const getAllFarmers = async (req, res) => {
     });
   }
 };
+// getfarmerwithtoken
+export const getFarmerWithToken = async (req, res) => {
+  try {
+    const authHeader = req.req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: "❌ No token provided."
+      });
+    }
+
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const farmer = await farmerModel.findById(decoded.id).select("-password");
+
+    if (!farmer) {
+      return res.status(404).json({
+        success: false,
+        message: "❌ Farmer not found."
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "✅ Farmer fetched successfully.",
+      farmer
+    });
+  } catch (error) {
+    console.error("Error fetching farmer with token:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "🚨 server error while fetching"
+    })
+  }
+}

@@ -18,6 +18,7 @@ import Product from "./product/id/page";
 import { Toaster } from "react-hot-toast";
 import MyOrders from "./component/MyOrders";
 import OrderPlaced from "./component/OrderPlaced";
+import FarmerDashboard from "./pages/famerDashboard";
 
 const App = () => {
   return (
@@ -40,6 +41,8 @@ const App = () => {
             <Route path="/profile" element={<UserProfile />} />
             <Route path="/my-orders" element={<MyOrders />} />
             <Route path="/order-placed" element={<OrderPlaced />} />
+            <Route path="/farmerdashboard" element={<FarmerDashboard />} />
+            
           </Routes>
           <Footer />
         </StoreContextProvider>

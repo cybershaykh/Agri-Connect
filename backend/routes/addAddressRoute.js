@@ -1,10 +1,9 @@
 import express from 'express';
 import { addAddress } from '../controllers/addAddressController.js';
-import authMiddleware from '../middlewares/auth.js';
 
 
 const addAddressRoute = express.Router();
 
-addAddressRoute.post("/add", authMiddleware, addAddress);
+addAddressRoute.post("/add", addAddress);
 
 export default addAddressRoute;

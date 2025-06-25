@@ -8,8 +8,8 @@ const productRoute = express.Router();
 
 productRoute.post("/add", addProduct);
 productRoute.get("/getall", getAllProducts);
-productRoute.put('/approve/:productId', authMiddleware, isAdmin, approveProduct);
-productRoute.get('/pending', authMiddleware, isAdmin, getUnapprovedProducts);
+productRoute.put('/approve/:productId', isAdmin, approveProduct);
+productRoute.get('/pending', isAdmin, getUnapprovedProducts);
 productRoute.get("/:id", getApprovedProducts);
 productRoute.put("/:id", updateProduct);
 productRoute.delete("/:id", deleteProduct);
