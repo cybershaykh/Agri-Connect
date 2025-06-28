@@ -90,7 +90,7 @@ const Navbar = () => {
           ) : (
             <>
               <Link to="/farmerdashboard" className="text-gray-600 hover:text-green-600 font-medium">Dashboard</Link>
-              <Link to="/add-product" className="text-gray-600 hover:text-green-600 font-medium">Add Product</Link>
+              {/* <Link to="/add-product" className="text-gray-600 hover:text-green-600 font-medium">Add Product</Link> */}
             </>
           )}
 
@@ -177,7 +177,7 @@ const Navbar = () => {
 
                     {isFarmer ? (
                       <>
-                        <Link to="/farmer-dashboard" className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600" onClick={() => setUserDropdownOpen(false)}>
+                        <Link to="/farmerdashboard" className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600" onClick={() => setUserDropdownOpen(false)}>
                           <User className="w-4 h-4" /> Dashboard
                         </Link>
                         <Link to="/add-product" className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600" onClick={() => setUserDropdownOpen(false)}>
@@ -186,9 +186,9 @@ const Navbar = () => {
                       </>
                     ) : (
                       <>
-                        <Link to="/profile" className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600" onClick={() => setUserDropdownOpen(false)}>
+                        {/* <Link to="/profile" className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600" onClick={() => setUserDropdownOpen(false)}>
                           <User className="w-4 h-4" /> My Profile
-                        </Link>
+                        </Link> */}
                         <Link to="/orders" className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600" onClick={() => setUserDropdownOpen(false)}>
                           <ShoppingCart className="w-4 h-4" /> My Orders
                         </Link>

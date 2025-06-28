@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   Wheat,
   Sun,
-  Home,
   PlusSquare,
   ShoppingBag,
   Menu,
@@ -25,6 +24,7 @@ import {
   Pie,
   Cell,
 } from "recharts";
+import { Link } from "react-router-dom";
 
 const cropYieldData = [
   { month: "Jan", wheat: 40, corn: 30, soybeans: 20, grains: 50 },
@@ -116,12 +116,15 @@ const MetricCard = ({ title, value, change, icon: Icon, color }) => (
 const FarmerDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  const NavItem = ({ icon: Icon, label }) => (
+  const NavItem = ({ icon: Icon, label, href = "#" }) => (
+  <Link to={href} className="no-underline text-white">
     <div className="flex items-center space-x-3 cursor-pointer hover:bg-green-700 p-2 rounded-lg">
       <Icon className="w-5 h-5" />
       {sidebarOpen && <span className="font-medium">{label}</span>}
     </div>
-  );
+  </Link>
+);
+
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -146,9 +149,9 @@ const FarmerDashboard = () => {
         </div>
 
         <nav className="flex-1 p-4 space-y-2">
-          <NavItem icon={PlusSquare} label="Add Product" />
+          <NavItem icon={PlusSquare} label="Add Product" href="/add-product" />
           <NavItem icon={ShoppingBag} label="Orders" />
-          <NavItem icon={List} label="Product List" />
+          <NavItem icon={List} label="List Product" href="/list-product" />
         </nav>
       </div>
 
@@ -216,7 +219,7 @@ const FarmerDashboard = () => {
                   <Bar dataKey="wheat" fill="#22c55e" name="Wheat" />
                   <Bar dataKey="corn" fill="#3b82f6" name="Corn" />
                   <Bar dataKey="grains" fill="" name="Grains" />
-                  <Bar dataKey="soybeans" fill="#f59e0b" name="Soybeans" />
+                  <Bar dataKey="soybeans" fill="#10b981" name="Soybeans" />
                 </BarChart>
               </ResponsiveContainer>
             </div>

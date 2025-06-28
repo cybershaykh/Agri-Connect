@@ -18,19 +18,21 @@ const StoreContextProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
 
   // Fetch products from real API
+  useEffect(() => {
   const fetchProducts = async () => {
     try {
       const response = await axios.get(`${url}/api/product/getall`);
+      console.log("Fetched products:", response.data); // <== Log it!
       setProducts(response.data.products);
     } catch (err) {
-      console.error("Failed to fetch products", err);
+      console.error("Error fetching products:", err);
       toast.error("Could not load products");
     }
   };
-  // Fetch products on initial load
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+
+  fetchProducts();
+}, []);
+
 
   // Initialize with dummy products (fallback)
   const fetchProductData = async () => {
@@ -206,7 +208,7 @@ const StoreContextProvider = ({ children }) => {
     logout,
     updateUser,
     loading,
-    fetchProducts,
+    // fetchProducts,
     fetchUserData,
   };
 

@@ -19,6 +19,9 @@ import { Toaster } from "react-hot-toast";
 import MyOrders from "./component/MyOrders";
 import OrderPlaced from "./component/OrderPlaced";
 import FarmerDashboard from "./pages/famerDashboard";
+import AddProduct from "./pages/AddProduct";
+import ProductList from "./pages/ProductList";
+import Orders from "./pages/Orders";
 
 const App = () => {
   return (
@@ -42,7 +45,9 @@ const App = () => {
             <Route path="/my-orders" element={<MyOrders />} />
             <Route path="/order-placed" element={<OrderPlaced />} />
             <Route path="/farmerdashboard" element={<FarmerDashboard />} />
-            
+            <Route path="/add-product" element={<AddProduct />} />
+            <Route path="/list-product" element={<ProductList />} />
+            <Route path="/orders" element={<Orders />} />
           </Routes>
           <Footer />
         </StoreContextProvider>
