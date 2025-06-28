@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllFarmers, getFarmerWithToken, loginFarmer, logoutFarmer, registerFarmer } from "../controllers/farmerController.js";
+import { approveFarmer, getAllFarmers, getFarmerWithToken, loginFarmer, logoutFarmer, registerFarmer } from "../controllers/farmerController.js";
 
 const farmerRoute = express.Router();
 
@@ -8,5 +8,6 @@ farmerRoute.post("/login", loginFarmer);
 farmerRoute.post("/logout", logoutFarmer);
 farmerRoute.get("/getall", getAllFarmers);
 farmerRoute.get("/me", getFarmerWithToken);
+farmerRoute.put("approve", approveFarmer);
 
 export default farmerRoute;

@@ -12,6 +12,7 @@ import adminRoute from './routes/adminRoute.js';
 import weatherRoute from './routes/weatherRoute.js';
 import farmerRoute from './routes/farmerRoute.js';
 import addAddressRoute from './routes/addAddressRoute.js';
+import cartRoute from './routes/cartRoute.js';
 
 dotenv.config();
 const app = express();
@@ -25,6 +26,7 @@ connectDB();
 app.use("/api/user", userRoute);
 app.use("/api/farmer", farmerRoute);
 app.use("/api/product", productRoute);
+app.use("/api/cart", cartRoute);
 app.use("/api/order", orderRoute);
 app.use("/api/review", reviewRoute);
 app.use("/api/resource", resourceRoute);

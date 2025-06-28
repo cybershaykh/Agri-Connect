@@ -47,7 +47,7 @@ const App = () => {
             <Route path="/farmerdashboard" element={<FarmerDashboard />} />
             <Route path="/add-product" element={<AddProduct />} />
             <Route path="/list-product" element={<ProductList />} />
-            <Route path="/orders" element={<Orders />} />
+            <Route path="/orders" element={<MyOrders />} />
           </Routes>
           <Footer />
         </StoreContextProvider>

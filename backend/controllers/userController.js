@@ -120,6 +120,17 @@ export const verifyUser = async (req, res) => {
   }
 };
 
+// getall users
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await userModel.find().select('-password'); // Exclude password field
+    res.status(200).json({ success: true, users });
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+}
+
 export const getUserWithToken = async (req, res) => {
   try {
     // 1. Get token from Authorization header

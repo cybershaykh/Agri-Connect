@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import farmerModel from "../models/farmerModel.js"
 import dotenv from 'dotenv';
+import { sendFarmerApprovalEmail } from '../utils/farmerMailer.js';
 
 dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
@@ -186,5 +187,44 @@ export const getFarmerWithToken = async (req, res) => {
       success: false,
       message: "🚨 server error while fetching"
     })
+  }
+}
+// Approve or reject a farmer
+export const approveFarmer = async (req, res) => {
+  const { status, farmerId } = req.body;
+
+  if (!status || !farmerId) {
+    return res.status(400).json({
+      success: false,
+      message: "❌ Please provide status and farmer ID."
+    });
+  }
+
+  try {
+    const updatedFarmer = await farmerModel.findByIdAndUpdate(
+      farmerId,
+      { status },
+      { new: true }
+    );
+
+    if (!updatedFarmer) {
+      return res.status(404).json({
+        success: false,
+        message: "❌ Farmer not found."
+      });
+    }
+    await sendFarmerApprovalEmail(updatedFarmer.email, updatedFarmer.name, status);
+
+    res.status(200).json({
+      success: true,
+      message: `✅ Farmer status updated to ${status}.`,
+      farmer: updatedFarmer
+    });
+  } catch (error) {
+    console.error("Error updating farmer status:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "🚨 server error while updating farmer."
+    });
   }
 }

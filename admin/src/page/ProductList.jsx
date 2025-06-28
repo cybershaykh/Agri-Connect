@@ -11,15 +11,29 @@ const ProductList = () => {
   const [loading, setLoading] = useState(true)
 
   const fetchList = async () => {
-    const response = await axios.get(`${url}/api/product/getall`);
-    
-    setLoading(false)
-  }
+    try {
+      const response = await axios.get(`${url}/api/product/getall`);
+      setProducts(response.data.products || []);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      toast.error("Failed to fetch products");
+    } finally {
+      setLoading(false);
+    }
+  };
+  const removeProduct = async (productId) => {
+    if (!window.confirm("Are you sure you want to delete this product?")) return;
 
-  const removeProduct = async(productId) =>{
-    console.log();
-    
-  }
+    try {
+      await axios.delete(`${url}/api/product/delete/${productId}`);
+      setProducts((prev) => prev.filter((item) => item._id !== productId));
+      toast.success("Product deleted successfully");
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      toast.error("Failed to delete product");
+    }
+  };
+  
   useEffect(() => {
     fetchList();
   }, [])
@@ -60,9 +74,17 @@ const ProductList = () => {
                   </td>
                   <td className="px-4 py-3 max-sm:hidden">{product.category}</td>
                   <td className="px-4 py-3">₦{product.offerPrice}</td>
+                  <td className="px-4 py-3">
+                    {product.inStock ? (
+                      <span className="text-green-600 font-semibold">In Stock</span>
+                    ) : (
+                      <span className="text-red-600 font-semibold">Out of Stock</span>
+                    )}
+                  </td>
 
                   <td className="px-4 py-3 max-sm:hidden">
-                    <button onClick={() => removeProduct(product._id)} className="cursor">
+                    <button onClick={() => removeProduct(product._id)} 
+                      className="text-red-600 hover:text-red-800 font-semibold">
                       X
                     </button>
                   </td>
