@@ -28,7 +28,7 @@ const articles = [
     type: "Technology",
     url: "https://images.pexels.com/photos/2132171/pexels-photo-2132171.jpeg?auto=compress&cs=tinysrgb&w=600",
     date: "March 15, 2025",
-    slug: "increase-crop-yields-drone-technology",
+    href: "increase-crop-yields-drone-technology",
   },
   {
     title: "The Future Farming Landscape through AI Drone for 2025",
@@ -37,7 +37,7 @@ const articles = [
     type: "Innovation",
     url: "https://images.pexels.com/photos/1595108/pexels-photo-1595108.jpeg?auto=compress&cs=tinysrgb&w=600g",
     date: "March 12, 2025",
-    slug: "future-farming-ai-drone-2025",
+    href: "future-farming-ai-drone-2025",
   },
   {
     title: "Latest Drone DG6000 News 2025 Drone Review",
@@ -46,7 +46,7 @@ const articles = [
     type: "Review",
     url: "https://media.istockphoto.com/id/2158853595/photo/agricultural-drone.jpg?b=1&s=612x612&w=0&k=20&c=RUtwPswM3jedv3Xh5IqehuXnH-N94DXg_XB4Yko329s=",
     date: "March 10, 2025",
-    slug: "drone-dg6000-review-2025",
+    href: "drone-dg6000-review-2025",
   },
 ];
 
@@ -502,7 +502,7 @@ const HomePage = () => {
           <div className="grid md:grid-cols-3 gap-8">
             {articles.map((article, index) => (
               <Link
-                to={`/articles/${article.slug}`}
+                to={article.href}
                 key={index}
                 className="bg-white rounded-xl shadow hover:shadow-lg transition-shadow group block"
                 data-aos="zoom-in"

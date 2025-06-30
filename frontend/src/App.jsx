@@ -23,6 +23,9 @@ import AddProduct from "./pages/AddProduct";
 import ProductList from "./pages/ProductList";
 import AdminDashboard from "./pages/adminDashboard";
 import NotFound from "./pages/NotFound";
+import DroneTechnology from "./pages/Drone";
+import DroneDG6000Review from "./pages/Drone1";
+import FutureFarmingAIDrone from "./pages/Drone2";
 
 const App = () => {
   return (
@@ -51,6 +54,9 @@ const App = () => {
             <Route path="/orders" element={<MyOrders />} />
             <Route path="/admindashboard" element={<AdminDashboard />} />
             <Route path="*" element={<NotFound />} />
+            <Route path="/increase-crop-yields-drone-technology" element={<DroneTechnology />} />
+            <Route path="/drone-dg6000-review-2025" element={<DroneDG6000Review />} />
+            <Route path="/future-farming-ai-drone-2025" element={<FutureFarmingAIDrone />} />
           </Routes>
           <Footer />
         </StoreContextProvider>
