@@ -9,28 +9,28 @@ const teamMembers = [
     role: "Lead Farmer",
     location: "Kano, Nigeria",
     bio: "Amina has over 20 years of experience in sustainable farming and leads innovation at AgriConnect.",
-    image: "https://via.placeholder.com/150?text=Amina",
+    image: "https://images.unsplash.com/photo-1701456108005-238f481800ab?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8QW1pbmElMjBZdXN1ZnxlbnwwfHwwfHx8MA%3D%3D",
   },
   {
     name: "Chinedu Okeke",
     role: "Agricultural Technician",
     location: "Enugu, Nigeria",
     bio: "Chinedu specializes in soil testing and crop rotation techniques to boost yield and quality.",
-    image: "https://via.placeholder.com/150?text=Chinedu",
+    image: "https://plus.unsplash.com/premium_photo-1693243527718-37442fc7f77c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Q2hpbmVkdSUyME9rZWtlfGVufDB8fDB8fHww",
   },
   {
     name: "Grace Olorunfemi",
     role: "Farm Worker Coordinator",
     location: "Ibadan, Nigeria",
     bio: "Grace manages field workers, ensuring optimal productivity and fair labor practices.",
-    image: "https://via.placeholder.com/150?text=Grace",
+    image: "https://media.istockphoto.com/id/2170496135/photo/golden-hour-greeting.webp?a=1&b=1&s=612x612&w=0&k=20&c=JTV6L3Z3cSFU2iQQzT4F6U_MfZuDU6pKrwY5XP9Klt0=",
   },
   {
     name: "Bashir Lawal",
     role: "Logistics Manager",
     location: "Kaduna, Nigeria",
     bio: "Bashir ensures timely delivery of farm produce from remote farms to urban buyers.",
-    image: "https://via.placeholder.com/150?text=Bashir",
+    image: "https://images.unsplash.com/photo-1646807930628-110036f5a090?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8QmFzaGlyJTIwTGF3YWx8ZW58MHx8MHx8fDA%3D",
   },
 ];
 

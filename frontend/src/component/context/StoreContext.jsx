@@ -10,132 +10,130 @@ const StoreContextProvider = ({ children }) => {
   const navigate = useNavigate();
   const url = "http://localhost:3000";
 
+  const [products, setProducts] = useState([]);
   const [cartItems, setCartItems] = useState({});
   const [token, setToken] = useState("");
   const [user, setUser] = useState(null);
   const [farmer, setFarmer] = useState(null);
+  const [admin, setAdmin] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [products, setProducts] = useState([]);
 
-  // Fetch products from real API
-  useEffect(() => {
+  // 🟢 Fetch products from API
   const fetchProducts = async () => {
     try {
-      const response = await axios.get(`${url}/api/product/getall`);
-      console.log("Fetched products:", response.data); // <== Log it!
-      setProducts(response.data.products);
+      const res = await axios.get(`${url}/api/product/getall`);
+      setProducts(res.data.products || []);
     } catch (err) {
-      console.error("Error fetching products:", err);
-      toast.error("Could not load products");
+      console.error("❌ Product fetch error:", err);
+      toast.error("Failed to load products");
     }
   };
 
-  fetchProducts();
-}, []);
+  // 🛒 Load cart from localStorage
+  useEffect(() => {
+    const storedCart = localStorage.getItem("cartItems");
+    if (storedCart) setCartItems(JSON.parse(storedCart));
+  }, []);
 
+  // 💾 Save cart to localStorage
+  useEffect(() => {
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  }, [cartItems]);
 
-  // Initialize with dummy products (fallback)
-  const fetchProductData = async () => {
-    setProducts(productsDummyData);
-  };
-
-  // Rehydrate auth on reload
+  // 🧠 Rehydrate auth on reload
   useEffect(() => {
     const initializeAuth = async () => {
       const storedToken = localStorage.getItem("token");
       const storedUser = localStorage.getItem("user");
       const storedFarmer = localStorage.getItem("farmer");
+      const storedAdmin = localStorage.getItem("admin");
 
       if (storedToken) {
         setToken(storedToken);
-
-        if (storedUser) {
-          try {
+        try {
+          if (storedUser) {
             setUser(JSON.parse(storedUser));
-          } catch (e) {
-            console.error("Failed to parse user data", e);
-          }
-        } else if (storedFarmer) {
-          try {
+          } else if (storedFarmer) {
             setFarmer(JSON.parse(storedFarmer));
-          } catch (e) {
-            console.error("Failed to parse farmer data", e);
+          } else if (storedAdmin) {
+            setAdmin(JSON.parse(storedAdmin));
+          } else {
+            await fetchUserData(storedToken);
           }
-        } else {
-          await fetchUserData(storedToken);
+        } catch (e) {
+          console.error("❌ Error parsing stored auth", e);
         }
       }
+
       setLoading(false);
     };
 
     initializeAuth();
+    fetchProducts();
   }, []);
 
-  // Load cart from localStorage
-  useEffect(() => {
-    const storedCart = localStorage.getItem("cartItems");
-    if (storedCart) {
-      setCartItems(JSON.parse(storedCart));
-    }
-  }, []);
-
-  // Save cart to localStorage on update
-  useEffect(() => {
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
-  }, [cartItems]);
-
-  // Fetch user profile
+  // 🔐 Fetch authenticated user
   const fetchUserData = async (token) => {
     try {
-      const response = await axios.get(`${url}/api/user/me`, {
+      const res = await axios.get(`${url}/api/user/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setUser(response.data.user);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
-    } catch (error) {
-      console.error("Failed to fetch user data", error);
+      setUser(res.data.user);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+    } catch (err) {
+      console.error("❌ Failed to fetch user profile", err);
       logout();
     }
   };
 
-  // Login as user
-  const login = async (token, userData) => {
+  // 👉 Login as user
+  const login = (token, userData) => {
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(userData));
     setToken(token);
     setUser(userData);
   };
 
-  // Login as farmer
-  const loginAsFarmer = async (token, farmerData) => {
+  // 👉 Login as farmer
+  const loginAsFarmer = (token, farmerData) => {
     localStorage.setItem("token", token);
     localStorage.setItem("farmer", JSON.stringify(farmerData));
     setToken(token);
     setFarmer(farmerData);
   };
 
-  // Logout
+  // 👉 Login as admin
+  const loginAsAdmin = (token, adminData) => {
+    localStorage.setItem("token", token);
+    localStorage.setItem("admin", JSON.stringify(adminData));
+    setToken(token);
+    setAdmin(adminData);
+  };
+
+  // 🔓 Logout all roles
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("farmer");
+    localStorage.removeItem("admin");
     localStorage.removeItem("cartItems");
     setToken("");
     setUser(null);
     setFarmer(null);
+    setAdmin(null);
+    setCartItems({});
   };
 
-  // Update user info
+  // 🛠 Update user profile
   const updateUser = (updatedUser) => {
     setUser(updatedUser);
     localStorage.setItem("user", JSON.stringify(updatedUser));
   };
 
-  // Add to cart
+  // 🛒 Add to cart
   const addToCart = async (itemId) => {
-    const cartData = structuredClone(cartItems);
-    cartData[itemId] = (cartData[itemId] || 0) + 1;
-    setCartItems(cartData);
+    const updatedCart = { ...cartItems, [itemId]: (cartItems[itemId] || 0) + 1 };
+    setCartItems(updatedCart);
 
     try {
       const token = localStorage.getItem("token");
@@ -143,19 +141,19 @@ const StoreContextProvider = ({ children }) => {
         headers: { Authorization: `Bearer ${token}` },
       });
     } catch (err) {
-      console.error("❌ Failed to sync with backend:", err.message);
+      console.error("❌ Sync error:", err.message);
     }
   };
 
-  // Update quantity
+  // ➖ Update quantity
   const updateCartQuantity = async (itemId, quantity) => {
-    const cartData = structuredClone(cartItems);
+    const updatedCart = { ...cartItems };
     if (quantity === 0) {
-      delete cartData[itemId];
+      delete updatedCart[itemId];
     } else {
-      cartData[itemId] = quantity;
+      updatedCart[itemId] = quantity;
     }
-    setCartItems(cartData);
+    setCartItems(updatedCart);
 
     try {
       const token = localStorage.getItem("token");
@@ -163,53 +161,52 @@ const StoreContextProvider = ({ children }) => {
         headers: { Authorization: `Bearer ${token}` },
       });
     } catch (err) {
-      console.error("❌ Failed to sync with backend:", err.message);
+      console.error("❌ Failed to sync cart quantity:", err.message);
     }
   };
 
-  // Total cart items count
-  const getCartCount = () => {
-    return Object.values(cartItems).reduce((sum, qty) => sum + qty, 0);
-  };
+  // 🧮 Get cart count
+  const getCartCount = () =>
+    Object.values(cartItems).reduce((acc, qty) => acc + qty, 0);
 
-  // Total amount
+  // 💰 Get cart total
   const getCartAmount = () => {
-    let totalAmount = 0;
-    for (const itemId in cartItems) {
-      const itemInfo = products.find((product) => product._id === itemId);
-      if (itemInfo && cartItems[itemId] > 0) {
-        totalAmount += itemInfo.offerPrice * cartItems[itemId];
-      }
-    }
-    return Math.floor(totalAmount * 100) / 100;
+    return Object.entries(cartItems).reduce((total, [id, qty]) => {
+      const item = products.find((p) => p._id === id);
+      return item ? total + item.offerPrice * qty : total;
+    }, 0);
   };
-  useEffect(() => {
-    fetchProductData();
-  }, [])
 
   const contextValue = {
+    url,
     products,
     cartItems,
-    getCartCount,
-    addToCart,
-    navigate,
-    fetchProductData,
-    getCartAmount,
-    loginAsFarmer,
-    farmer,
-    setFarmer,
-    url,
-    updateCartQuantity,
     token,
-    setToken,
     user,
-    setUser,
+    farmer,
+    admin,
+    loading,
+    navigate,
+
+    // Auth
     login,
+    loginAsFarmer,
+    loginAsAdmin,
     logout,
     updateUser,
-    loading,
-    // fetchProducts,
     fetchUserData,
+
+    // Cart
+    addToCart,
+    updateCartQuantity,
+    getCartCount,
+    getCartAmount,
+
+    // State setters
+    setToken,
+    setUser,
+    setFarmer,
+    setAdmin,
   };
 
   return (

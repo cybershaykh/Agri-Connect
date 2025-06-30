@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema(
     cartItems: {type: Object, default: {}},
     verified: { type: Boolean, default: false },
     role: { type: String, enum: ['farmer', 'buyer', 'admin'], default: 'buyer' },
+    isAdmin: { type: Boolean, default: false},
     isBlocked: { type: Boolean, default: false },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },

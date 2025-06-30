@@ -228,3 +228,19 @@ export const approveFarmer = async (req, res) => {
     });
   }
 }
+// DELETE /api/farmer/delete/:id
+export const deleteFarmer = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const farmer = await farmerModel.findByIdAndDelete(id);
+
+    if (!farmer) {
+      return res.status(404).json({ success: false, message: "Farmer not found" });
+    }
+
+    res.status(200).json({ success: true, message: "Farmer deleted successfully" });
+  } catch (error) {
+    console.error("Delete farmer error:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};

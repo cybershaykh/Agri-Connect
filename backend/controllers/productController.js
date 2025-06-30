@@ -175,9 +175,9 @@ export const updateProduct = async (req, res) => {
 // delete a product
 export const deleteProduct = async (req, res) => {
   try {
-    const { id } = req.body;
+    const { id } = req.params;
 
-    if (!productId) {
+    if (!id) {
       return res.status(400).json({ error: "❌Product ID is required." });
     }
 

@@ -21,7 +21,8 @@ import OrderPlaced from "./component/OrderPlaced";
 import FarmerDashboard from "./pages/famerDashboard";
 import AddProduct from "./pages/AddProduct";
 import ProductList from "./pages/ProductList";
-import Orders from "./pages/Orders";
+import AdminDashboard from "./pages/adminDashboard";
+import NotFound from "./pages/NotFound";
 
 const App = () => {
   return (
@@ -48,6 +49,8 @@ const App = () => {
             <Route path="/add-product" element={<AddProduct />} />
             <Route path="/list-product" element={<ProductList />} />
             <Route path="/orders" element={<MyOrders />} />
+            <Route path="/admindashboard" element={<AdminDashboard />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
           <Footer />
         </StoreContextProvider>

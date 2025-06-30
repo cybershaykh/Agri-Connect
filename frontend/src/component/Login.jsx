@@ -12,7 +12,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [termsChecked, setTermsChecked] = useState(false);
-  const [loginType, setLoginType] = useState("user"); // 'user' or 'farmer'
+  const [loginType, setLoginType] = useState("user"); // 'user', 'farmer', or 'admin'
   const navigate = useNavigate();
 
   const [data, setData] = useState({
@@ -32,17 +32,7 @@ const Login = () => {
     event.preventDefault();
 
     if (!termsChecked) {
-      toast.error("⚠️ Please agree to the terms and conditions before logging in.", {
-        style: {
-          borderRadius: "10px",
-          background: "#fff3cd",
-          color: "#856404",
-          fontWeight: "600",
-          fontSize: "16px",
-          padding: "16px"
-        },
-        position: "top-center"
-      });
+      toast.error("⚠️ Please agree to the terms and conditions before logging in.");
       return;
     }
 
@@ -51,33 +41,31 @@ const Login = () => {
     const endpoint =
       loginType === "farmer"
         ? `${url}/api/farmer/login`
+        : loginType === "admin"
+        ? `${url}/api/admin/admin/login`
         : `${url}/api/user/login`;
 
     try {
       const response = await axios.post(endpoint, data);
 
       if (response.data.success) {
-        setToken(response.data.token, response.data.user || response.data.farmer);
-        toast.success(`${loginType === "farmer" ? "Farmer" : "User"} login successful!`);
+        setToken(response.data.token, response.data.user || response.data.farmer || response.data.admin);
+        toast.success(`${loginType.charAt(0).toUpperCase() + loginType.slice(1)} login successful!`);
         localStorage.setItem("token", response.data.token);
-        localStorage.setItem("user", JSON.stringify(response.data.user || response.data.farmer));
+        localStorage.setItem("user", JSON.stringify(response.data.user || response.data.farmer || response.data.admin));
 
-        navigate(loginType === "farmer" ? "/farmerdashboard" : "/");
+        navigate(
+          loginType === "farmer"
+            ? "/farmerdashboard"
+            : loginType === "admin"
+            ? "/admindashboard"
+            : "/"
+        );
       } else {
         toast.error(response.data.message || "Login failed");
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "An error occurred during login", {
-        style: {
-          borderRadius: "10px",
-          background: "#f8d7da",
-          color: "#721c24",
-          fontWeight: "600",
-          fontSize: "16px",
-          padding: "16px"
-        },
-        position: "top-center"
-      });
+      toast.error(error.response?.data?.message || "An error occurred during login");
     } finally {
       setLoading(false);
     }
@@ -96,29 +84,30 @@ const Login = () => {
           data-aos="flip-left"
         >
           <h2 className="text-3xl font-bold text-center text-green-700 mb-6">
-            {loginType === "farmer" ? "Farmer Login" : "Welcome Back"}
+            {loginType === "farmer"
+              ? "Farmer Login"
+              : loginType === "admin"
+              ? "Admin Login"
+              : "Welcome Back"}
           </h2>
 
+          {/* Login Type Switcher */}
           <div className="flex justify-center gap-4 mb-4">
-            <button
-              onClick={() => setLoginType("user")}
-              className={`px-4 py-1 rounded-full font-semibold ${
-                loginType === "user" ? "bg-green-600 text-white" : "bg-gray-200"
-              }`}
-            >
-              User Login
-            </button>
-            <button
-              onClick={() => setLoginType("farmer")}
-              className={`px-4 py-1 rounded-full font-semibold ${
-                loginType === "farmer" ? "bg-green-600 text-white" : "bg-gray-200"
-              }`}
-            >
-              Farmer Login
-            </button>
+            {["user", "farmer", "admin"].map((type) => (
+              <button
+                key={type}
+                onClick={() => setLoginType(type)}
+                className={`px-4 py-1 rounded-full font-semibold ${
+                  loginType === type ? "bg-green-600 text-white" : "bg-gray-200"
+                }`}
+              >
+                {type.charAt(0).toUpperCase() + type.slice(1)}
+              </button>
+            ))}
           </div>
 
           <form onSubmit={onLogin} className="space-y-6">
+            {/* Email */}
             <div>
               <label className="block text-sm font-medium text-gray-700">Email address</label>
               <div className="mt-1 relative">
@@ -135,6 +124,7 @@ const Login = () => {
               </div>
             </div>
 
+            {/* Password */}
             <div>
               <label className="block text-sm font-medium text-gray-700">Password</label>
               <div className="mt-1 relative">
@@ -158,6 +148,7 @@ const Login = () => {
               </div>
             </div>
 
+            {/* Terms Checkbox */}
             <div className="flex items-center space-x-2 text-sm" data-aos="fade-up">
               <input
                 type="checkbox"
@@ -175,6 +166,7 @@ const Login = () => {
               </label>
             </div>
 
+            {/* Submit */}
             <button
               type="submit"
               disabled={loading}
@@ -183,10 +175,11 @@ const Login = () => {
               {loading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
-                `${loginType === "farmer" ? "Farmer Login" : "Log In"}`
+                `${loginType === "farmer" ? "Farmer Login" : loginType === "admin" ? "Admin Login" : "Log In"}`
               )}
             </button>
 
+            {/* Register Link (for users only) */}
             {loginType === "user" && (
               <p className="text-sm text-center text-gray-600">
                 Don&apos;t have an account?{" "}

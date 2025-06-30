@@ -1,7 +1,102 @@
-import userModel from "../models/userModel.js";
-import resourceModel from "../models/resourceModel.js";
+import userModel from '../models/userModel.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+import Admin from '../models/adminModel.js';
 
-// Get all users (Admin only)
+dotenv.config();
+
+const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
+
+// 🆕 Register an Admin User
+export const adminRegister = async (req, res) => {
+  const { name, email, password } = req.body;
+
+  // ✅ Basic validation
+  if (!name || !email || !password) {
+    return res.status(400).json({ error: "❌ Please provide name, email, and password." });
+  }
+
+  try {
+    // 🔍 Check for existing user
+    const existingUser = await Admin.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ error: "❌ Admin already exists." });
+    }
+
+    // 🔐 Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // ✅ Create admin user
+    const newAdmin = await Admin.create({
+      name,
+      email,
+      password: hashedPassword,
+      isAdmin: true,
+      role: 'admin'
+    });
+
+    // 🎟️ Generate JWT
+    const token = jwt.sign({ id: newAdmin._id, isAdmin: true }, JWT_SECRET, { expiresIn: '7d' });
+
+    res.status(201).json({
+      success: true,
+      message: "✅ Admin registered successfully.",
+      token,
+      user: {
+        id: newAdmin._id,
+        name: newAdmin.name,
+        email: newAdmin.email,
+        isAdmin: true,
+        role: 'admin'
+      },
+    });
+  } catch (err) {
+    console.error("Admin registration error:", err);
+    res.status(500).json({ error: "❌ Server error." });
+  }
+};
+
+// 🛡️ Admin Login Controller
+export const adminLogin = async (req, res) => {
+  const { email, password } = req.body;
+
+  // ✅ Validate fields
+  if (!email || !password) {
+    return res.status(400).json({ success: false, message: "❌ Email and password are required." });
+  }
+
+  try {
+    const admin = await Admin.findOne({ email, isAdmin: true });
+    if (!admin) {
+      return res.status(403).json({ success: false, message: "❌ Access denied. Not an admin." });
+    }
+    const isMatch = await bcrypt.compare(password, admin.password);
+    if (!isMatch) {
+      return res.status(401).json({ success: false, message: "❌ Invalid credentials." });
+    }
+
+    // 🎟️ Sign JWT
+    const token = jwt.sign({ id: admin._id, isAdmin: true }, JWT_SECRET, { expiresIn: '7d' });
+
+    res.status(200).json({
+      success: true,
+      message: "✅ Admin login successful.",
+      token,
+      user: {
+        id: admin._id,
+        name: admin.name,
+        email: admin.email,
+        isAdmin: true,
+        role: 'admin'
+      },
+    });
+  } catch (error) {
+    console.error("Admin login error:", error);
+    res.status(500).json({ success: false, message: "❌ Server error." });
+  }
+};
+
 export const getAllUsers = async (req, res) => {
     try {
         const users = await userModel.find().select("-password").sort({ createdAt: -1 });

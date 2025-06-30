@@ -12,6 +12,6 @@ productRoute.put('/approve/:productId', isAdmin, approveProduct);
 productRoute.get('/pending', isAdmin, getUnapprovedProducts);
 productRoute.get("/:id", getApprovedProducts);
 productRoute.put("/:id", updateProduct);
-productRoute.delete("/:id", deleteProduct);
+productRoute.delete("/delete/:id", deleteProduct);
 
 export default productRoute;

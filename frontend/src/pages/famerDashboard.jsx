@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Wheat,
   Sun,
@@ -24,7 +24,8 @@ import {
   Pie,
   Cell,
 } from "recharts";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { StoreContext } from "../component/context/StoreContext";
 
 const cropYieldData = [
   { month: "Jan", wheat: 40, corn: 30, soybeans: 20, grains: 50 },
@@ -114,7 +115,17 @@ const MetricCard = ({ title, value, change, icon: Icon, color }) => (
 );
 
 const FarmerDashboard = () => {
+  const { user, token } = useContext(StoreContext);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!token || user?.role !== "farmer") {
+      navigate("/");
+    }
+  }, [user, token, navigate]);
+
+  if (!user) return <div className="p-10 text-center text-gray-500">Loading...</div>;
 
   const NavItem = ({ icon: Icon, label, href = "#" }) => (
   <Link to={href} className="no-underline text-white">
@@ -150,7 +161,7 @@ const FarmerDashboard = () => {
 
         <nav className="flex-1 p-4 space-y-2">
           <NavItem icon={PlusSquare} label="Add Product" href="/add-product" />
-          <NavItem icon={ShoppingBag} label="Orders" />
+          <NavItem icon={ShoppingBag} label="Orders" href="/" />
           <NavItem icon={List} label="List Product" href="/list-product" />
         </nav>
       </div>
