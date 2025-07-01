@@ -18,7 +18,7 @@ const StoreContextProvider = ({ children }) => {
   const [admin, setAdmin] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // 🟢 Fetch products from API
+  // Fetch all products
   const fetchProducts = async () => {
     try {
       const res = await axios.get(`${url}/api/product/getall`);
@@ -29,18 +29,18 @@ const StoreContextProvider = ({ children }) => {
     }
   };
 
-  // 🛒 Load cart from localStorage
+  // Load cart from localStorage
   useEffect(() => {
     const storedCart = localStorage.getItem("cartItems");
     if (storedCart) setCartItems(JSON.parse(storedCart));
   }, []);
 
-  // 💾 Save cart to localStorage
+  // Save cart to localStorage on update
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // 🧠 Rehydrate auth on reload
+  // Initialize auth
   useEffect(() => {
     const initializeAuth = async () => {
       const storedToken = localStorage.getItem("token");
@@ -72,7 +72,7 @@ const StoreContextProvider = ({ children }) => {
     fetchProducts();
   }, []);
 
-  // 🔐 Fetch authenticated user
+  // Fetch user data
   const fetchUserData = async (token) => {
     try {
       const res = await axios.get(`${url}/api/user/me`, {
@@ -86,7 +86,7 @@ const StoreContextProvider = ({ children }) => {
     }
   };
 
-  // 👉 Login as user
+  // Auth functions
   const login = (token, userData) => {
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(userData));
@@ -94,7 +94,6 @@ const StoreContextProvider = ({ children }) => {
     setUser(userData);
   };
 
-  // 👉 Login as farmer
   const loginAsFarmer = (token, farmerData) => {
     localStorage.setItem("token", token);
     localStorage.setItem("farmer", JSON.stringify(farmerData));
@@ -102,7 +101,6 @@ const StoreContextProvider = ({ children }) => {
     setFarmer(farmerData);
   };
 
-  // 👉 Login as admin
   const loginAsAdmin = (token, adminData) => {
     localStorage.setItem("token", token);
     localStorage.setItem("admin", JSON.stringify(adminData));
@@ -110,7 +108,6 @@ const StoreContextProvider = ({ children }) => {
     setAdmin(adminData);
   };
 
-  // 🔓 Logout all roles
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -124,19 +121,17 @@ const StoreContextProvider = ({ children }) => {
     setCartItems({});
   };
 
-  // 🛠 Update user profile
   const updateUser = (updatedUser) => {
     setUser(updatedUser);
     localStorage.setItem("user", JSON.stringify(updatedUser));
   };
 
-  // 🛒 Add to cart
+  // Cart Management
   const addToCart = async (itemId) => {
     const updatedCart = { ...cartItems, [itemId]: (cartItems[itemId] || 0) + 1 };
     setCartItems(updatedCart);
 
     try {
-      const token = localStorage.getItem("token");
       await axios.post(`${url}/api/cart/add`, { productId: itemId }, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -145,7 +140,6 @@ const StoreContextProvider = ({ children }) => {
     }
   };
 
-  // ➖ Update quantity
   const updateCartQuantity = async (itemId, quantity) => {
     const updatedCart = { ...cartItems };
     if (quantity === 0) {
@@ -156,8 +150,7 @@ const StoreContextProvider = ({ children }) => {
     setCartItems(updatedCart);
 
     try {
-      const token = localStorage.getItem("token");
-      await axios.post(`${url}/api/cart/add`, { productId: itemId }, {
+      await axios.post(`${url}/api/cart/remove`, { productId: itemId }, {
         headers: { Authorization: `Bearer ${token}` },
       });
     } catch (err) {
@@ -165,11 +158,15 @@ const StoreContextProvider = ({ children }) => {
     }
   };
 
-  // 🧮 Get cart count
+  // ✅ Clear cart after order placement
+  const clearCart = () => {
+    setCartItems({});
+    localStorage.removeItem("cartItems");
+  };
+
   const getCartCount = () =>
     Object.values(cartItems).reduce((acc, qty) => acc + qty, 0);
 
-  // 💰 Get cart total
   const getCartAmount = () => {
     return Object.entries(cartItems).reduce((total, [id, qty]) => {
       const item = products.find((p) => p._id === id);
@@ -187,22 +184,17 @@ const StoreContextProvider = ({ children }) => {
     admin,
     loading,
     navigate,
-
-    // Auth
     login,
     loginAsFarmer,
     loginAsAdmin,
     logout,
     updateUser,
     fetchUserData,
-
-    // Cart
     addToCart,
     updateCartQuantity,
+    clearCart, // ✅ include in context
     getCartCount,
     getCartAmount,
-
-    // State setters
     setToken,
     setUser,
     setFarmer,

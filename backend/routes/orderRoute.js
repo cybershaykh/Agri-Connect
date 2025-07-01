@@ -1,11 +1,12 @@
 import express from 'express';
-import { getUserOrders, placeOrder, updateOrderStatus } from '../controllers/orderController.js';
+import { getUserOrders, placeOrder } from '../controllers/orderController.js';
+import authMiddleware from '../middlewares/auth.js';
+
 
 
 const orderRoute = express.Router();
 
-orderRoute.post("/order", placeOrder);
-orderRoute.get("/:id", getUserOrders);
-orderRoute.put("/:id", updateOrderStatus);
+orderRoute.post("/place", authMiddleware, placeOrder);
+orderRoute.get("/user", authMiddleware, getUserOrders);
 
 export default orderRoute;

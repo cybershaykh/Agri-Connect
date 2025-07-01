@@ -1,97 +1,58 @@
-import orderModel from "../models/orderModel.js";
-import productModel from "../models/productModel.js";
 import userModel from "../models/userModel.js";
 
+// ✅ PLACE ORDER
 export const placeOrder = async (req, res) => {
-  try {
-    const { buyerId, productId, quantity, deliveryAddress } = req.body;
+  const { items, amount, address, method = "COD" } = req.body;
 
-    if (!productId || !quantity) {
-      return res.status(400).json({ error: "❌Product ID and quantity are required." });
-    }
-
-    const product = await productModel.findById(productId);
-    if (!product || product.quantity < quantity) {
-      return res.status(404).json({ error: "❌Product not found or insufficient quantity." });
-    }
-
-    const newOrder = new orderModel({
-      buyerId,
-      productId,
-      quantity,
-      deliveryAddress,
-      totalPrice: product.price * quantity,
-      status: "Pending",
+  if (!items || !amount || !address) {
+    return res.status(400).json({
+      success: false,
+      message: "Missing order data",
     });
+  }
 
-    // Save the order
-    const savedOrder = await newOrder.save();
+  try {
+    const user = await userModel.findById(req.user._id);
 
-    // Deduct the ordered quantity from product inventory
-    product.quantity -= quantity;
-    await product.save();
+    const order = {
+      items, // Array of { product: ObjectId, quantity: Number }
+      amount,
+      address,
+      method,
+      paymentStatus: method === "COD" ? "Pending" : "Paid",
+      date: new Date(),
+    };
 
-    // (Optional) Link order to user if order tracking array exists
-    // await userModel.findByIdAndUpdate(buyerId, { $push: { orders: savedOrder._id } });
+    user.orders.push(order);
+    await user.save();
 
     res.status(201).json({
       success: true,
-      message: "✅Order placed successfully.",
-      order: savedOrder,
+      message: "Order placed successfully",
+      order,
     });
   } catch (err) {
-    console.error("Place order error:", err);
-    res.status(500).json({ error: "❌Something went wrong while placing the order." });
+    console.error(err);
+    res.status(500).json({
+      success: false,
+      message: "Server error placing order",
+    });
   }
 };
 
-// Get all orders for a user
+// ✅ GET USER ORDERS (with product populated)
 export const getUserOrders = async (req, res) => {
-    try {
-        const { userId } = req.body;
+  try {
+    const user = await userModel.findById(req.user._id)
+      .populate("orders.items.product", "name image offerPrice");
 
-        const orders = await orderModel.find({ buyerId: userId });
-
-        if (!orders || orders.length === 0) {
-            return res.status(404).json({ error: "❌No orders found for this user." });
-        }
-
-        res.status(200).json({
-            success: true,
-            orders
-        });
-    } catch (err) {
-        console.error("Get user orders error:", err);
-        res.status(500).json({ error: "❌Something went wrong while fetching the orders." });
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
     }
-}
-// update order status
-export const updateOrderStatus = async (req, res) => {
-    try {
-        const { orderId, status } = req.body;
 
-        if (!orderId || !status) {
-            return res.status(400).json({ error: "❌Order ID and status are required." });
-        }
-
-        const validStatuses = ['Pending', 'Confirmed', 'Shipped', 'Delivered', 'Canceled'];
-        if (!validStatuses.includes(status)) {
-            return res.status(400).json({ error: "Invalid status." });
-        }
-
-        const updatedOrder = await orderModel.findByIdAndUpdate(orderId, { status }, { new: true });
-
-        if (!updatedOrder) {
-            return res.status(404).json({ error: "Order not found." });
-        }
-
-        res.status(200).json({
-            success: true,
-            message: "✅Order status updated successfully.",
-            order: updatedOrder
-        });
-    } catch (err) {
-        console.error("Update order status error:", err);
-        res.status(500).json({ error: "❌Something went wrong while updating the order status." });
-    }
-}
+    res.status(200).json({ success: true, orders: user.orders });
+  } catch (err) {
+    console.error("❌ Error fetching user orders:", err);
+    res.status(500).json({ success: false, message: "Error fetching orders" });
+  }
+};

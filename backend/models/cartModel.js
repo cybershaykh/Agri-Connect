@@ -22,7 +22,7 @@ const cartSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    items: [cartItemSchema],
+    cartItems: [cartItemSchema],
   },
   { timestamps: true }
 );

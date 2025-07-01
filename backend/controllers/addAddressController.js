@@ -1,47 +1,63 @@
-import connectDB from "../config/db.js";
-import AddAddressModel from "../models/addAddressModel.js";
+import userModel from "../models/userModel.js";
+import AddAddressModel from "../models/addAddressModel.js" 
 
+
+// ➕ Add new address to user
 export const addAddress = async (req, res) => {
   try {
-    const { address } = req.body;
-    const userId = req.user.id; 
+    const { fullName, phoneNumber, pincode, area, city, state } = req.body;
 
-    if (
-      !address.fullName ||
-      !address.phoneNumber ||
-      !address.pincode ||
-      !address.area ||
-      !address.city ||
-      !address.state
-    ) {
-      return res.json({
+    if (!fullName || !phoneNumber || !pincode || !area || !city || !state) {
+      return res.status(400).json({
         success: false,
-        message: "Please provide all required address fields.",
+        message: "Please fill in all required fields.",
       });
     }
 
-    await connectDB();
-    const newAddress = new AddAddressModel({
-      userId: userId,
-      fullName: address.fullName,
-      phoneNumber: address.phoneNumber,
-      pincode: address.pincode,
-      area: address.area,
-      city: address.city,
-      state: address.state,
-    });
+    const user = await userModel.findById(req.user._id);
 
-    const savedAddress = await newAddress.save();
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found." });
+    }
 
-    return res.json({
+    const newAddress = { fullName, phoneNumber, pincode, area, city, state };
+
+    user.addresses.push(newAddress);
+    await user.save();
+
+    res.status(200).json({
       success: true,
-      message: "Address added successfully.",
-      address: savedAddress,
+      message: "Address saved to user profile.",
+      addresses: user.addresses,
     });
   } catch (error) {
+    console.error("Save address error:", error);
+    res.status(500).json({ success: false, message: "Server error while saving address." });
+  }
+};
+
+// 📦 Get user addresses
+export const getUserAddresses = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const user = await userModel.findById(userId).select("addresses");
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      addresses: user.addresses,
+    });
+  } catch (error) {
+    console.error("Fetch Address Error:", error);
     return res.status(500).json({
       success: false,
-      message: "Something went wrong while adding the address.",
+      message: "Failed to fetch addresses.",
       error: error.message,
     });
   }

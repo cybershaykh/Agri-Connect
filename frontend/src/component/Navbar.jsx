@@ -145,7 +145,7 @@ const Navbar = () => {
                       </>
                     )}
                     {!isAdmin && !isFarmer && (
-                      <Link to="/myorders" className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600" onClick={() => setUserDropdownOpen(false)}>
+                      <Link to="/userorder" className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600" onClick={() => setUserDropdownOpen(false)}>
                         <ShoppingCart className="w-4 h-4" /> My Orders
                       </Link>
                     )}

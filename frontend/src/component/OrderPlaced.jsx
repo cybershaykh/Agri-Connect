@@ -12,7 +12,7 @@ const OrderPlaced = () => {
     }, 2000);
 
     const redirectTimer = setTimeout(() => {
-      navigate('/my-orders');
+      navigate('/userorder');
     }, 5000);
 
     return () => {

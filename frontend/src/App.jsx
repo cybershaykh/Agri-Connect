@@ -26,6 +26,7 @@ import NotFound from "./pages/NotFound";
 import DroneTechnology from "./pages/Drone";
 import DroneDG6000Review from "./pages/Drone1";
 import FutureFarmingAIDrone from "./pages/Drone2";
+import UserOrder from "./pages/UserOrder";
 
 const App = () => {
   return (
@@ -57,6 +58,7 @@ const App = () => {
             <Route path="/increase-crop-yields-drone-technology" element={<DroneTechnology />} />
             <Route path="/drone-dg6000-review-2025" element={<DroneDG6000Review />} />
             <Route path="/future-farming-ai-drone-2025" element={<FutureFarmingAIDrone />} />
+            <Route path="/userorder" element={<UserOrder />} />
           </Routes>
           <Footer />
         </StoreContextProvider>
