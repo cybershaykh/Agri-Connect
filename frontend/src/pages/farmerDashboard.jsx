@@ -11,14 +11,12 @@ import {
   List,
 } from "lucide-react";
 
-import AllUsers from "./AllUsers";
-import AllFarmers from "./AllFarmer";
-import ProductList from "./AllProduct";
-import Dashboard from "./DashboardStat";
 import { StoreContext } from "../component/context/StoreContext";
-import AllOrders from "../component/MyOrders";
+import FarmerStat from "./FarmerStat";
+import ProductList from "./ProductList";
+import FarmerOrder from "./FarmerOrder";
 
-const AdminDashboard = () => {
+const FarmerDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("Dashboard");
 
@@ -26,7 +24,7 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!token || user.role !== "admin") {
+    if (!token || user.role !== "farmer") {
       navigate("/"); 
     }
   }, [user, token, navigate]);
@@ -34,19 +32,15 @@ const AdminDashboard = () => {
 
 
   const components = {
-    Dashboard: <Dashboard />,
-    "All Users": <AllUsers />,
-    "All Farmers": <AllFarmers />,
+    Dashboard: <FarmerStat />,
+    "My Orders": <FarmerOrder />,
     "All Products": <ProductList />,
-    "All Orders": <AllOrders />,
   };
 
   const sidebarItems = [
     { icon: Home, label: "Dashboard" },
-    { icon: Users, label: "All Users" },
-    { icon: Tractor, label: "All Farmers" },
     { icon: List, label: "All Products" },
-    { icon: ShoppingCart, label: "All Orders" },
+    { icon: ShoppingCart, label: "My Orders" },
   ];
 
   return (
@@ -60,9 +54,9 @@ const AdminDashboard = () => {
         <div className="flex items-center justify-between h-16 px-6 bg-green-800">
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-sm">A</span>
+              <span className="text-white font-bold text-sm">F</span>
             </div>
-            <span className="text-white font-semibold">AdminPanel</span>
+            <span className="text-white font-semibold">Farmer</span>
           </div>
           <button
             className="lg:hidden text-white"
@@ -76,10 +70,10 @@ const AdminDashboard = () => {
           <div className="mb-6">
             <div className="flex items-center space-x-3 p-3 bg-green-500 rounded-lg">
               <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                AD
+                FD
               </div>
               <div className="text-white">
-                <p className="text-sm font-medium">Admin</p>
+                <p className="text-sm font-medium">Farmer</p>
                 <p className="text-xs opacity-90">Dashboard</p>
               </div>
             </div>
@@ -124,4 +118,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export default FarmerDashboard;

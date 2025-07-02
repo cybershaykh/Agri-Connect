@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Package } from "lucide-react";
 import Loading from "../component/Loading.jsx";
 import axios from "axios";
 import { StoreContext } from "../component/context/StoreContext.jsx";
@@ -49,50 +48,40 @@ const UserOrder = () => {
           {orders.map((order, index) => (
             <div
               key={index}
-              className="bg-white border rounded-lg p-5 shadow-sm flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center"
+              className="bg-white border rounded-lg p-4 shadow-sm flex flex-col gap-6 sm:flex-row sm:justify-between"
             >
-              {/* Left Section: Images + Item Names */}
-              <div className="flex flex-col sm:flex-row items-start gap-4 flex-1">
-                <div className="flex gap-2 flex-wrap">
-                  {order.items.map((item, idx) =>
-                    item.product?.image?.[0] ? (
-                      <img
-                        key={idx}
-                        src={item.product.image[0]}
-                        alt={item.product.name}
-                        className="w-12 h-12 object-contain rounded border border-gray-200"
-                      />
-                    ) : (
-                      <Package key={idx} className="w-10 h-10 text-green-600" />
-                    )
-                  )}
-                </div>
-
-                <div className="text-sm text-gray-700">
-                  <p className="font-medium text-base mb-1">
-                    {order.items
-                      .map((item) =>
-                        item.product?.name
-                          ? `${item.product.name} x ${item.quantity}`
-                          : `Item x ${item.quantity}`
-                      )
-                      .join(", ")}
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    Items: {order.items.length}
-                  </p>
-                </div>
+              {/* Products */}
+              <div className="flex flex-col gap-3 flex-1">
+                {order.items.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-center gap-3 text-sm text-gray-700"
+                  >
+                    <div className="bg-gray-100 rounded p-1">
+                      {item.product?.image?.[0] && (
+                        <img
+                          src={item.product.image[0]}
+                          alt={item.product.name}
+                          className="w-14 h-14 object-cover rounded"
+                        />
+                      )}
+                    </div>
+                    <p className="font-medium">{item.product?.name}</p>
+                    <span className="text-gray-500">x {item.quantity}</span>
+                  </div>
+                ))}
               </div>
 
-              {/* Middle Section: Shipping Address */}
-              <div className="text-sm text-gray-600 flex-1 sm:text-left">
-                <p className="font-medium">{order.address.fullName}</p>
+              {/* Shipping Address */}
+              <div className="text-sm text-gray-600 flex-1">
+                <p className="font-semibold">{order.address.fullName}</p>
                 <p>{order.address.area}</p>
                 <p>{`${order.address.city}, ${order.address.state}`}</p>
+                <p>Pincode: {order.address.pincode}</p>
                 <p>{order.address.phoneNumber}</p>
               </div>
 
-              {/* Right Section: Order Info */}
+              {/* Order Info */}
               <div className="flex flex-col gap-1 text-sm text-gray-600 text-right">
                 <p className="font-semibold text-green-700">
                   ₦{order.amount.toLocaleString()}

@@ -11,14 +11,12 @@ import Cart from "./pages/Cart";
 import StoreContextProvider from "./component/context/StoreContext";
 import Login from "./component/Login";
 import Register from "./component/Register";
-import UserProfile from "./pages/UserProfile";
 import AddAddress from "./component/Addaddress";
 import AllProducts from "./pages/AllProducts";
 import Product from "./product/id/page";
 import { Toaster } from "react-hot-toast";
 import MyOrders from "./component/MyOrders";
 import OrderPlaced from "./component/OrderPlaced";
-import FarmerDashboard from "./pages/famerDashboard";
 import AddProduct from "./pages/AddProduct";
 import ProductList from "./pages/ProductList";
 import AdminDashboard from "./pages/adminDashboard";
@@ -27,6 +25,7 @@ import DroneTechnology from "./pages/Drone";
 import DroneDG6000Review from "./pages/Drone1";
 import FutureFarmingAIDrone from "./pages/Drone2";
 import UserOrder from "./pages/UserOrder";
+import FarmerDashboard from "./pages/farmerDashboard";
 
 const App = () => {
   return (
@@ -46,7 +45,6 @@ const App = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/add-address" element={<AddAddress />} />
-            <Route path="/profile" element={<UserProfile />} />
             <Route path="/my-orders" element={<MyOrders />} />
             <Route path="/order-placed" element={<OrderPlaced />} />
             <Route path="/farmerdashboard" element={<FarmerDashboard />} />

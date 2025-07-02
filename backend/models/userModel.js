@@ -1,5 +1,10 @@
 import mongoose from "mongoose";
 
+const orderItemSchema = new mongoose.Schema({
+  product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+  quantity: Number,
+});
+
 const addressSchema = new mongoose.Schema(
   {
     fullName: String,
@@ -11,6 +16,19 @@ const addressSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+const orderSchema = new mongoose.Schema({
+  items: [orderItemSchema],
+  amount: Number,
+  address: addressSchema,
+  method: String,
+  paymentStatus: String,
+  status: {
+    type: String,
+    enum: ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"],
+    default: "Pending",
+  },
+  date: Date,
+});
 
 const userSchema = new mongoose.Schema(
   {
@@ -28,40 +46,7 @@ const userSchema = new mongoose.Schema(
         state: String,
       },
     ],
-    orders: [
-      {
-        items: [
-          {
-            product: { type: mongoose.Schema.Types.ObjectId, ref: "Product",},
-            quantity: Number,
-          },
-        ],
-        amount: Number,
-        address: {
-          fullName: String,
-          phoneNumber: String,
-          pincode: String,
-          area: String,
-          city: String,
-          state: String,
-        },
-        method: {
-          type: String,
-          enum: ["COD", "Online"],
-          default: "COD",
-        },
-        paymentStatus: {
-          type: String,
-          enum: ["Pending", "Paid", "Failed"],
-          default: "Pending",
-        },
-        date: {
-          type: Date,
-          default: Date.now,
-        },
-      },
-    ],
-
+    orders: [orderSchema],
     verified: { type: Boolean, default: false },
     role: {
       type: String,

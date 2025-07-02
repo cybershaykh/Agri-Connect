@@ -37,7 +37,7 @@ export const adminRegister = async (req, res) => {
     });
 
     // 🎟️ Generate JWT
-    const token = jwt.sign({ id: newAdmin._id, isAdmin: true }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ id: newAdmin._id, isAdmin: true, role:'admin' }, JWT_SECRET, { expiresIn: '7d' });
 
     res.status(201).json({
       success: true,
@@ -77,7 +77,7 @@ export const adminLogin = async (req, res) => {
     }
 
     // 🎟️ Sign JWT
-    const token = jwt.sign({ id: admin._id, isAdmin: true }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ id: admin._id, isAdmin: true, role:'admin' }, JWT_SECRET, { expiresIn: '7d' });
 
     res.status(200).json({
       success: true,

@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Sidebar from "../component/Sidebar";
 import { ArrowUpRight } from "lucide-react";
 
 const ProductList = () => {
@@ -30,7 +29,6 @@ const ProductList = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <Sidebar />
 
       <div className="flex-1 w-full md:p-10 p-4">
         <h2 className="pb-4 text-lg font-semibold text-green-900">

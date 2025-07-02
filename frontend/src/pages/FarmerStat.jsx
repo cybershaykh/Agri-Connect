@@ -114,9 +114,8 @@ const MetricCard = ({ title, value, change, icon: Icon, color }) => (
   </div>
 );
 
-const FarmerDashboard = () => {
+const FarmerStat = () => {
   const { user, token } = useContext(StoreContext);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -127,57 +126,10 @@ const FarmerDashboard = () => {
 
   if (!user) return <div className="p-10 text-center text-gray-500">Loading...</div>;
 
-  const NavItem = ({ icon: Icon, label, href = "#" }) => (
-  <Link to={href} className="no-underline text-white">
-    <div className="flex items-center space-x-3 cursor-pointer hover:bg-green-700 p-2 rounded-lg">
-      <Icon className="w-5 h-5" />
-      {sidebarOpen && <span className="font-medium">{label}</span>}
-    </div>
-  </Link>
-);
-
-
   return (
     <div className="flex h-screen bg-gray-50">
-      {/* Sidebar */}
-      <div
-        className={`${
-          sidebarOpen ? "w-64" : "w-16"
-        } bg-gradient-to-b from-green-800 to-green-900 text-white transition-all duration-300 flex flex-col`}
-      >
-        <div className="p-4 border-b border-green-700">
-          <div className="flex items-center space-x-3">
-            <div className="bg-green-600 p-2 rounded-lg">
-              <Wheat className="h-6 w-6" />
-            </div>
-            {sidebarOpen && (
-              <div>
-                <h1 className="font-bold text-lg">FarmTrack</h1>
-                <p className="text-green-200 text-sm">Farm Management</p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        <nav className="flex-1 p-4 space-y-2">
-          <NavItem icon={PlusSquare} label="Add Product" href="/add-product" />
-          <NavItem icon={ShoppingBag} label="Orders" href="/" />
-          <NavItem icon={List} label="List Product" href="/list-product" />
-        </nav>
-      </div>
-
       {/* Main Section */}
       <div className="flex-1 overflow-auto">
-        <div className="p-4 flex justify-between items-center">
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="text-green-800 bg-white border border-green-300 rounded px-3 py-1 shadow hover:bg-green-100"
-          >
-            <Menu className="w-5 h-5" />
-          </button>
-          <h2 className="text-2xl font-bold text-gray-800">Farm Dashboard</h2>
-        </div>
-
         <div className="p-6">
           {/* Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -360,4 +312,4 @@ const FarmerDashboard = () => {
   );
 };
 
-export default FarmerDashboard;
+export default FarmerStat;
