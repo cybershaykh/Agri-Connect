@@ -1,3 +1,4 @@
+// models/orderModel.js
 import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema(
@@ -5,7 +6,11 @@ const orderSchema = new mongoose.Schema(
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     items: [
       {
-        product: { type: mongoose.Schema.Types.ObjectId, ref: "Product", required: true },
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
         quantity: { type: Number, required: true },
       },
     ],
@@ -20,7 +25,7 @@ const orderSchema = new mongoose.Schema(
     },
     method: { type: String, default: "COD" },
     paymentStatus: { type: String, default: "Pending" },
-    status: { type: String, default: "Pending" }, // e.g., Confirmed, Delivered
+    status: { type: String, default: "Pending" },
     date: { type: Date, default: Date.now },
   },
   { timestamps: true }

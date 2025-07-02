@@ -36,7 +36,7 @@ const AllOrders = () => {
   return (
     <div className="p-4 md:p-8 bg-gray-50 min-h-screen">
       <h2 className="text-xl md:text-2xl font-semibold text-green-800 mb-6">
-        All Orders (Admin)
+        📦 All Orders (Admin)
       </h2>
 
       {loading ? (
@@ -50,47 +50,76 @@ const AllOrders = () => {
               key={index}
               className="bg-white border rounded-lg shadow-sm p-4 md:p-6 flex flex-col gap-4"
             >
-              {/* User Email */}
+              {/* User Info */}
               <p className="text-sm text-gray-600">
                 <span className="font-semibold">User:</span>{" "}
-                {order.user.email}
+                {order.user?.email || "N/A"}
               </p>
 
-              {/* Product Items */}
+              {/* Items */}
               <div className="space-y-2">
                 {order.items.map((item, idx) => (
-                  <div key={idx} className="flex items-center gap-4 text-sm text-gray-700">
+                  <div
+                    key={idx}
+                    className="flex items-center gap-4 text-sm text-gray-700"
+                  >
                     <img
-                      src={item.product?.image?.[0]}
+                      src={item.product?.image?.[0] || "/no-image.png"}
                       alt={item.product?.name}
                       className="w-12 h-12 object-cover rounded border"
                     />
                     <div className="flex flex-col">
-                      <p className="font-medium">{item.product?.name}</p>
-                      <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
+                      <p className="font-medium">
+                        {item.product?.name || "Unknown Product"}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        Qty: {item.quantity}
+                      </p>
                     </div>
                   </div>
                 ))}
               </div>
 
-              {/* Address & Info */}
+              {/* Address & Order Summary */}
               <div className="flex flex-col md:flex-row md:justify-between gap-4 pt-3 border-t">
                 <div className="text-sm text-gray-700 space-y-1">
                   <p className="font-semibold">Shipping Address:</p>
-                  <p>{order.address.fullName}</p>
-                  <p>{order.address.area}</p>
-                  <p>{order.address.city}, {order.address.state}</p>
-                  <p>Pincode: {order.address.pincode}</p>
-                  <p>Phone: {order.address.phoneNumber}</p>
+                  <p>{order.address?.fullName}</p>
+                  <p>{order.address?.area}</p>
+                  <p>
+                    {order.address?.city}, {order.address?.state}
+                  </p>
+                  <p>Pincode: {order.address?.pincode}</p>
+                  <p>Phone: {order.address?.phoneNumber}</p>
                 </div>
 
                 <div className="text-sm text-gray-700 text-right space-y-1">
                   <p className="font-semibold">Order Summary:</p>
-                  <p>Amount: ₦{order.amount.toLocaleString()}</p>
+                  <p>Amount: ₦{order.amount?.toLocaleString()}</p>
                   <p>Payment: {order.paymentStatus}</p>
                   <p>Method: {order.method}</p>
-                  <p>Date: {new Date(order.date).toLocaleDateString("en-NG")}</p>
-                  <p>Status: {order.status || "Pending"}</p>
+                  <p>
+                    Date:{" "}
+                    {new Date(order.date).toLocaleDateString("en-NG", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </p>
+                  <p>
+                    Status:{" "}
+                    <span
+                      className={`px-2 py-0.5 rounded text-xs font-medium ${
+                        order.status === "Confirmed"
+                          ? "bg-green-100 text-green-700"
+                          : order.status === "Delivered"
+                          ? "bg-blue-100 text-blue-700"
+                          : "bg-yellow-100 text-yellow-700"
+                      }`}
+                    >
+                      {order.status || "Pending"}
+                    </span>
+                  </p>
                 </div>
               </div>
             </div>

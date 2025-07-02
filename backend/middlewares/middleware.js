@@ -31,7 +31,7 @@ export const checkAdmin = async (req, res, next) => {
 };
 
 // Middleware to check if user is admin
-export function isAdmin(req, res, next) {
+export const isAdmin = (req, res, next) => {
     // Assuming req.user is set after authentication and contains the user's role
     if (req.user && req.user.role === "admin") {
         return next();

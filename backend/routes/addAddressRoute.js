@@ -1,6 +1,6 @@
 import express from 'express';
 import { addAddress, getUserAddresses } from '../controllers/addAddressController.js';
-import authMiddleware, { verifyToken } from '../middlewares/auth.js';
+import authMiddleware from '../middlewares/auth.js';
 
 
 const addAddressRoute = express.Router();

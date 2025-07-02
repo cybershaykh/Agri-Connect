@@ -1,31 +1,6 @@
 import jwt from "jsonwebtoken";
 import userModel from "../models/userModel.js";
 
-export const verifyToken = (req, res, next) => {
-  const authHeader = req.headers["authorization"];
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ message: "Access token missing" });
-  }
-
-  const token = authHeader.split(" ")[1];
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // Attach user info to request
-    next();
-  } catch (err) {
-    return res.status(403).json({ message: "Invalid token" });
-  }
-};
-export const adminMiddleware = (req, res, next) => {
-  if (req.user.role !== "admin") {
-    return res.status(403).json({ success: false, message: "Forbidden: Admins only" });
-  }
-  next();
-};
-
-
 const authMiddleware = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
@@ -37,7 +12,6 @@ const authMiddleware = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
     const user = await userModel.findById(decoded.id).select("-password");
 
     if (!user) {

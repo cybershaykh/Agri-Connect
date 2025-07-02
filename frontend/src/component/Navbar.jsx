@@ -8,6 +8,7 @@ import {
   UserCircle,
   ShoppingCart,
   ShieldCheck,
+  Bell,
 } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -85,6 +86,19 @@ const Navbar = () => {
 
         {/* Icons */}
         <div className="flex items-center space-x-4 relative">
+          {(isAdmin || isFarmer) && (
+            <button
+              className="relative text-gray-600 hover:text-green-600"
+              onClick={() => navigate("/")}
+              title="Notifications"
+            >
+              <Bell className="w-6 h-6" />
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                3
+              </span>
+            </button>
+          )}
+
           {!isFarmer && !isAdmin && (
             <Link to="/cart" className="relative group">
               <ShoppingCart className={`h-6 w-6 ${animateCart ? "animate-bounce" : ""}`} />
@@ -169,11 +183,17 @@ const Navbar = () => {
       {mobileMenuOpen && (
         <div className="md:hidden bg-white border-t border-gray-100 px-4 py-4 space-y-3">
           <Link to="/" className="block text-gray-700 font-medium">Home</Link>
-          {isAdmin && <Link to="/admindashboard" className="block text-gray-700 font-medium">Admin Dashboard</Link>}
+          {isAdmin && (
+            <>
+              <Link to="/admindashboard" className="block text-gray-700 font-medium">Admin Dashboard</Link>
+              <Link to="/admindashboard" className="block text-gray-700 font-medium">Notifications</Link>
+            </>
+          )}
           {isFarmer && (
             <>
               <Link to="/farmerdashboard" className="block text-gray-700 font-medium">Dashboard</Link>
               <Link to="/add-product" className="block text-gray-700 font-medium">Add Product</Link>
+              <Link to="/notifications" className="block text-gray-700 font-medium">Notifications</Link>
             </>
           )}
           {!isAdmin && !isFarmer && (

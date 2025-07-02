@@ -4,21 +4,43 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import {
   ArrowRight,
-  Play,
-  Star,
-  Zap,
+  Play, Leaf,
+  Star, Handshake,
+  Zap, Truck,
   Shield,
   Award,
   Smile,
   Globe,
   Headphones,
   Tractor,
+  PackageCheck,
 } from "lucide-react";
 import CountUp from "react-countup";
 import About from "./About";
 import FAQSection from "./FAQSection";
 import { StoreContext } from "../component/context/StoreContext";
 import Testimonial from "./Testimonial";
+
+const steps = [
+  {
+    title: "Farmer at Work",
+    description: "Farmers grow and harvest crops using sustainable practices.",
+    icon: <Leaf className="w-6 h-6 text-green-600" />,
+    image: "https://images.pexels.com/photos/5529587/pexels-photo-5529587.jpeg?auto=compress&cs=tinysrgb&w=600",
+  },
+  {
+    title: "Negotiation & Fair Trade",
+    description: "Farmers and buyers connect to negotiate prices directly.",
+    icon: <Handshake className="w-6 h-6 text-green-600" />,
+    image: "https://images.pexels.com/photos/8867484/pexels-photo-8867484.jpeg?auto=compress&cs=tinysrgb&w=600",
+  },
+  {
+    title: "Delivery to Your Doorstep",
+    description: "Crops are delivered fresh to buyers quickly and efficiently.",
+    icon: <Truck className="w-6 h-6 text-green-600" />,
+    image: "https://images.pexels.com/photos/4483610/pexels-photo-4483610.jpeg?auto=compress&cs=tinysrgb&w=600",
+  },
+];
 
 const articles = [
   {
@@ -267,6 +289,61 @@ const HomePage = () => {
           </div>
         </div>
       </section>
+      <section className="bg-white py-12 px-4 sm:px-6 lg:px-20" id="how-it-works">
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-green-700 mb-12" data-aos="fade-up">
+          How AgriConnect Works
+        </h2>
+
+        <div className="grid gap-12">
+          {steps.map((step, index) => (
+            <div
+              key={index}
+              className="grid md:grid-cols-2 gap-8 items-center"
+              data-aos={index % 2 === 0 ? "fade-right" : "fade-left"}
+            >
+              {/* Image */}
+              <img
+                src={step.image}
+                alt={step.title}
+                className="w-full h-64 sm:h-72 md:h-80 lg:h-96 object-cover rounded-lg shadow-md"
+              />
+
+              {/* Content */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-green-600 font-medium text-sm">
+                  {step.icon}
+                  <span>{step.title}</span>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-semibold text-gray-800">
+                  {step.title}
+                </h3>
+                <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
+                  {step.description}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div
+          className="mt-16 text-center"
+          data-aos="fade-up"
+        >
+          <h3 className="text-2xl font-semibold text-gray-800 mb-4">
+            Ready to join the movement?
+          </h3>
+          <p className="text-gray-600 mb-6">
+            Whether you're a farmer or a buyer, AgriConnect is your bridge to better trade.
+          </p>
+          <Link
+            to="/register"
+            className="inline-block bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-6 rounded-lg transition"
+          >
+            Get Started
+          </Link>
+        </div>
+      </div>
+    </section>
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
