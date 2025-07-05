@@ -4,47 +4,67 @@ import productModel from "../models/productModel.js";
 
 // create a new product
 export const addProduct = async (req, res) => {
-  const { name,description, category,rating, price, image, offerPrice,
-    inStock, location, farmerImage, farmerAddress, farmerName,
-    farmerPhone,farmerEmail,
-  } = req.body;
   try {
-    if (!name || !category || !image || !price) {
-      return res
-        .status(400)
-        .json({ error: "❌Please provide all required fields." });
+    const {
+      name,
+      description,
+      category,
+      price,
+      offerPrice,
+      rating,
+      inStock,
+      location,
+      farmerAddress,
+      farmerName,
+      farmerPhone,
+      farmerEmail,
+    } = req.body;
+
+    // Proper image paths for frontend access
+    const productImages = req.files["images"]?.map(
+      (file) => `/uploads/${file.filename}`
+    ) || [];
+
+    const farmerImage = req.files["farmerImage"]?.[0]?.filename;
+    const farmerImagePath = farmerImage ? `/uploads/${farmerImage}` : "";
+
+    if (!productImages.length || !farmerImagePath) {
+      return res.status(400).json({
+        success: false,
+        message: "Product and farmer images are required.",
+      });
     }
 
     const newProduct = new productModel({
-      name: name,
-      description: description || "",
-      category: category,
-      rating: rating || 0,
-      price: price,
-      offerPrice: offerPrice || 0,
-      image: image,
-      location: location || "",
-      inStock: inStock !== undefined ? inStock : true,
-      farmerImage: farmerImage || [],
-      farmerAddress: farmerAddress || "",
-      farmerName: farmerName || "",
-      farmerPhone: farmerPhone || "",
-      farmerEmail: farmerEmail || "",
+      name,
+      description,
+      category,
+      rating: Number(rating),
+      price: Number(price),
+      offerPrice: Number(offerPrice),
+      inStock: inStock === "true",
+      image: productImages,
+      location,
+      farmerImage: farmerImagePath,
+      farmerAddress,
+      farmerName,
+      farmerPhone,
+      farmerEmail,
     });
 
-    const savedProduct = await newProduct.save();
+    await newProduct.save();
+
     res.status(201).json({
       success: true,
-      message: "✅Product added successfully.",
-      product: savedProduct,
+      message: "Product added",
+      product: newProduct,
     });
   } catch (err) {
-    console.error("Add product error:", err);
-    res
-      .status(500)
-      .json({ error: "❌Something went wrong while adding the product." });
+    console.error("Product add error:", err.message);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
 
 //get all products
 export const getAllProducts = async (req, res) => {

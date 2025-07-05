@@ -58,15 +58,19 @@ const UserOrder = () => {
                     className="flex items-center gap-3 text-sm text-gray-700"
                   >
                     <div className="bg-gray-100 rounded p-1">
-                      {item.product?.image?.[0] && (
+                      {item.product?.image?.[0] ? (
                         <img
                           src={item.product.image[0]}
-                          alt={item.product.name}
+                          alt={item.product.name || "Product"}
                           className="w-14 h-14 object-cover rounded"
                         />
+                      ) : (
+                        <div className="w-14 h-14 bg-gray-200 rounded flex items-center justify-center text-xs text-gray-500">
+                          No Image
+                        </div>
                       )}
                     </div>
-                    <p className="font-medium">{item.product?.name}</p>
+                    <p className="font-medium">{item.product?.name || "Unnamed Product"}</p>
                     <span className="text-gray-500">x {item.quantity}</span>
                   </div>
                 ))}
@@ -74,23 +78,26 @@ const UserOrder = () => {
 
               {/* Shipping Address */}
               <div className="text-sm text-gray-600 flex-1">
-                <p className="font-semibold">{order.address.fullName}</p>
-                <p>{order.address.area}</p>
-                <p>{`${order.address.city}, ${order.address.state}`}</p>
-                <p>Pincode: {order.address.pincode}</p>
-                <p>{order.address.phoneNumber}</p>
+                <p className="font-semibold">{order.address?.fullName || "N/A"}</p>
+                <p>{order.address?.area || "N/A"}</p>
+                <p>{`${order.address?.city || "N/A"}, ${order.address?.state || "N/A"}`}</p>
+                <p>Pincode: {order.address?.pincode || "N/A"}</p>
+                <p>{order.address?.phoneNumber || "N/A"}</p>
               </div>
 
               {/* Order Info */}
               <div className="flex flex-col gap-1 text-sm text-gray-600 text-right">
                 <p className="font-semibold text-green-700">
-                  ₦{order.amount.toLocaleString()}
+                  ₦{order.amount?.toLocaleString() || "0"}
                 </p>
-                <p>Method: {order.method}</p>
+                <p>Method: {order.method || "N/A"}</p>
                 <p>
-                  Date: {new Date(order.date).toLocaleDateString("en-NG")}
+                  Date:{" "}
+                  {order.date
+                    ? new Date(order.date).toLocaleDateString("en-NG")
+                    : "N/A"}
                 </p>
-                <p>Payment: {order.paymentStatus}</p>
+                <p>Payment: {order.paymentStatus || "N/A"}</p>
               </div>
             </div>
           ))}

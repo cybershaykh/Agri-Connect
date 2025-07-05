@@ -92,7 +92,6 @@ const AddProduct = () => {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen">
-      <Sidebar />
       <div className="flex-1 p-4 md:p-10">
         <Toaster />
         <form onSubmit={onSubmitHandler} className="space-y-6 max-w-3xl mx-auto w-full">

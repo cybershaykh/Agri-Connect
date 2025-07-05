@@ -44,13 +44,13 @@ const ProductCard = ({ product }) => {
         <span>{product.location}</span>
       </div>
       <div className="flex items-center gap-2">
-        <p className="text-xs">{4.5}</p>
+        {/* <p className="text-xs"></p> */}
         <div className="text-yellow-500 text-sm">
-          {"★".repeat(Math.floor(product.rating)) +
-            "☆".repeat(5 - Math.floor(product.rating))}
-          <span className="text-gray-500 ml-2">
+          <span className="text-gray-500 ">
             ({(product.rating || 0).toFixed(1)})
           </span>
+          {"★".repeat(Math.floor(product.rating)) +
+            "☆".repeat(5 - Math.floor(product.rating))}
         </div>
       </div>
       <p className="text-xs text--500/70 max-sm:hidden">{product.category}</p>

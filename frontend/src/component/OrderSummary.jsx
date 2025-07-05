@@ -11,23 +11,21 @@ const OrderSummary = () => {
     url,
     clearCart,
     cartItems,
-    user,
   } = useContext(StoreContext);
 
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [userAddresses, setUserAddresses] = useState([]);
   const [loadingAddresses, setLoadingAddresses] = useState(true);
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+
   const navigate = useNavigate();
 
-  // ✅ Fetch user addresses
   const fetchUserAddresses = async () => {
     try {
       setLoadingAddresses(true);
       const res = await fetch(`${url}/api/address/user`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
 
@@ -42,7 +40,6 @@ const OrderSummary = () => {
         toast.error(data.message || "Failed to fetch addresses");
       }
     } catch (err) {
-      console.error("Address fetch error:", err.message);
       toast.error("Error fetching addresses");
     } finally {
       setLoadingAddresses(false);
@@ -58,16 +55,17 @@ const OrderSummary = () => {
     setIsDropdownOpen(false);
   };
 
-  // ✅ Create order & send to backend
   const createOrder = async () => {
     if (!selectedAddress) {
       toast.error("Please select an address before placing an order.");
       return;
     }
 
+    setIsPlacingOrder(true);
+
     const orderDetails = {
-      items: Object.entries(cartItems).map(([productId, quantity]) => ({
-        productId,
+      items: Object.entries(cartItems).map(([product, quantity]) => ({
+        product,
         quantity,
       })),
       address: selectedAddress,
@@ -89,16 +87,19 @@ const OrderSummary = () => {
 
       if (data.success) {
         toast.success("Order placed successfully!");
-        clearCart(); // ✅ clear cart after order
+        clearCart();
         setTimeout(() => navigate("/order-placed"), 1500);
       } else {
         toast.error(data.message || "Failed to place order");
       }
     } catch (err) {
-      console.error("Create order error:", err.message);
       toast.error("Error placing order");
+    } finally {
+      setIsPlacingOrder(false);
     }
   };
+
+  const totalAmount = getCartAmount() + Math.floor(getCartAmount() * 0.02);
 
   return (
     <div className="w-full md:w-96 bg-gray-500/5 p-5 mt-10 md:mt-0">
@@ -131,7 +132,12 @@ const OrderSummary = () => {
                 viewBox="0 0 24 24"
                 stroke="#6B7280"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M19 9l-7 7-7-7"
+                />
               </svg>
             </button>
 
@@ -148,7 +154,8 @@ const OrderSummary = () => {
                       className="px-4 py-2 hover:bg-gray-500/10 cursor-pointer"
                       onClick={() => handleAddressSelect(address)}
                     >
-                      {address.fullName}, {address.area}, {address.pincode}, {address.city}, {address.state}
+                      {address.fullName}, {address.area}, {address.pincode},{" "}
+                      {address.city}, {address.state}
                     </li>
                   ))
                 )}
@@ -163,7 +170,7 @@ const OrderSummary = () => {
           </div>
         </div>
 
-        {/* Promo */}
+        {/* Promo Code */}
         <div>
           <label className="text-base font-medium uppercase text-gray-600 block mb-2">
             Promo Code
@@ -186,7 +193,7 @@ const OrderSummary = () => {
         <div className="space-y-4">
           <div className="flex justify-between text-base font-medium">
             <p className="uppercase text-gray-600">Items ({getCartCount()})</p>
-            <p className="text-gray-800">₦{getCartAmount()}</p>
+            <p className="text-gray-800">₦{getCartAmount().toLocaleString()}</p>
           </div>
           <div className="flex justify-between">
             <p className="text-gray-600">Shipping Fee</p>
@@ -194,20 +201,53 @@ const OrderSummary = () => {
           </div>
           <div className="flex justify-between">
             <p className="text-gray-600">Tax (2%)</p>
-            <p className="font-medium text-gray-800">₦{Math.floor(getCartAmount() * 0.02)}</p>
+            <p className="font-medium text-gray-800">
+              ₦{Math.floor(getCartAmount() * 0.02).toLocaleString()}
+            </p>
           </div>
           <div className="flex justify-between text-lg md:text-xl font-medium border-t pt-3">
             <p>Total</p>
-            <p>₦{getCartAmount() + Math.floor(getCartAmount() * 0.02)}</p>
+            <p>₦{totalAmount.toLocaleString()}</p>
           </div>
         </div>
       </div>
 
       <button
         onClick={createOrder}
-        className="w-full bg-green-600 text-white py-3 mt-5 hover:bg-green-700"
+        disabled={isPlacingOrder}
+        className={`w-full py-3 mt-5 text-white font-medium transition duration-300 ${
+          isPlacingOrder
+            ? "bg-gray-400 cursor-not-allowed"
+            : "bg-green-600 hover:bg-green-700"
+        }`}
       >
-        Place Order
+        {isPlacingOrder ? (
+          <div className="flex items-center justify-center gap-2">
+            <svg
+              className="animate-spin h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v8z"
+              ></path>
+            </svg>
+            Placing Order...
+          </div>
+        ) : (
+          "Place Order"
+        )}
       </button>
     </div>
   );

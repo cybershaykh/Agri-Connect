@@ -9,12 +9,14 @@ import {
   Tractor,
   ShoppingCart,
   List,
+  Plus,
 } from "lucide-react";
 
 import { StoreContext } from "../component/context/StoreContext";
 import FarmerStat from "./FarmerStat";
 import ProductList from "./ProductList";
 import FarmerOrder from "./FarmerOrder";
+import AddProduct from "./AddProduct";
 
 const FarmerDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -33,12 +35,14 @@ const FarmerDashboard = () => {
 
   const components = {
     Dashboard: <FarmerStat />,
+    "Add Product": <AddProduct />,
     "My Orders": <FarmerOrder />,
     "All Products": <ProductList />,
   };
 
   const sidebarItems = [
     { icon: Home, label: "Dashboard" },
+    { icon: Plus, label: "Add Product"},
     { icon: List, label: "All Products" },
     { icon: ShoppingCart, label: "My Orders" },
   ];

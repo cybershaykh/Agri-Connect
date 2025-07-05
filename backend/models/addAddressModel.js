@@ -8,7 +8,8 @@ const addressSchema = new mongoose.Schema({
   area: { type: String, required: true },
   city: { type: String, required: true },
   state: { type: String, required: true },
-}, { timestamps: true });
+}, 
+{ timestamps: true });
 
 const AddAddressModel = mongoose.models.address || mongoose.model("address", addressSchema);
 
