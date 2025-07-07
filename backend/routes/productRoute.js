@@ -2,7 +2,7 @@ import express from "express";
 import { addProduct, approveProduct, deleteProduct, getAllProducts, getApprovedProducts, getUnapprovedProducts, updateProduct } from "../controllers/productController.js";
 import authMiddleware from "../middlewares/auth.js";
 import { isAdmin } from "../middlewares/middleware.js";
-import { upload } from "../middlewares/multerConfig.js";
+import upload from "../middlewares/multerConfig.js";
 
 
 
