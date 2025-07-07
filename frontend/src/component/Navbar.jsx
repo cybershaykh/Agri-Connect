@@ -66,7 +66,6 @@ const Navbar = () => {
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex space-x-6">
-          <Link to="/" className="text-gray-600 hover:text-green-600 font-medium">Home</Link>
           {isAdmin && <Link to="/admindashboard" className="text-gray-600 hover:text-green-600 font-medium">Admin Dashboard</Link>}
           {isFarmer && (
             <>
@@ -182,7 +181,7 @@ const Navbar = () => {
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-white border-t border-gray-100 px-4 py-4 space-y-3">
-          <Link to="/" className="block text-gray-700 font-medium">Home</Link>
+          
           {isAdmin && (
             <>
               <Link to="/admindashboard" className="block text-gray-700 font-medium">Admin Dashboard</Link>

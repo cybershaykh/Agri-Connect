@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { StoreContext } from "../component/context/StoreContext";
-import Sidebar from "../component/Sidebar";
 
 const AddProduct = () => {
   const { url } = useContext(StoreContext);
