@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ArrowUpRight } from "lucide-react";
 
 const ProductList = () => {
-  const url = "https://backend1-uyy5.onrender.com";
+  const url = "http://localhost:3000";
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);

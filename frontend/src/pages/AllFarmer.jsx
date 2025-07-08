@@ -4,7 +4,7 @@ import { Trash2, Pencil } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 const AllFarmers = () => {
-  const url = "https://backend1-uyy5.onrender.com";
+  const url = "http://localhost:3000";
   const [farmers, setFarmers] = useState([]);
   const [loading, setLoading] = useState(true);
 
