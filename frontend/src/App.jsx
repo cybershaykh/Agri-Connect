@@ -11,7 +11,7 @@ import Cart from "./pages/Cart";
 import StoreContextProvider from "./component/context/StoreContext";
 import Login from "./component/Login";
 import Register from "./component/Register";
-import AddAddress from "./component/Addaddress";
+import AddAddress from "./component/AddAddress";
 import AllProducts from "./pages/AllProducts";
 import Product from "./product/id/page";
 import { Toaster } from "react-hot-toast";
