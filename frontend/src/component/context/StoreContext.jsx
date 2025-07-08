@@ -8,7 +8,7 @@ export const StoreContext = createContext(null);
 
 const StoreContextProvider = ({ children }) => {
   const navigate = useNavigate();
-  const url = "http://localhost:3000";
+  const url = "https://backend1-uyy5.onrender.com";
 
   const [products, setProducts] = useState([]);
   const [cartItems, setCartItems] = useState({});

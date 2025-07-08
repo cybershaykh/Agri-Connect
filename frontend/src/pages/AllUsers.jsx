@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 
 const AllUsers = () => {
-  const url = "http://localhost:3000"; 
+  const url = "https://backend1-uyy5.onrender.com"; 
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
