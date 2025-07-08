@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 const Product = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { products, addToCart } = useContext(StoreContext);
+  const { products, addToCart, token } = useContext(StoreContext);
 
   const [mainImage, setMainImage] = useState(null);
   const [productData, setProductData] = useState(null);
@@ -165,64 +165,74 @@ const Product = () => {
 
             {/* Buttons */}
             <div className="flex items-center mt-6 gap-4">
-              <button
-                onClick={() => {
-                  if (!productData.inStock) {
-                    toast.error("🚫 This product is out of stock!", {
-                      position: "top-center",
-                      duration: 2500,
-                      style: {
-                        fontSize: "16px",
-                        fontWeight: "500",
-                      },
-                    });
-                    return;
-                  }
-                  addToCart(productData._id);
-                  toast.success("🛒 Added to cart!", {
-                    position: "top-center",
-                    duration: 2000,
-                    style: {
-                      fontSize: "16px",
-                      fontWeight: "500",
-                    },
-                  });
-                }}
-                className="w-full py-3.5 bg-gray-100 text-gray-800/80 hover:bg-gray-200 transition"
-              >
-                Add to Cart
-              </button>
+  {/* Add to Cart */}
+  <button
+    onClick={() => {
+      if (!token) {
+        toast.error("🔐 Please log in to add items to cart.", {
+          position: "top-center",
+          duration: 2500,
+          style: { fontSize: "16px", fontWeight: "500" },
+        });
+        return navigate("/login");
+      }
 
-              <button
-                onClick={() => {
-                  if (!productData.inStock) {
-                    toast.error("🚫 This product is out of stock!", {
-                      position: "top-center",
-                      duration: 2500,
-                      style: {
-                        fontSize: "16px",
-                        fontWeight: "500",
-                      },
-                    });
-                    return;
-                  }
+      if (!productData.inStock) {
+        toast.error("🚫 This product is out of stock!", {
+          position: "top-center",
+          duration: 2500,
+          style: { fontSize: "16px", fontWeight: "500" },
+        });
+        return;
+      }
 
-                  addToCart(productData._id);
-                  toast.success("🛒 Added to cart!", {
-                    position: "top-center",
-                    duration: 2000,
-                    style: {
-                      fontSize: "16px",
-                      fontWeight: "500",
-                    },
-                  });
-                  navigate("/cart");
-                }}
-                className="w-full py-3.5 bg-green-500 text-white hover:bg-green-600 transition"
-              >
-                Buy now
-              </button>
-            </div>
+      addToCart(productData._id);
+      toast.success("🛒 Added to cart!", {
+        position: "top-center",
+        duration: 2000,
+        style: { fontSize: "16px", fontWeight: "500" },
+      });
+    }}
+    className="w-full py-3.5 bg-gray-100 text-gray-800/80 hover:bg-gray-200 transition"
+  >
+    Add to Cart
+  </button>
+
+  {/* Buy Now */}
+  <button
+    onClick={() => {
+      if (!token) {
+        toast.error("🔐 Please log in to continue.", {
+          position: "top-center",
+          duration: 2500,
+          style: { fontSize: "16px", fontWeight: "500" },
+        });
+        return navigate("/login");
+      }
+
+      if (!productData.inStock) {
+        toast.error("🚫 This product is out of stock!", {
+          position: "top-center",
+          duration: 2500,
+          style: { fontSize: "16px", fontWeight: "500" },
+        });
+        return;
+      }
+
+      addToCart(productData._id);
+      toast.success("🛒 Added to cart!", {
+        position: "top-center",
+        duration: 2000,
+        style: { fontSize: "16px", fontWeight: "500" },
+      });
+      navigate("/cart");
+    }}
+    className="w-full py-3.5 bg-green-500 text-white hover:bg-green-600 transition"
+  >
+    Buy now
+  </button>
+</div>
+
           </div>
         </div>
 

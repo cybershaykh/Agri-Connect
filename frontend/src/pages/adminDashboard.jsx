@@ -27,7 +27,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     if (!token || user.role !== "admin") {
-      navigate("/"); 
+      navigate(""); 
     }
   }, [user, token, navigate]);
   if (!user) return <div className="p-10 text-center text-gray-500">Loading...</div>;

@@ -48,6 +48,7 @@ const StoreContextProvider = ({ children }) => {
       const storedFarmer = localStorage.getItem("farmer");
       const storedAdmin = localStorage.getItem("admin");
 
+
       if (storedToken) {
         setToken(storedToken);
         try {

@@ -181,7 +181,6 @@ const Navbar = () => {
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-white border-t border-gray-100 px-4 py-4 space-y-3">
-          
           {isAdmin && (
             <>
               <Link to="/admindashboard" className="block text-gray-700 font-medium">Admin Dashboard</Link>

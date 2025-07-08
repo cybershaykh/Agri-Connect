@@ -20,15 +20,10 @@ export const addProduct = async (req, res) => {
       farmerEmail,
     } = req.body;
 
-    // Proper image paths for frontend access
-    const productImages = req.files["images"]?.map(
-      (file) => `/uploads/${file.filename}`
-    ) || [];
+    const productImages = req.files["images"]?.map(file => file.path) || [];
+    const farmerImage = req.files["farmerImage"]?.[0]?.path || "";
 
-    const farmerImage = req.files["farmerImage"]?.[0]?.filename;
-    const farmerImagePath = farmerImage ? `/uploads/${farmerImage}` : "";
-
-    if (!productImages.length || !farmerImagePath) {
+    if (!productImages.length || !farmerImage) {
       return res.status(400).json({
         success: false,
         message: "Product and farmer images are required.",
@@ -45,7 +40,7 @@ export const addProduct = async (req, res) => {
       inStock: inStock === "true",
       image: productImages,
       location,
-      farmerImage: farmerImagePath,
+      farmerImage,
       farmerAddress,
       farmerName,
       farmerPhone,
@@ -56,7 +51,7 @@ export const addProduct = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: "Product added",
+      message: "✅ Product added successfully",
       product: newProduct,
     });
   } catch (err) {
