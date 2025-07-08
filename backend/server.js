@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/uploads", express.static("uploads"));
+app.use("/image", express.static("uploads"));
 connectDB();
 
 app.use("/api/user", userRoute);
@@ -37,7 +37,7 @@ app.use("/api/address", addAddressRoute);
 app.use("/api/weather", weatherRoute);
 
 app.get('/', (req, res) => {
-    res.send('Hello from the backend server!');
+    res.send('Hello buddy! YOU `RE GOOD TO GO');
 });
 
 app.listen(PORT, () => {

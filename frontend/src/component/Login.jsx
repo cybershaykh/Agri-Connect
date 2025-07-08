@@ -54,13 +54,13 @@ const Login = () => {
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("user", JSON.stringify(response.data.user || response.data.farmer || response.data.admin));
 
-        navigate(
-          loginType === "farmer"
-            ? "/farmerdashboard"
-            : loginType === "admin"
-            ? "/admindashboard"
-            : "/"
-        );
+        if (loginType === "farmer") {
+  navigate("/farmerdashboard");
+} else if (loginType === "admin") {
+  navigate("/admindashboard");
+} else {
+  navigate("/");
+}
       } else {
         toast.error(response.data.message || "Login failed");
       }
